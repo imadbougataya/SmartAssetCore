@@ -1,0 +1,28 @@
+{
+  "generator-jhipster": {
+    "applicationType": "monolith",
+    "authenticationType": "jwt",
+    "baseName": "SmartAssetCore",
+    "buildTool": "maven",
+    "cacheProvider": "caffeine",
+    "creationTimestamp": 1765927348215,
+    "databaseType": "sql",
+    "devDatabaseType": "mysql",
+    "enableHibernateCache": true,
+    "enableTranslation": true,
+    "entities": [],
+    "feignClient": null,
+    "jhipsterVersion": "8.11.0",
+    "jwtSecretKey": "MDNjZTg0MjIyOTdmMDczMjFiZDBhNzllNWI3ZDEwOTk2ZDBkNzBmNTg1MTVmNWRjZTI3OGVmY2M5ZDkyNDZlODUwZDZjMTFhNGQ2Y2MyNjJjMzQyZjkxMTUxOGE5YWQ4MDNmZmZmZDMzYzg4ZTk2YjNkMWU2NjQ3NjQ3ZDRmNWU=",
+    "languages": ["fr", "ar-ly", "en", "es"],
+    "nativeLanguage": "fr",
+    "packageName": "com.ailab.smartasset",
+    "prodDatabaseType": "mysql",
+    "reactive": false,
+    "serverPort": null,
+    "serviceDiscoveryType": null,
+    "skipClient": true,
+    "syncUserWithIdp": null,
+    "testFrameworks": []
+  }
+}
