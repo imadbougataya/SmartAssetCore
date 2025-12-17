@@ -28,13 +28,14 @@ spring:
     livereload:
       enabled: false # we use Webpack dev server + BrowserSync for livereload
   jackson:
+    time-zone: Africa/Casablanca
     serialization:
       indent-output: true
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:mysql://localhost:3306/SmartAssetCore?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&createDatabaseIfNotExist=true
-    username: root
-    password:
+    url: jdbc:mysql://localhost:3306/smartassetcore?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&createDatabaseIfNotExist=true&serverTimezone=Africa/Casablanca&allowPublicKeyRetrieval=true
+    username: SmartAssetCore
+    password: SmartAssetCore
     hikari:
       poolName: Hikari
       auto-commit: false

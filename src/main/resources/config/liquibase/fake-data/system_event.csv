@@ -1,0 +1,11 @@
+id;event_type;entity_type;entity_id;severity;source;message;created_at;created_by;correlation_id;payload;created_date;last_modified_by;last_modified_date
+1;prestataire de services;ASSET;23759;WARNING;SYSTEM;psitt lors;2025-12-16T16:49:55;de;cot cot absolument;../fake-data/blob/hipster.txt;2025-12-16T22:55:38;partager;2025-12-16T14:24:09
+2;affable sous;LOCATION_EVENT;11170;WARNING;API;infime rencontrer semer;2025-12-16T04:01:48;lunatique lors de énorme;ouin secouriste admirablement;../fake-data/blob/hipster.txt;2025-12-16T23:03:06;cadre vers;2025-12-16T13:57:42
+3;a traîner émérite;FORESIGHT;3428;ERROR;UI;ouin hôte à peine;2025-12-16T22:36:14;épargner antique abîmer;tôt même si commissionnaire;../fake-data/blob/hipster.txt;2025-12-16T21:21:03;d'abord;2025-12-16T14:59:17
+4;sans que conseil municipal;LOCATION_EVENT;8387;WARNING;UI;quand hystérique de manière à;2025-12-16T08:02:38;comme;rafraîchir malgré cocorico;../fake-data/blob/hipster.txt;2025-12-16T02:33:29;pas mal toc-toc;2025-12-16T11:09:47
+5;maintenant déposer joliment;ASSET;9120;INFO;ESIGN;chef de cuisine hé;2025-12-16T12:18:42;glouglou ronron;redevenir croâ afin de;../fake-data/blob/hipster.txt;2025-12-16T09:16:57;passablement deçà;2025-12-16T14:07:02
+6;ouch rose;MOVEMENT_REQUEST;12836;WARNING;UI;maintenant moyennant triathlète;2025-12-16T20:19:10;de crainte que conseil d’administration en guise de;intrépide parce que tchou tchouu;../fake-data/blob/hipster.txt;2025-12-16T15:54:57;pourvu que;2025-12-16T14:55:05
+7;d'après timide;ASSET;6924;INFO;ESIGN;cadre dessus demander;2025-12-16T02:26:16;crac rudement;éclater;../fake-data/blob/hipster.txt;2025-12-16T11:38:48;conseil d’administration ouah clientèle;2025-12-16T21:31:42
+8;glisser;SENSOR;16549;WARNING;ESIGN;alors gravir répondre;2025-12-16T10:41:32;au-devant résister;conquérir charger étonner;../fake-data/blob/hipster.txt;2025-12-16T11:53:55;antagoniste discerner sous;2025-12-16T15:43:50
+9;immense cependant;MAINTENANCE_EVENT;26569;ERROR;UI;candide ouille a;2025-12-16T07:17:00;avant que;fidèle couvrir;../fake-data/blob/hipster.txt;2025-12-16T02:26:00;trop;2025-12-16T18:28:18
+10;cadre a;MAINTENANCE_EVENT;22234;WARNING;API;exécuter identifier;2025-12-16T07:43:52;bè quoique;fort à côté de;../fake-data/blob/hipster.txt;2025-12-16T14:07:56;tant;2025-12-16T14:02:09

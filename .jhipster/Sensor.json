@@ -1,0 +1,108 @@
+{
+  "annotations": {
+    "changelogDate": "20251217002704",
+    "enableAudit": true
+  },
+  "applications": ["smartassetcore"],
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "sensorType",
+      "fieldType": "SensorType",
+      "fieldValidateRules": ["required"],
+      "fieldValues": "TEMPERATURE,VIBRATION,PRESSURE,CURRENT,VOLTAGE,OIL_LEVEL,LIQUID_LEVEL,HUMIDITY,BLE_TAG,GNSS_TRACKER"
+    },
+    {
+      "fieldName": "name",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "150"
+    },
+    {
+      "fieldName": "unit",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "30"
+    },
+    {
+      "fieldName": "minThreshold",
+      "fieldType": "BigDecimal"
+    },
+    {
+      "fieldName": "maxThreshold",
+      "fieldType": "BigDecimal"
+    },
+    {
+      "fieldName": "installedAt",
+      "fieldType": "Instant"
+    },
+    {
+      "fieldName": "active",
+      "fieldType": "Boolean",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "externalId",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "120"
+    },
+    {
+      "auditField": true,
+      "autoGenerate": true,
+      "columnType": "varchar(50)",
+      "fieldName": "createdBy",
+      "fieldType": "String",
+      "nullable": false,
+      "readonly": true
+    },
+    {
+      "auditField": true,
+      "autoGenerate": true,
+      "fieldName": "createdDate",
+      "fieldType": "Instant",
+      "nullable": false,
+      "readonly": true
+    },
+    {
+      "auditField": true,
+      "autoGenerate": true,
+      "columnType": "varchar(50)",
+      "fieldName": "lastModifiedBy",
+      "fieldType": "String",
+      "nullable": false,
+      "readonly": true
+    },
+    {
+      "auditField": true,
+      "autoGenerate": true,
+      "fieldName": "lastModifiedDate",
+      "fieldType": "Instant",
+      "nullable": false,
+      "readonly": true
+    }
+  ],
+  "jpaMetamodelFiltering": true,
+  "name": "Sensor",
+  "pagination": "pagination",
+  "relationships": [
+    {
+      "otherEntityField": "measuredAt",
+      "otherEntityName": "sensorMeasurement",
+      "otherEntityRelationshipName": "sensor",
+      "relationshipName": "measurements",
+      "relationshipSide": "left",
+      "relationshipType": "one-to-many"
+    },
+    {
+      "otherEntityField": "assetCode",
+      "otherEntityName": "asset",
+      "otherEntityRelationshipName": "sensors",
+      "relationshipName": "asset",
+      "relationshipSide": "right",
+      "relationshipType": "many-to-one"
+    }
+  ],
+  "searchEngine": "no",
+  "service": "serviceClass"
+}

@@ -1,0 +1,120 @@
+{
+  "annotations": {
+    "changelogDate": "20251217002706",
+    "enableAudit": true
+  },
+  "applications": ["smartassetcore"],
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "maintenanceType",
+      "fieldType": "MaintenanceType",
+      "fieldValidateRules": ["required"],
+      "fieldValues": "PREVENTIVE,CORRECTIVE,REVISION,INSPECTION"
+    },
+    {
+      "fieldName": "status",
+      "fieldType": "MaintenanceStatus",
+      "fieldValidateRules": ["required"],
+      "fieldValues": "REQUESTED,PLANNED,IN_PROGRESS,DONE,CANCELLED"
+    },
+    {
+      "fieldName": "requestedAt",
+      "fieldType": "Instant",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "plannedAt",
+      "fieldType": "Instant"
+    },
+    {
+      "fieldName": "startedAt",
+      "fieldType": "Instant"
+    },
+    {
+      "fieldName": "finishedAt",
+      "fieldType": "Instant"
+    },
+    {
+      "fieldName": "title",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "180"
+    },
+    {
+      "fieldName": "description",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "2000"
+    },
+    {
+      "fieldName": "technician",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "120"
+    },
+    {
+      "fieldName": "downtimeMinutes",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "costAmount",
+      "fieldType": "BigDecimal"
+    },
+    {
+      "fieldName": "notes",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "2000"
+    },
+    {
+      "auditField": true,
+      "autoGenerate": true,
+      "columnType": "varchar(50)",
+      "fieldName": "createdBy",
+      "fieldType": "String",
+      "nullable": false,
+      "readonly": true
+    },
+    {
+      "auditField": true,
+      "autoGenerate": true,
+      "fieldName": "createdDate",
+      "fieldType": "Instant",
+      "nullable": false,
+      "readonly": true
+    },
+    {
+      "auditField": true,
+      "autoGenerate": true,
+      "columnType": "varchar(50)",
+      "fieldName": "lastModifiedBy",
+      "fieldType": "String",
+      "nullable": false,
+      "readonly": true
+    },
+    {
+      "auditField": true,
+      "autoGenerate": true,
+      "fieldName": "lastModifiedDate",
+      "fieldType": "Instant",
+      "nullable": false,
+      "readonly": true
+    }
+  ],
+  "jpaMetamodelFiltering": true,
+  "name": "MaintenanceEvent",
+  "pagination": "pagination",
+  "relationships": [
+    {
+      "otherEntityField": "assetCode",
+      "otherEntityName": "asset",
+      "otherEntityRelationshipName": "maintenanceEvents",
+      "relationshipName": "asset",
+      "relationshipSide": "right",
+      "relationshipType": "many-to-one"
+    }
+  ],
+  "searchEngine": "no",
+  "service": "serviceClass"
+}

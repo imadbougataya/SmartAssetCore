@@ -1,0 +1,104 @@
+{
+  "annotations": {
+    "changelogDate": "20251217002711",
+    "enableAudit": true
+  },
+  "applications": ["smartassetcore"],
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "eventType",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "maxlength"],
+      "fieldValidateRulesMaxlength": "120"
+    },
+    {
+      "fieldName": "entityType",
+      "fieldType": "SystemEntityType",
+      "fieldValidateRules": ["required"],
+      "fieldValues": "ASSET,LOCATION_EVENT,SENSOR,SENSOR_MEASUREMENT,MAINTENANCE_EVENT,MOVEMENT_REQUEST,DOCUMENT,ZONE,GATEWAY,USER,FORESIGHT"
+    },
+    {
+      "fieldName": "entityId",
+      "fieldType": "Long"
+    },
+    {
+      "fieldName": "severity",
+      "fieldType": "SystemEventSeverity",
+      "fieldValidateRules": ["required"],
+      "fieldValues": "INFO,WARNING,ERROR"
+    },
+    {
+      "fieldName": "source",
+      "fieldType": "SystemEventSource",
+      "fieldValidateRules": ["required"],
+      "fieldValues": "UI,API,GATEWAY,ESIGN,SCHEDULER,SYSTEM"
+    },
+    {
+      "fieldName": "message",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "1000"
+    },
+    {
+      "fieldName": "createdAt",
+      "fieldType": "Instant",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "createdBy",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "120"
+    },
+    {
+      "fieldName": "correlationId",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "64"
+    },
+    {
+      "fieldName": "payload",
+      "fieldType": "TextBlob"
+    },
+    {
+      "auditField": true,
+      "autoGenerate": true,
+      "fieldName": "createdDate",
+      "fieldType": "Instant",
+      "nullable": false,
+      "readonly": true
+    },
+    {
+      "auditField": true,
+      "autoGenerate": true,
+      "columnType": "varchar(50)",
+      "fieldName": "lastModifiedBy",
+      "fieldType": "String",
+      "nullable": false,
+      "readonly": true
+    },
+    {
+      "auditField": true,
+      "autoGenerate": true,
+      "fieldName": "lastModifiedDate",
+      "fieldType": "Instant",
+      "nullable": false,
+      "readonly": true
+    }
+  ],
+  "jpaMetamodelFiltering": true,
+  "name": "SystemEvent",
+  "pagination": "pagination",
+  "relationships": [
+    {
+      "otherEntityField": "assetCode",
+      "otherEntityName": "asset",
+      "relationshipName": "asset",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-one"
+    }
+  ],
+  "searchEngine": "no",
+  "service": "serviceClass"
+}

@@ -46,6 +46,28 @@ public class CacheConfiguration {
             createCache(cm, com.ailab.smartasset.domain.User.class.getName());
             createCache(cm, com.ailab.smartasset.domain.Authority.class.getName());
             createCache(cm, com.ailab.smartasset.domain.User.class.getName() + ".authorities");
+            createCache(cm, com.ailab.smartasset.domain.EntityAuditEvent.class.getName());
+            createCache(cm, com.ailab.smartasset.domain.Site.class.getName());
+            createCache(cm, com.ailab.smartasset.domain.ProductionLine.class.getName());
+            createCache(cm, com.ailab.smartasset.domain.Zone.class.getName());
+            createCache(cm, com.ailab.smartasset.domain.Zone.class.getName() + ".locationEvents");
+            createCache(cm, com.ailab.smartasset.domain.Gateway.class.getName());
+            createCache(cm, com.ailab.smartasset.domain.Gateway.class.getName() + ".locationEvents");
+            createCache(cm, com.ailab.smartasset.domain.Asset.class.getName());
+            createCache(cm, com.ailab.smartasset.domain.Asset.class.getName() + ".sensors");
+            createCache(cm, com.ailab.smartasset.domain.Asset.class.getName() + ".maintenanceEvents");
+            createCache(cm, com.ailab.smartasset.domain.Asset.class.getName() + ".movementRequests");
+            createCache(cm, com.ailab.smartasset.domain.Asset.class.getName() + ".locationEvents");
+            createCache(cm, com.ailab.smartasset.domain.Sensor.class.getName());
+            createCache(cm, com.ailab.smartasset.domain.Sensor.class.getName() + ".measurements");
+            createCache(cm, com.ailab.smartasset.domain.SensorMeasurement.class.getName());
+            createCache(cm, com.ailab.smartasset.domain.MaintenanceEvent.class.getName());
+            createCache(cm, com.ailab.smartasset.domain.Document.class.getName());
+            createCache(cm, com.ailab.smartasset.domain.Document.class.getName() + ".links");
+            createCache(cm, com.ailab.smartasset.domain.DocumentLink.class.getName());
+            createCache(cm, com.ailab.smartasset.domain.AssetMovementRequest.class.getName());
+            createCache(cm, com.ailab.smartasset.domain.LocationEvent.class.getName());
+            createCache(cm, com.ailab.smartasset.domain.SystemEvent.class.getName());
             // jhipster-needle-caffeine-add-entry
         };
     }

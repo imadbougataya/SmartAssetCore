@@ -1,0 +1,258 @@
+{
+  "annotations": {
+    "changelogDate": "20251217002703",
+    "enableAudit": true
+  },
+  "applications": ["smartassetcore"],
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "assetType",
+      "fieldType": "AssetType",
+      "fieldValidateRules": ["required"],
+      "fieldValues": "INDUSTRIAL_ASSET,NON_INDUSTRIAL_ASSET"
+    },
+    {
+      "fieldName": "assetCode",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "unique", "maxlength"],
+      "fieldValidateRulesMaxlength": "80"
+    },
+    {
+      "fieldName": "reference",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "120"
+    },
+    {
+      "fieldName": "description",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "500"
+    },
+    {
+      "fieldName": "status",
+      "fieldType": "AssetStatus",
+      "fieldValidateRules": ["required"],
+      "fieldValues": "ACTIVE,INACTIVE,OUT_OF_SERVICE,LOST,SCRAPPED"
+    },
+    {
+      "fieldName": "criticality",
+      "fieldType": "Criticality",
+      "fieldValidateRules": ["required"],
+      "fieldValues": "LOW,MEDIUM,HIGH,CRITICAL"
+    },
+    {
+      "fieldName": "responsibleName",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "120"
+    },
+    {
+      "fieldName": "costCenter",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "80"
+    },
+    {
+      "fieldName": "brand",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "80"
+    },
+    {
+      "fieldName": "model",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "120"
+    },
+    {
+      "fieldName": "serialNumber",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "120"
+    },
+    {
+      "fieldName": "powerKw",
+      "fieldType": "BigDecimal"
+    },
+    {
+      "fieldName": "voltageV",
+      "fieldType": "BigDecimal"
+    },
+    {
+      "fieldName": "currentA",
+      "fieldType": "BigDecimal"
+    },
+    {
+      "fieldName": "cosPhi",
+      "fieldType": "BigDecimal"
+    },
+    {
+      "fieldName": "speedRpm",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "ipRating",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "20"
+    },
+    {
+      "fieldName": "insulationClass",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "30"
+    },
+    {
+      "fieldName": "mountingType",
+      "fieldType": "MountingType",
+      "fieldValues": "B3,B5,V1,B14,B35,UNKNOWN"
+    },
+    {
+      "fieldName": "shaftDiameterMm",
+      "fieldType": "BigDecimal"
+    },
+    {
+      "fieldName": "footDistanceAmm",
+      "fieldType": "BigDecimal"
+    },
+    {
+      "fieldName": "footDistanceBmm",
+      "fieldType": "BigDecimal"
+    },
+    {
+      "fieldName": "frontFlangeMm",
+      "fieldType": "BigDecimal"
+    },
+    {
+      "fieldName": "rearFlangeMm",
+      "fieldType": "BigDecimal"
+    },
+    {
+      "fieldName": "iecAxisHeightMm",
+      "fieldType": "BigDecimal"
+    },
+    {
+      "fieldName": "dimensionsSource",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "120"
+    },
+    {
+      "fieldName": "hasHeating",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "temperatureProbeType",
+      "fieldType": "TemperatureProbeType",
+      "fieldValues": "NONE,PTC,PT100,PT1000"
+    },
+    {
+      "fieldName": "lastCommissioningDate",
+      "fieldType": "LocalDate"
+    },
+    {
+      "fieldName": "lastMaintenanceDate",
+      "fieldType": "LocalDate"
+    },
+    {
+      "fieldName": "maintenanceCount",
+      "fieldType": "Integer"
+    },
+    {
+      "auditField": true,
+      "autoGenerate": true,
+      "columnType": "varchar(50)",
+      "fieldName": "createdBy",
+      "fieldType": "String",
+      "nullable": false,
+      "readonly": true
+    },
+    {
+      "auditField": true,
+      "autoGenerate": true,
+      "fieldName": "createdDate",
+      "fieldType": "Instant",
+      "nullable": false,
+      "readonly": true
+    },
+    {
+      "auditField": true,
+      "autoGenerate": true,
+      "columnType": "varchar(50)",
+      "fieldName": "lastModifiedBy",
+      "fieldType": "String",
+      "nullable": false,
+      "readonly": true
+    },
+    {
+      "auditField": true,
+      "autoGenerate": true,
+      "fieldName": "lastModifiedDate",
+      "fieldType": "Instant",
+      "nullable": false,
+      "readonly": true
+    }
+  ],
+  "jpaMetamodelFiltering": true,
+  "name": "Asset",
+  "pagination": "pagination",
+  "relationships": [
+    {
+      "otherEntityField": "name",
+      "otherEntityName": "sensor",
+      "otherEntityRelationshipName": "asset",
+      "relationshipName": "sensors",
+      "relationshipSide": "left",
+      "relationshipType": "one-to-many"
+    },
+    {
+      "otherEntityField": "requestedAt",
+      "otherEntityName": "maintenanceEvent",
+      "otherEntityRelationshipName": "asset",
+      "relationshipName": "maintenanceEvents",
+      "relationshipSide": "left",
+      "relationshipType": "one-to-many"
+    },
+    {
+      "otherEntityField": "requestedAt",
+      "otherEntityName": "assetMovementRequest",
+      "otherEntityRelationshipName": "asset",
+      "relationshipName": "movementRequests",
+      "relationshipSide": "left",
+      "relationshipType": "one-to-many"
+    },
+    {
+      "otherEntityField": "observedAt",
+      "otherEntityName": "locationEvent",
+      "otherEntityRelationshipName": "asset",
+      "relationshipName": "locationEvents",
+      "relationshipSide": "left",
+      "relationshipType": "one-to-many"
+    },
+    {
+      "otherEntityField": "code",
+      "otherEntityName": "site",
+      "relationshipName": "site",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-one"
+    },
+    {
+      "otherEntityField": "code",
+      "otherEntityName": "productionLine",
+      "relationshipName": "productionLine",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-one"
+    },
+    {
+      "otherEntityField": "code",
+      "otherEntityName": "zone",
+      "relationshipName": "currentZone",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-one"
+    }
+  ],
+  "searchEngine": "no",
+  "service": "serviceClass"
+}

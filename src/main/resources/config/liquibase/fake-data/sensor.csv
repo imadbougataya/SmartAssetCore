@@ -1,0 +1,11 @@
+id;sensor_type;name;unit;min_threshold;max_threshold;installed_at;active;external_id;created_by;created_date;last_modified_by;last_modified_date
+1;HUMIDITY;prou au-dedans de rapporter;lâche;6385.79;7179.85;2025-12-16T20:28:46;false;procurer;en dépit de;2025-12-16T09:52:08;du moment que;2025-12-16T16:19:30
+2;BLE_TAG;novice coac coac;tant étaler;17505.62;21783.47;2025-12-16T04:24:42;false;tant soit;pin-pon tchou tchouu étudier;2025-12-16T01:05:20;auprès de ouf;2025-12-16T20:02:14
+3;PRESSURE;totalement vraiment sans que;appeler chez pff;4207.31;12754.46;2025-12-16T13:36:08;true;intégrer;encore insolite communauté étudiante;2025-12-16T17:40:56;en decà de sympathique loufoque;2025-12-16T13:54:43
+4;LIQUID_LEVEL;vouh ainsi fonctionnaire;tellement;6405.17;24859.86;2025-12-16T03:50:07;false;membre du personnel;bè;2025-12-16T18:15:28;moderne attraper;2025-12-16T13:44:33
+5;LIQUID_LEVEL;concernant pff;afin que blablabla miam;7077.08;31494.42;2025-12-17T00:26:22;true;intrépide;membre à vie;2025-12-16T01:51:49;vouh;2025-12-16T01:50:12
+6;BLE_TAG;a chez à cause de;de façon à approximativement c;17488.79;22005.09;2025-12-16T16:44:23;false;si au prix de;tchou tchouu;2025-12-16T22:08:30;même;2025-12-16T02:06:32
+7;VIBRATION;sincère;décharger ouin mélancolique;991.27;7859.26;2025-12-16T15:04:11;false;collègue;quoique;2025-12-17T00:04:11;pas mal de crainte que;2025-12-16T16:39:08
+8;VIBRATION;ha mairie y;brusque prout;15520.48;21858.22;2025-12-16T11:54:16;true;aligner exploiter lâche;main-d’œuvre smack reposer;2025-12-16T14:25:08;chef à condition que;2025-12-16T15:17:10
+9;OIL_LEVEL;lorsque;euh entre-temps;6817.79;23070.84;2025-12-16T04:44:52;true;tirer de façon à ce que au-delà;tard boum;2025-12-16T09:26:39;miaou émérite concernant;2025-12-16T01:00:47
+10;VIBRATION;dîner soumettre vers;dès que plus quasi;13571.62;30215.3;2025-12-16T17:06:06;true;mater;étant donné que;2025-12-16T14:51:28;consoler mince aïe;2025-12-16T06:02:56

@@ -12,7 +12,32 @@
     <property name="timeType" value="time(6)" dbms="mysql"/>
 
     <include file="config/liquibase/changelog/00000000000000_initial_schema.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20251217002659_added_entity_Site.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20251217002700_added_entity_ProductionLine.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20251217002701_added_entity_Zone.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20251217002702_added_entity_Gateway.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20251217002703_added_entity_Asset.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20251217002704_added_entity_Sensor.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20251217002705_added_entity_SensorMeasurement.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20251217002706_added_entity_MaintenanceEvent.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20251217002707_added_entity_Document.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20251217002708_added_entity_DocumentLink.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20251217002709_added_entity_AssetMovementRequest.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20251217002710_added_entity_LocationEvent.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20251217002711_added_entity_SystemEvent.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
+    <include file="config/liquibase/changelog/20251217002700_added_entity_constraints_ProductionLine.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20251217002701_added_entity_constraints_Zone.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20251217002702_added_entity_constraints_Gateway.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20251217002703_added_entity_constraints_Asset.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20251217002704_added_entity_constraints_Sensor.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20251217002705_added_entity_constraints_SensorMeasurement.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20251217002706_added_entity_constraints_MaintenanceEvent.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20251217002708_added_entity_constraints_DocumentLink.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20251217002709_added_entity_constraints_AssetMovementRequest.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20251217002710_added_entity_constraints_LocationEvent.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20251217002711_added_entity_constraints_SystemEvent.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
+    <include file="config/liquibase/changelog/20251217004256_added_entity_EntityAuditEvent.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-incremental-changelog - JHipster will add incremental liquibase changelogs here -->
 </databaseChangeLog>

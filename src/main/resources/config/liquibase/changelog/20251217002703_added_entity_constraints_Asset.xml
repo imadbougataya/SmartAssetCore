@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+    <!--
+        Added the constraints for entity Asset.
+    -->
+    <changeSet id="20251217002703-2" author="jhipster">
+
+        <addForeignKeyConstraint baseColumnNames="site_id"
+                                 baseTableName="asset"
+                                 constraintName="fk_asset__site_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="site"
+                                 />
+
+        <addForeignKeyConstraint baseColumnNames="production_line_id"
+                                 baseTableName="asset"
+                                 constraintName="fk_asset__production_line_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="production_line"
+                                 />
+
+        <addForeignKeyConstraint baseColumnNames="current_zone_id"
+                                 baseTableName="asset"
+                                 constraintName="fk_asset__current_zone_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="zone"
+                                 />
+    </changeSet>
+</databaseChangeLog>

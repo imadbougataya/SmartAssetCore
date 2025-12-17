@@ -1,5 +1,6 @@
 package com.ailab.smartasset.domain;
 
+import com.ailab.smartasset.audit.EntityAuditEventListener;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
@@ -17,7 +18,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
  * last modified by attributes.
  */
 @MappedSuperclass
-@EntityListeners(AuditingEntityListener.class)
+@EntityListeners({ AuditingEntityListener.class, EntityAuditEventListener.class })
 @JsonIgnoreProperties(value = { "createdBy", "createdDate", "lastModifiedBy", "lastModifiedDate" }, allowGetters = true)
 public abstract class AbstractAuditingEntity<T> implements Serializable {
 

@@ -1,0 +1,120 @@
+{
+  "annotations": {
+    "changelogDate": "20251217002710",
+    "enableAudit": true
+  },
+  "applications": ["smartassetcore"],
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "source",
+      "fieldType": "LocationSource",
+      "fieldValidateRules": ["required"],
+      "fieldValues": "BLE,GNSS,MANUAL"
+    },
+    {
+      "fieldName": "observedAt",
+      "fieldType": "Instant",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "zoneConfidence",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "rssi",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "txPower",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "latitude",
+      "fieldType": "Double"
+    },
+    {
+      "fieldName": "longitude",
+      "fieldType": "Double"
+    },
+    {
+      "fieldName": "accuracyMeters",
+      "fieldType": "Double"
+    },
+    {
+      "fieldName": "speedKmh",
+      "fieldType": "Double"
+    },
+    {
+      "fieldName": "rawPayload",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "4000"
+    },
+    {
+      "auditField": true,
+      "autoGenerate": true,
+      "columnType": "varchar(50)",
+      "fieldName": "createdBy",
+      "fieldType": "String",
+      "nullable": false,
+      "readonly": true
+    },
+    {
+      "auditField": true,
+      "autoGenerate": true,
+      "fieldName": "createdDate",
+      "fieldType": "Instant",
+      "nullable": false,
+      "readonly": true
+    },
+    {
+      "auditField": true,
+      "autoGenerate": true,
+      "columnType": "varchar(50)",
+      "fieldName": "lastModifiedBy",
+      "fieldType": "String",
+      "nullable": false,
+      "readonly": true
+    },
+    {
+      "auditField": true,
+      "autoGenerate": true,
+      "fieldName": "lastModifiedDate",
+      "fieldType": "Instant",
+      "nullable": false,
+      "readonly": true
+    }
+  ],
+  "jpaMetamodelFiltering": true,
+  "name": "LocationEvent",
+  "pagination": "pagination",
+  "relationships": [
+    {
+      "otherEntityField": "assetCode",
+      "otherEntityName": "asset",
+      "otherEntityRelationshipName": "locationEvents",
+      "relationshipName": "asset",
+      "relationshipSide": "right",
+      "relationshipType": "many-to-one"
+    },
+    {
+      "otherEntityField": "code",
+      "otherEntityName": "zone",
+      "otherEntityRelationshipName": "locationEvents",
+      "relationshipName": "zone",
+      "relationshipSide": "right",
+      "relationshipType": "many-to-one"
+    },
+    {
+      "otherEntityField": "code",
+      "otherEntityName": "gateway",
+      "otherEntityRelationshipName": "locationEvents",
+      "relationshipName": "gateway",
+      "relationshipSide": "right",
+      "relationshipType": "many-to-one"
+    }
+  ],
+  "searchEngine": "no",
+  "service": "serviceClass"
+}
