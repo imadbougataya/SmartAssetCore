@@ -1,5 +1,6 @@
 package com.ailab.smartasset.service.criteria;
 
+import com.ailab.smartasset.domain.enumeration.EsignStatus;
 import com.ailab.smartasset.domain.enumeration.MovementRequestStatus;
 import java.io.Serializable;
 import java.util.Objects;
@@ -38,6 +39,23 @@ public class AssetMovementRequestCriteria implements Serializable, Criteria {
         }
     }
 
+    /**
+     * Class for filtering EsignStatus
+     */
+    public static class EsignStatusFilter extends Filter<EsignStatus> {
+
+        public EsignStatusFilter() {}
+
+        public EsignStatusFilter(EsignStatusFilter filter) {
+            super(filter);
+        }
+
+        @Override
+        public EsignStatusFilter copy() {
+            return new EsignStatusFilter(this);
+        }
+    }
+
     private static final long serialVersionUID = 1L;
 
     private LongFilter id;
@@ -54,7 +72,7 @@ public class AssetMovementRequestCriteria implements Serializable, Criteria {
 
     private StringFilter esignWorkflowId;
 
-    private StringFilter esignStatus;
+    private EsignStatusFilter esignStatus;
 
     private InstantFilter esignLastUpdate;
 
@@ -62,11 +80,11 @@ public class AssetMovementRequestCriteria implements Serializable, Criteria {
 
     private InstantFilter executedAt;
 
-    private StringFilter requestedBy;
-
-    private StringFilter approvedBy;
-
     private LongFilter assetId;
+
+    private LongFilter requestedById;
+
+    private LongFilter approvedById;
 
     private Boolean distinct;
 
@@ -80,13 +98,13 @@ public class AssetMovementRequestCriteria implements Serializable, Criteria {
         this.fromLocationLabel = other.optionalFromLocationLabel().map(StringFilter::copy).orElse(null);
         this.toLocationLabel = other.optionalToLocationLabel().map(StringFilter::copy).orElse(null);
         this.esignWorkflowId = other.optionalEsignWorkflowId().map(StringFilter::copy).orElse(null);
-        this.esignStatus = other.optionalEsignStatus().map(StringFilter::copy).orElse(null);
+        this.esignStatus = other.optionalEsignStatus().map(EsignStatusFilter::copy).orElse(null);
         this.esignLastUpdate = other.optionalEsignLastUpdate().map(InstantFilter::copy).orElse(null);
         this.signedAt = other.optionalSignedAt().map(InstantFilter::copy).orElse(null);
         this.executedAt = other.optionalExecutedAt().map(InstantFilter::copy).orElse(null);
-        this.requestedBy = other.optionalRequestedBy().map(StringFilter::copy).orElse(null);
-        this.approvedBy = other.optionalApprovedBy().map(StringFilter::copy).orElse(null);
         this.assetId = other.optionalAssetId().map(LongFilter::copy).orElse(null);
+        this.requestedById = other.optionalRequestedById().map(LongFilter::copy).orElse(null);
+        this.approvedById = other.optionalApprovedById().map(LongFilter::copy).orElse(null);
         this.distinct = other.distinct;
     }
 
@@ -228,22 +246,22 @@ public class AssetMovementRequestCriteria implements Serializable, Criteria {
         this.esignWorkflowId = esignWorkflowId;
     }
 
-    public StringFilter getEsignStatus() {
+    public EsignStatusFilter getEsignStatus() {
         return esignStatus;
     }
 
-    public Optional<StringFilter> optionalEsignStatus() {
+    public Optional<EsignStatusFilter> optionalEsignStatus() {
         return Optional.ofNullable(esignStatus);
     }
 
-    public StringFilter esignStatus() {
+    public EsignStatusFilter esignStatus() {
         if (esignStatus == null) {
-            setEsignStatus(new StringFilter());
+            setEsignStatus(new EsignStatusFilter());
         }
         return esignStatus;
     }
 
-    public void setEsignStatus(StringFilter esignStatus) {
+    public void setEsignStatus(EsignStatusFilter esignStatus) {
         this.esignStatus = esignStatus;
     }
 
@@ -304,44 +322,6 @@ public class AssetMovementRequestCriteria implements Serializable, Criteria {
         this.executedAt = executedAt;
     }
 
-    public StringFilter getRequestedBy() {
-        return requestedBy;
-    }
-
-    public Optional<StringFilter> optionalRequestedBy() {
-        return Optional.ofNullable(requestedBy);
-    }
-
-    public StringFilter requestedBy() {
-        if (requestedBy == null) {
-            setRequestedBy(new StringFilter());
-        }
-        return requestedBy;
-    }
-
-    public void setRequestedBy(StringFilter requestedBy) {
-        this.requestedBy = requestedBy;
-    }
-
-    public StringFilter getApprovedBy() {
-        return approvedBy;
-    }
-
-    public Optional<StringFilter> optionalApprovedBy() {
-        return Optional.ofNullable(approvedBy);
-    }
-
-    public StringFilter approvedBy() {
-        if (approvedBy == null) {
-            setApprovedBy(new StringFilter());
-        }
-        return approvedBy;
-    }
-
-    public void setApprovedBy(StringFilter approvedBy) {
-        this.approvedBy = approvedBy;
-    }
-
     public LongFilter getAssetId() {
         return assetId;
     }
@@ -359,6 +339,44 @@ public class AssetMovementRequestCriteria implements Serializable, Criteria {
 
     public void setAssetId(LongFilter assetId) {
         this.assetId = assetId;
+    }
+
+    public LongFilter getRequestedById() {
+        return requestedById;
+    }
+
+    public Optional<LongFilter> optionalRequestedById() {
+        return Optional.ofNullable(requestedById);
+    }
+
+    public LongFilter requestedById() {
+        if (requestedById == null) {
+            setRequestedById(new LongFilter());
+        }
+        return requestedById;
+    }
+
+    public void setRequestedById(LongFilter requestedById) {
+        this.requestedById = requestedById;
+    }
+
+    public LongFilter getApprovedById() {
+        return approvedById;
+    }
+
+    public Optional<LongFilter> optionalApprovedById() {
+        return Optional.ofNullable(approvedById);
+    }
+
+    public LongFilter approvedById() {
+        if (approvedById == null) {
+            setApprovedById(new LongFilter());
+        }
+        return approvedById;
+    }
+
+    public void setApprovedById(LongFilter approvedById) {
+        this.approvedById = approvedById;
     }
 
     public Boolean getDistinct() {
@@ -401,9 +419,9 @@ public class AssetMovementRequestCriteria implements Serializable, Criteria {
             Objects.equals(esignLastUpdate, that.esignLastUpdate) &&
             Objects.equals(signedAt, that.signedAt) &&
             Objects.equals(executedAt, that.executedAt) &&
-            Objects.equals(requestedBy, that.requestedBy) &&
-            Objects.equals(approvedBy, that.approvedBy) &&
             Objects.equals(assetId, that.assetId) &&
+            Objects.equals(requestedById, that.requestedById) &&
+            Objects.equals(approvedById, that.approvedById) &&
             Objects.equals(distinct, that.distinct)
         );
     }
@@ -422,9 +440,9 @@ public class AssetMovementRequestCriteria implements Serializable, Criteria {
             esignLastUpdate,
             signedAt,
             executedAt,
-            requestedBy,
-            approvedBy,
             assetId,
+            requestedById,
+            approvedById,
             distinct
         );
     }
@@ -444,9 +462,9 @@ public class AssetMovementRequestCriteria implements Serializable, Criteria {
             optionalEsignLastUpdate().map(f -> "esignLastUpdate=" + f + ", ").orElse("") +
             optionalSignedAt().map(f -> "signedAt=" + f + ", ").orElse("") +
             optionalExecutedAt().map(f -> "executedAt=" + f + ", ").orElse("") +
-            optionalRequestedBy().map(f -> "requestedBy=" + f + ", ").orElse("") +
-            optionalApprovedBy().map(f -> "approvedBy=" + f + ", ").orElse("") +
             optionalAssetId().map(f -> "assetId=" + f + ", ").orElse("") +
+            optionalRequestedById().map(f -> "requestedById=" + f + ", ").orElse("") +
+            optionalApprovedById().map(f -> "approvedById=" + f + ", ").orElse("") +
             optionalDistinct().map(f -> "distinct=" + f + ", ").orElse("") +
         "}";
     }

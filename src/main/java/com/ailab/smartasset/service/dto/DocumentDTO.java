@@ -36,9 +36,6 @@ public class DocumentDTO implements Serializable {
     @Size(max = 120)
     private String uploadedBy;
 
-    @NotNull
-    private AssetDTO asset;
-
     public Long getId() {
         return id;
     }
@@ -103,14 +100,6 @@ public class DocumentDTO implements Serializable {
         this.uploadedBy = uploadedBy;
     }
 
-    public AssetDTO getAsset() {
-        return asset;
-    }
-
-    public void setAsset(AssetDTO asset) {
-        this.asset = asset;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -144,7 +133,6 @@ public class DocumentDTO implements Serializable {
             ", checksumSha256='" + getChecksumSha256() + "'" +
             ", uploadedAt='" + getUploadedAt() + "'" +
             ", uploadedBy='" + getUploadedBy() + "'" +
-            ", asset=" + getAsset() +
             "}";
     }
 }

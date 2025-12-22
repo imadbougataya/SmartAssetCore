@@ -51,7 +51,7 @@
                 <constraints nullable="true" />
             </column>
             <column name="asset_id" type="bigint">
-                <constraints nullable="true" />
+                <constraints nullable="false" />
             </column>
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here -->
         </createTable>
@@ -90,6 +90,7 @@
             <column name="downtime_minutes" type="numeric"/>
             <column name="cost_amount" type="numeric"/>
             <column name="notes" type="string"/>
+            <column name="asset_id" type="numeric"/>
             <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here -->
         </loadData>
     </changeSet>

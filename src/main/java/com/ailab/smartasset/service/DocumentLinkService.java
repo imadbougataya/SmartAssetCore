@@ -7,8 +7,6 @@ import com.ailab.smartasset.service.mapper.DocumentLinkMapper;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -77,15 +75,6 @@ public class DocumentLinkService {
     }
 
     /**
-     * Get all the documentLinks with eager load of many-to-many relationships.
-     *
-     * @return the list of entities.
-     */
-    public Page<DocumentLinkDTO> findAllWithEagerRelationships(Pageable pageable) {
-        return documentLinkRepository.findAllWithEagerRelationships(pageable).map(documentLinkMapper::toDto);
-    }
-
-    /**
      * Get one documentLink by id.
      *
      * @param id the id of the entity.
@@ -94,7 +83,7 @@ public class DocumentLinkService {
     @Transactional(readOnly = true)
     public Optional<DocumentLinkDTO> findOne(Long id) {
         LOG.debug("Request to get DocumentLink : {}", id);
-        return documentLinkRepository.findOneWithEagerRelationships(id).map(documentLinkMapper::toDto);
+        return documentLinkRepository.findById(id).map(documentLinkMapper::toDto);
     }
 
     /**

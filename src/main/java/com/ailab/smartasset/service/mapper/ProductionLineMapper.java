@@ -11,12 +11,11 @@ import org.mapstruct.*;
  */
 @Mapper(componentModel = "spring")
 public interface ProductionLineMapper extends EntityMapper<ProductionLineDTO, ProductionLine> {
-    @Mapping(target = "zone", source = "zone", qualifiedByName = "zoneCode")
+    @Mapping(target = "zone", source = "zone", qualifiedByName = "zoneId")
     ProductionLineDTO toDto(ProductionLine s);
 
-    @Named("zoneCode")
+    @Named("zoneId")
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
-    @Mapping(target = "code", source = "code")
-    ZoneDTO toDtoZoneCode(Zone zone);
+    ZoneDTO toDtoZoneId(Zone zone);
 }

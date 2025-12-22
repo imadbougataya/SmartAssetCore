@@ -26,6 +26,7 @@ public class SensorMeasurementDTO implements Serializable {
     @Size(max = 80)
     private String source;
 
+    @NotNull
     private SensorDTO sensor;
 
     public Long getId() {

@@ -7,8 +7,6 @@ import com.ailab.smartasset.service.mapper.GatewayMapper;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -77,15 +75,6 @@ public class GatewayService {
     }
 
     /**
-     * Get all the gateways with eager load of many-to-many relationships.
-     *
-     * @return the list of entities.
-     */
-    public Page<GatewayDTO> findAllWithEagerRelationships(Pageable pageable) {
-        return gatewayRepository.findAllWithEagerRelationships(pageable).map(gatewayMapper::toDto);
-    }
-
-    /**
      * Get one gateway by id.
      *
      * @param id the id of the entity.
@@ -94,7 +83,7 @@ public class GatewayService {
     @Transactional(readOnly = true)
     public Optional<GatewayDTO> findOne(Long id) {
         LOG.debug("Request to get Gateway : {}", id);
-        return gatewayRepository.findOneWithEagerRelationships(id).map(gatewayMapper::toDto);
+        return gatewayRepository.findById(id).map(gatewayMapper::toDto);
     }
 
     /**

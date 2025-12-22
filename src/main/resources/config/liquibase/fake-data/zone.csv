@@ -1,4 +1,4 @@
-id;code;name;description;center_lat;center_lon;radius_meters
-1;ENG_306;Engrais 306;Unité de production engrais – Ligne 306;33.1212;-8.6075;400
-2;ENG_307;Engrais 307;Unité de production engrais – Ligne 307;33.1195;-8.6058;400
-3;BROYAGE;Broyage;Zone de broyage matières premières;33.1168;-8.6123;500
+id;code;name;description;center_lat;center_lon;radius_meters;site_id
+1;ENG_306;Engrais 306;Unité de production engrais – Ligne 306;33.1212;-8.6075;400;1
+2;ENG_307;Engrais 307;Unité de production engrais – Ligne 307;33.1195;-8.6058;400;1
+3;BROYAGE;Broyage;Zone de broyage matières premières;33.1168;-8.6123;500;1

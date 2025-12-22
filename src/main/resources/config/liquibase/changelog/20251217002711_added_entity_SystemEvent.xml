@@ -55,10 +55,10 @@
     -->
     <changeSet id="20251217002711-1-data" author="jhipster" context="faker">
         <loadData
-            file="config/liquibase/fake-data/system_event.csv"
-            separator=";"
-            tableName="system_event"
-            usePreparedStatements="true">
+                  file="config/liquibase/fake-data/system_event.csv"
+                  separator=";"
+                  tableName="system_event"
+                  usePreparedStatements="true">
             <column name="id" type="numeric"/>
             <column name="event_type" type="string"/>
             <column name="severity" type="string"/>

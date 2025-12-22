@@ -64,7 +64,6 @@
   "pagination": "pagination",
   "relationships": [
     {
-      "otherEntityField": "assetCode",
       "otherEntityName": "asset",
       "relationshipName": "asset",
       "relationshipSide": "left",
@@ -72,21 +71,18 @@
       "relationshipValidateRules": "required"
     },
     {
-      "otherEntityField": "externalId",
       "otherEntityName": "sensor",
       "relationshipName": "sensor",
       "relationshipSide": "left",
       "relationshipType": "many-to-one"
     },
     {
-      "otherEntityField": "code",
       "otherEntityName": "site",
       "relationshipName": "matchedSite",
       "relationshipSide": "left",
       "relationshipType": "many-to-one"
     },
     {
-      "otherEntityField": "code",
       "otherEntityName": "zone",
       "relationshipName": "matchedZone",
       "relationshipSide": "left",

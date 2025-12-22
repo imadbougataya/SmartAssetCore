@@ -83,13 +83,17 @@ public class AssetMovementRequestQueryService extends QueryService<AssetMovement
                 buildStringSpecification(criteria.getFromLocationLabel(), AssetMovementRequest_.fromLocationLabel),
                 buildStringSpecification(criteria.getToLocationLabel(), AssetMovementRequest_.toLocationLabel),
                 buildStringSpecification(criteria.getEsignWorkflowId(), AssetMovementRequest_.esignWorkflowId),
-                buildStringSpecification(criteria.getEsignStatus(), AssetMovementRequest_.esignStatus),
+                buildSpecification(criteria.getEsignStatus(), AssetMovementRequest_.esignStatus),
                 buildRangeSpecification(criteria.getEsignLastUpdate(), AssetMovementRequest_.esignLastUpdate),
                 buildRangeSpecification(criteria.getSignedAt(), AssetMovementRequest_.signedAt),
                 buildRangeSpecification(criteria.getExecutedAt(), AssetMovementRequest_.executedAt),
-                buildStringSpecification(criteria.getRequestedBy(), AssetMovementRequest_.requestedBy),
-                buildStringSpecification(criteria.getApprovedBy(), AssetMovementRequest_.approvedBy),
-                buildSpecification(criteria.getAssetId(), root -> root.join(AssetMovementRequest_.asset, JoinType.LEFT).get(Asset_.id))
+                buildSpecification(criteria.getAssetId(), root -> root.join(AssetMovementRequest_.asset, JoinType.LEFT).get(Asset_.id)),
+                buildSpecification(criteria.getRequestedById(), root ->
+                    root.join(AssetMovementRequest_.requestedBy, JoinType.LEFT).get(User_.id)
+                ),
+                buildSpecification(criteria.getApprovedById(), root ->
+                    root.join(AssetMovementRequest_.approvedBy, JoinType.LEFT).get(User_.id)
+                )
             );
         }
         return specification;

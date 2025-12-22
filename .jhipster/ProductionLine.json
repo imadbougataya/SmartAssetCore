@@ -29,11 +29,11 @@
   "pagination": "pagination",
   "relationships": [
     {
-      "otherEntityField": "code",
       "otherEntityName": "zone",
       "relationshipName": "zone",
       "relationshipSide": "left",
-      "relationshipType": "many-to-one"
+      "relationshipType": "many-to-one",
+      "relationshipValidateRules": "required"
     }
   ],
   "searchEngine": "no",

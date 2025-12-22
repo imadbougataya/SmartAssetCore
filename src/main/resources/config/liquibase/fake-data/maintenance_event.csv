@@ -1,11 +1,11 @@
-id;maintenance_type;status;requested_at;planned_at;started_at;finished_at;title;description;technician;downtime_minutes;cost_amount;notes
-1;INSPECTION;PLANNED;2025-12-16T09:15:00;2025-12-17T08:00:00;;;Inspection périodique moteur;Inspection visuelle et contrôle électrique d’un moteur de ligne Engrais 306;Y. El Amrani;0;0.00;Inspection programmée
-2;INSPECTION;PLANNED;2025-12-16T14:05:00;2025-12-17T13:30:00;;;Inspection capteur vibration;Contrôle du capteur de vibration sur équipement critique;A. Benjelloun;0;0.00;Préventif
-3;PREVENTIVE;IN_PROGRESS;2025-12-16T11:45:00;2025-12-16T14:00:00;2025-12-16T14:10:00;;Maintenance préventive moteur;Graissage, resserrage et contrôle thermique moteur ABB;M. Chafik;45;1250.00;Intervention en cours
-4;CORRECTIVE;DONE;2025-12-16T06:30:00;2025-12-16T07:00:00;2025-12-16T07:05:00;2025-12-16T08:20:00;Remplacement roulement moteur;Remplacement d’un roulement défectueux suite vibration excessive;H. Berrada;75;4800.00;Panne corrigée
-5;REVISION;DONE;2025-12-16T03:40:00;2025-12-16T04:00:00;2025-12-16T04:05:00;2025-12-16T07:30:00;Révision complète moteur;Démontage, nettoyage et contrôle général du moteur;S. El Idrissi;205;9200.00;Révision annuelle
-6;CORRECTIVE;REQUESTED;2025-12-17T00:20:00;;;;Défaut capteur température;Alerte température élevée détectée par le système;—;0;0.00;En attente de planification
-7;REVISION;IN_PROGRESS;2025-12-16T20:50:00;2025-12-16T21:00:00;2025-12-16T21:10:00;;Révision réducteur;Contrôle engrenages et remplacement huile réducteur;R. Ait Lahcen;120;6500.00;Zone Broyage
-8;REVISION;CANCELLED;2025-12-16T22:00:00;2025-12-17T09:00:00;;;Révision planifiée annulée;Intervention annulée suite indisponibilité équipement;—;0;0.00;À reprogrammer
-9;CORRECTIVE;PLANNED;2025-12-16T23:00:00;2025-12-17T01:00:00;;;Dysfonctionnement moteur convoyeur;Baisse de performance détectée sur convoyeur Engrais 307;K. Amine;60;3500.00;Intervention de nuit
-10;REVISION;DONE;2025-12-16T07:45:00;2025-12-16T08:00:00;2025-12-16T08:05:00;2025-12-16T09:30:00;Révision moteur auxiliaire;Maintenance d’un moteur auxiliaire hors production;N. Ouali;85;2100.00;RAS
+id;maintenance_type;status;requested_at;planned_at;started_at;finished_at;title;description;technician;downtime_minutes;cost_amount;notes;asset_id
+1;INSPECTION;PLANNED;2025-12-16T09:15:00;2025-12-17T08:00:00;;;Inspection périodique moteur;Inspection visuelle et contrôle électrique d’un moteur de ligne Engrais 306;Y. El Amrani;0;0.00;Inspection programmée;1
+2;INSPECTION;PLANNED;2025-12-16T14:05:00;2025-12-17T13:30:00;;;Inspection capteur vibration;Contrôle du capteur de vibration sur équipement critique;A. Benjelloun;0;0.00;Préventif;2
+3;PREVENTIVE;IN_PROGRESS;2025-12-16T11:45:00;2025-12-16T14:00:00;2025-12-16T14:10:00;;Maintenance préventive moteur;Graissage, resserrage et contrôle thermique moteur ABB;M. Chafik;45;1250.00;Intervention en cours;3
+4;CORRECTIVE;DONE;2025-12-16T06:30:00;2025-12-16T07:00:00;2025-12-16T07:05:00;2025-12-16T08:20:00;Remplacement roulement moteur;Remplacement d’un roulement défectueux suite vibration excessive;H. Berrada;75;4800.00;Panne corrigée;4
+5;REVISION;DONE;2025-12-16T03:40:00;2025-12-16T04:00:00;2025-12-16T04:05:00;2025-12-16T07:30:00;Révision complète moteur;Démontage, nettoyage et contrôle général du moteur;S. El Idrissi;205;9200.00;Révision annuelle;5
+6;CORRECTIVE;REQUESTED;2025-12-17T00:20:00;;;;Défaut capteur température;Alerte température élevée détectée par le système;—;0;0.00;En attente de planification;6
+7;REVISION;IN_PROGRESS;2025-12-16T20:50:00;2025-12-16T21:00:00;2025-12-16T21:10:00;;Révision réducteur;Contrôle engrenages et remplacement huile réducteur;R. Ait Lahcen;120;6500.00;Zone Broyage;7
+8;REVISION;CANCELLED;2025-12-16T22:00:00;2025-12-17T09:00:00;;;Révision planifiée annulée;Intervention annulée suite indisponibilité équipement;—;0;0.00;À reprogrammer;8
+9;CORRECTIVE;PLANNED;2025-12-16T23:00:00;2025-12-17T01:00:00;;;Dysfonctionnement moteur convoyeur;Baisse de performance détectée sur convoyeur Engrais 307;K. Amine;60;3500.00;Intervention de nuit;9
+10;REVISION;DONE;2025-12-16T07:45:00;2025-12-16T08:00:00;2025-12-16T08:05:00;2025-12-16T09:30:00;Révision moteur auxiliaire;Maintenance d’un moteur auxiliaire hors production;N. Ouali;85;2100.00;RAS;10

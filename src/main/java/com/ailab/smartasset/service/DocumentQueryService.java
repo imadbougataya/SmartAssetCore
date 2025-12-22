@@ -6,7 +6,6 @@ import com.ailab.smartasset.repository.DocumentRepository;
 import com.ailab.smartasset.service.criteria.DocumentCriteria;
 import com.ailab.smartasset.service.dto.DocumentDTO;
 import com.ailab.smartasset.service.mapper.DocumentMapper;
-import jakarta.persistence.criteria.JoinType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -80,8 +79,7 @@ public class DocumentQueryService extends QueryService<Document> {
                 buildStringSpecification(criteria.getStorageRef(), Document_.storageRef),
                 buildStringSpecification(criteria.getChecksumSha256(), Document_.checksumSha256),
                 buildRangeSpecification(criteria.getUploadedAt(), Document_.uploadedAt),
-                buildStringSpecification(criteria.getUploadedBy(), Document_.uploadedBy),
-                buildSpecification(criteria.getAssetId(), root -> root.join(Document_.asset, JoinType.LEFT).get(Asset_.id))
+                buildStringSpecification(criteria.getUploadedBy(), Document_.uploadedBy)
             );
         }
         return specification;

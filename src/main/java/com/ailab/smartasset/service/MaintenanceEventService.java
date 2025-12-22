@@ -7,8 +7,6 @@ import com.ailab.smartasset.service.mapper.MaintenanceEventMapper;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -77,15 +75,6 @@ public class MaintenanceEventService {
     }
 
     /**
-     * Get all the maintenanceEvents with eager load of many-to-many relationships.
-     *
-     * @return the list of entities.
-     */
-    public Page<MaintenanceEventDTO> findAllWithEagerRelationships(Pageable pageable) {
-        return maintenanceEventRepository.findAllWithEagerRelationships(pageable).map(maintenanceEventMapper::toDto);
-    }
-
-    /**
      * Get one maintenanceEvent by id.
      *
      * @param id the id of the entity.
@@ -94,7 +83,7 @@ public class MaintenanceEventService {
     @Transactional(readOnly = true)
     public Optional<MaintenanceEventDTO> findOne(Long id) {
         LOG.debug("Request to get MaintenanceEvent : {}", id);
-        return maintenanceEventRepository.findOneWithEagerRelationships(id).map(maintenanceEventMapper::toDto);
+        return maintenanceEventRepository.findById(id).map(maintenanceEventMapper::toDto);
     }
 
     /**

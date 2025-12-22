@@ -63,8 +63,6 @@ public class DocumentAsserts {
      * @param actual the actual entity
      */
     public static void assertDocumentUpdatableRelationshipsEquals(Document expected, Document actual) {
-        assertThat(actual)
-            .as("Verify Document relationships")
-            .satisfies(a -> assertThat(a.getAsset()).as("check asset").isEqualTo(expected.getAsset()));
+        // empty method
     }
 }

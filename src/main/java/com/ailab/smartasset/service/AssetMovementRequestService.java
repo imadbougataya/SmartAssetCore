@@ -7,8 +7,6 @@ import com.ailab.smartasset.service.mapper.AssetMovementRequestMapper;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -80,15 +78,6 @@ public class AssetMovementRequestService {
     }
 
     /**
-     * Get all the assetMovementRequests with eager load of many-to-many relationships.
-     *
-     * @return the list of entities.
-     */
-    public Page<AssetMovementRequestDTO> findAllWithEagerRelationships(Pageable pageable) {
-        return assetMovementRequestRepository.findAllWithEagerRelationships(pageable).map(assetMovementRequestMapper::toDto);
-    }
-
-    /**
      * Get one assetMovementRequest by id.
      *
      * @param id the id of the entity.
@@ -97,7 +86,7 @@ public class AssetMovementRequestService {
     @Transactional(readOnly = true)
     public Optional<AssetMovementRequestDTO> findOne(Long id) {
         LOG.debug("Request to get AssetMovementRequest : {}", id);
-        return assetMovementRequestRepository.findOneWithEagerRelationships(id).map(assetMovementRequestMapper::toDto);
+        return assetMovementRequestRepository.findById(id).map(assetMovementRequestMapper::toDto);
     }
 
     /**

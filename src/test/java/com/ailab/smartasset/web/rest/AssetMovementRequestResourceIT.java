@@ -4,35 +4,30 @@ import static com.ailab.smartasset.domain.AssetMovementRequestAsserts.*;
 import static com.ailab.smartasset.web.rest.TestUtil.createUpdateProxyForBean;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
-import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.ailab.smartasset.IntegrationTest;
 import com.ailab.smartasset.domain.Asset;
 import com.ailab.smartasset.domain.AssetMovementRequest;
+import com.ailab.smartasset.domain.User;
+import com.ailab.smartasset.domain.enumeration.EsignStatus;
 import com.ailab.smartasset.domain.enumeration.MovementRequestStatus;
 import com.ailab.smartasset.repository.AssetMovementRequestRepository;
-import com.ailab.smartasset.service.AssetMovementRequestService;
+import com.ailab.smartasset.repository.UserRepository;
 import com.ailab.smartasset.service.dto.AssetMovementRequestDTO;
 import com.ailab.smartasset.service.mapper.AssetMovementRequestMapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityManager;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -42,7 +37,6 @@ import org.springframework.transaction.annotation.Transactional;
  * Integration tests for the {@link AssetMovementRequestResource} REST controller.
  */
 @IntegrationTest
-@ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
 @WithMockUser
 class AssetMovementRequestResourceIT {
@@ -65,8 +59,8 @@ class AssetMovementRequestResourceIT {
     private static final String DEFAULT_ESIGN_WORKFLOW_ID = "AAAAAAAAAA";
     private static final String UPDATED_ESIGN_WORKFLOW_ID = "BBBBBBBBBB";
 
-    private static final String DEFAULT_ESIGN_STATUS = "AAAAAAAAAA";
-    private static final String UPDATED_ESIGN_STATUS = "BBBBBBBBBB";
+    private static final EsignStatus DEFAULT_ESIGN_STATUS = EsignStatus.NOT_STARTED;
+    private static final EsignStatus UPDATED_ESIGN_STATUS = EsignStatus.SENT;
 
     private static final Instant DEFAULT_ESIGN_LAST_UPDATE = Instant.ofEpochMilli(0L);
     private static final Instant UPDATED_ESIGN_LAST_UPDATE = Instant.now().truncatedTo(ChronoUnit.MILLIS);
@@ -76,12 +70,6 @@ class AssetMovementRequestResourceIT {
 
     private static final Instant DEFAULT_EXECUTED_AT = Instant.ofEpochMilli(0L);
     private static final Instant UPDATED_EXECUTED_AT = Instant.now().truncatedTo(ChronoUnit.MILLIS);
-
-    private static final String DEFAULT_REQUESTED_BY = "AAAAAAAAAA";
-    private static final String UPDATED_REQUESTED_BY = "BBBBBBBBBB";
-
-    private static final String DEFAULT_APPROVED_BY = "AAAAAAAAAA";
-    private static final String UPDATED_APPROVED_BY = "BBBBBBBBBB";
 
     private static final String ENTITY_API_URL = "/api/asset-movement-requests";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
@@ -95,14 +83,11 @@ class AssetMovementRequestResourceIT {
     @Autowired
     private AssetMovementRequestRepository assetMovementRequestRepository;
 
-    @Mock
-    private AssetMovementRequestRepository assetMovementRequestRepositoryMock;
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     private AssetMovementRequestMapper assetMovementRequestMapper;
-
-    @Mock
-    private AssetMovementRequestService assetMovementRequestServiceMock;
 
     @Autowired
     private EntityManager em;
@@ -120,8 +105,8 @@ class AssetMovementRequestResourceIT {
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
-    public static AssetMovementRequest createEntity() {
-        return new AssetMovementRequest()
+    public static AssetMovementRequest createEntity(EntityManager em) {
+        AssetMovementRequest assetMovementRequest = new AssetMovementRequest()
             .status(DEFAULT_STATUS)
             .requestedAt(DEFAULT_REQUESTED_AT)
             .reason(DEFAULT_REASON)
@@ -131,9 +116,23 @@ class AssetMovementRequestResourceIT {
             .esignStatus(DEFAULT_ESIGN_STATUS)
             .esignLastUpdate(DEFAULT_ESIGN_LAST_UPDATE)
             .signedAt(DEFAULT_SIGNED_AT)
-            .executedAt(DEFAULT_EXECUTED_AT)
-            .requestedBy(DEFAULT_REQUESTED_BY)
-            .approvedBy(DEFAULT_APPROVED_BY);
+            .executedAt(DEFAULT_EXECUTED_AT);
+        // Add required entity
+        Asset asset;
+        if (TestUtil.findAll(em, Asset.class).isEmpty()) {
+            asset = AssetResourceIT.createEntity(em);
+            em.persist(asset);
+            em.flush();
+        } else {
+            asset = TestUtil.findAll(em, Asset.class).get(0);
+        }
+        assetMovementRequest.setAsset(asset);
+        // Add required entity
+        User user = UserResourceIT.createEntity();
+        em.persist(user);
+        em.flush();
+        assetMovementRequest.setRequestedBy(user);
+        return assetMovementRequest;
     }
 
     /**
@@ -142,8 +141,8 @@ class AssetMovementRequestResourceIT {
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
-    public static AssetMovementRequest createUpdatedEntity() {
-        return new AssetMovementRequest()
+    public static AssetMovementRequest createUpdatedEntity(EntityManager em) {
+        AssetMovementRequest updatedAssetMovementRequest = new AssetMovementRequest()
             .status(UPDATED_STATUS)
             .requestedAt(UPDATED_REQUESTED_AT)
             .reason(UPDATED_REASON)
@@ -153,14 +152,28 @@ class AssetMovementRequestResourceIT {
             .esignStatus(UPDATED_ESIGN_STATUS)
             .esignLastUpdate(UPDATED_ESIGN_LAST_UPDATE)
             .signedAt(UPDATED_SIGNED_AT)
-            .executedAt(UPDATED_EXECUTED_AT)
-            .requestedBy(UPDATED_REQUESTED_BY)
-            .approvedBy(UPDATED_APPROVED_BY);
+            .executedAt(UPDATED_EXECUTED_AT);
+        // Add required entity
+        Asset asset;
+        if (TestUtil.findAll(em, Asset.class).isEmpty()) {
+            asset = AssetResourceIT.createUpdatedEntity(em);
+            em.persist(asset);
+            em.flush();
+        } else {
+            asset = TestUtil.findAll(em, Asset.class).get(0);
+        }
+        updatedAssetMovementRequest.setAsset(asset);
+        // Add required entity
+        User user = UserResourceIT.createEntity();
+        em.persist(user);
+        em.flush();
+        updatedAssetMovementRequest.setRequestedBy(user);
+        return updatedAssetMovementRequest;
     }
 
     @BeforeEach
     void initTest() {
-        assetMovementRequest = createEntity();
+        assetMovementRequest = createEntity(em);
     }
 
     @AfterEach
@@ -254,6 +267,23 @@ class AssetMovementRequestResourceIT {
 
     @Test
     @Transactional
+    void checkEsignStatusIsRequired() throws Exception {
+        long databaseSizeBeforeTest = getRepositoryCount();
+        // set the field null
+        assetMovementRequest.setEsignStatus(null);
+
+        // Create the AssetMovementRequest, which fails.
+        AssetMovementRequestDTO assetMovementRequestDTO = assetMovementRequestMapper.toDto(assetMovementRequest);
+
+        restAssetMovementRequestMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(assetMovementRequestDTO)))
+            .andExpect(status().isBadRequest());
+
+        assertSameRepositoryCount(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
     void getAllAssetMovementRequests() throws Exception {
         // Initialize the database
         insertedAssetMovementRequest = assetMovementRequestRepository.saveAndFlush(assetMovementRequest);
@@ -270,29 +300,10 @@ class AssetMovementRequestResourceIT {
             .andExpect(jsonPath("$.[*].fromLocationLabel").value(hasItem(DEFAULT_FROM_LOCATION_LABEL)))
             .andExpect(jsonPath("$.[*].toLocationLabel").value(hasItem(DEFAULT_TO_LOCATION_LABEL)))
             .andExpect(jsonPath("$.[*].esignWorkflowId").value(hasItem(DEFAULT_ESIGN_WORKFLOW_ID)))
-            .andExpect(jsonPath("$.[*].esignStatus").value(hasItem(DEFAULT_ESIGN_STATUS)))
+            .andExpect(jsonPath("$.[*].esignStatus").value(hasItem(DEFAULT_ESIGN_STATUS.toString())))
             .andExpect(jsonPath("$.[*].esignLastUpdate").value(hasItem(DEFAULT_ESIGN_LAST_UPDATE.toString())))
             .andExpect(jsonPath("$.[*].signedAt").value(hasItem(DEFAULT_SIGNED_AT.toString())))
-            .andExpect(jsonPath("$.[*].executedAt").value(hasItem(DEFAULT_EXECUTED_AT.toString())))
-            .andExpect(jsonPath("$.[*].requestedBy").value(hasItem(DEFAULT_REQUESTED_BY)))
-            .andExpect(jsonPath("$.[*].approvedBy").value(hasItem(DEFAULT_APPROVED_BY)));
-    }
-
-    @SuppressWarnings({ "unchecked" })
-    void getAllAssetMovementRequestsWithEagerRelationshipsIsEnabled() throws Exception {
-        when(assetMovementRequestServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
-
-        restAssetMovementRequestMockMvc.perform(get(ENTITY_API_URL + "?eagerload=true")).andExpect(status().isOk());
-
-        verify(assetMovementRequestServiceMock, times(1)).findAllWithEagerRelationships(any());
-    }
-
-    @SuppressWarnings({ "unchecked" })
-    void getAllAssetMovementRequestsWithEagerRelationshipsIsNotEnabled() throws Exception {
-        when(assetMovementRequestServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
-
-        restAssetMovementRequestMockMvc.perform(get(ENTITY_API_URL + "?eagerload=false")).andExpect(status().isOk());
-        verify(assetMovementRequestRepositoryMock, times(1)).findAll(any(Pageable.class));
+            .andExpect(jsonPath("$.[*].executedAt").value(hasItem(DEFAULT_EXECUTED_AT.toString())));
     }
 
     @Test
@@ -313,12 +324,10 @@ class AssetMovementRequestResourceIT {
             .andExpect(jsonPath("$.fromLocationLabel").value(DEFAULT_FROM_LOCATION_LABEL))
             .andExpect(jsonPath("$.toLocationLabel").value(DEFAULT_TO_LOCATION_LABEL))
             .andExpect(jsonPath("$.esignWorkflowId").value(DEFAULT_ESIGN_WORKFLOW_ID))
-            .andExpect(jsonPath("$.esignStatus").value(DEFAULT_ESIGN_STATUS))
+            .andExpect(jsonPath("$.esignStatus").value(DEFAULT_ESIGN_STATUS.toString()))
             .andExpect(jsonPath("$.esignLastUpdate").value(DEFAULT_ESIGN_LAST_UPDATE.toString()))
             .andExpect(jsonPath("$.signedAt").value(DEFAULT_SIGNED_AT.toString()))
-            .andExpect(jsonPath("$.executedAt").value(DEFAULT_EXECUTED_AT.toString()))
-            .andExpect(jsonPath("$.requestedBy").value(DEFAULT_REQUESTED_BY))
-            .andExpect(jsonPath("$.approvedBy").value(DEFAULT_APPROVED_BY));
+            .andExpect(jsonPath("$.executedAt").value(DEFAULT_EXECUTED_AT.toString()));
     }
 
     @Test
@@ -670,32 +679,6 @@ class AssetMovementRequestResourceIT {
 
     @Test
     @Transactional
-    void getAllAssetMovementRequestsByEsignStatusContainsSomething() throws Exception {
-        // Initialize the database
-        insertedAssetMovementRequest = assetMovementRequestRepository.saveAndFlush(assetMovementRequest);
-
-        // Get all the assetMovementRequestList where esignStatus contains
-        defaultAssetMovementRequestFiltering(
-            "esignStatus.contains=" + DEFAULT_ESIGN_STATUS,
-            "esignStatus.contains=" + UPDATED_ESIGN_STATUS
-        );
-    }
-
-    @Test
-    @Transactional
-    void getAllAssetMovementRequestsByEsignStatusNotContainsSomething() throws Exception {
-        // Initialize the database
-        insertedAssetMovementRequest = assetMovementRequestRepository.saveAndFlush(assetMovementRequest);
-
-        // Get all the assetMovementRequestList where esignStatus does not contain
-        defaultAssetMovementRequestFiltering(
-            "esignStatus.doesNotContain=" + UPDATED_ESIGN_STATUS,
-            "esignStatus.doesNotContain=" + DEFAULT_ESIGN_STATUS
-        );
-    }
-
-    @Test
-    @Transactional
     void getAllAssetMovementRequestsByEsignLastUpdateIsEqualToSomething() throws Exception {
         // Initialize the database
         insertedAssetMovementRequest = assetMovementRequestRepository.saveAndFlush(assetMovementRequest);
@@ -798,121 +781,6 @@ class AssetMovementRequestResourceIT {
 
     @Test
     @Transactional
-    void getAllAssetMovementRequestsByRequestedByIsEqualToSomething() throws Exception {
-        // Initialize the database
-        insertedAssetMovementRequest = assetMovementRequestRepository.saveAndFlush(assetMovementRequest);
-
-        // Get all the assetMovementRequestList where requestedBy equals to
-        defaultAssetMovementRequestFiltering("requestedBy.equals=" + DEFAULT_REQUESTED_BY, "requestedBy.equals=" + UPDATED_REQUESTED_BY);
-    }
-
-    @Test
-    @Transactional
-    void getAllAssetMovementRequestsByRequestedByIsInShouldWork() throws Exception {
-        // Initialize the database
-        insertedAssetMovementRequest = assetMovementRequestRepository.saveAndFlush(assetMovementRequest);
-
-        // Get all the assetMovementRequestList where requestedBy in
-        defaultAssetMovementRequestFiltering(
-            "requestedBy.in=" + DEFAULT_REQUESTED_BY + "," + UPDATED_REQUESTED_BY,
-            "requestedBy.in=" + UPDATED_REQUESTED_BY
-        );
-    }
-
-    @Test
-    @Transactional
-    void getAllAssetMovementRequestsByRequestedByIsNullOrNotNull() throws Exception {
-        // Initialize the database
-        insertedAssetMovementRequest = assetMovementRequestRepository.saveAndFlush(assetMovementRequest);
-
-        // Get all the assetMovementRequestList where requestedBy is not null
-        defaultAssetMovementRequestFiltering("requestedBy.specified=true", "requestedBy.specified=false");
-    }
-
-    @Test
-    @Transactional
-    void getAllAssetMovementRequestsByRequestedByContainsSomething() throws Exception {
-        // Initialize the database
-        insertedAssetMovementRequest = assetMovementRequestRepository.saveAndFlush(assetMovementRequest);
-
-        // Get all the assetMovementRequestList where requestedBy contains
-        defaultAssetMovementRequestFiltering(
-            "requestedBy.contains=" + DEFAULT_REQUESTED_BY,
-            "requestedBy.contains=" + UPDATED_REQUESTED_BY
-        );
-    }
-
-    @Test
-    @Transactional
-    void getAllAssetMovementRequestsByRequestedByNotContainsSomething() throws Exception {
-        // Initialize the database
-        insertedAssetMovementRequest = assetMovementRequestRepository.saveAndFlush(assetMovementRequest);
-
-        // Get all the assetMovementRequestList where requestedBy does not contain
-        defaultAssetMovementRequestFiltering(
-            "requestedBy.doesNotContain=" + UPDATED_REQUESTED_BY,
-            "requestedBy.doesNotContain=" + DEFAULT_REQUESTED_BY
-        );
-    }
-
-    @Test
-    @Transactional
-    void getAllAssetMovementRequestsByApprovedByIsEqualToSomething() throws Exception {
-        // Initialize the database
-        insertedAssetMovementRequest = assetMovementRequestRepository.saveAndFlush(assetMovementRequest);
-
-        // Get all the assetMovementRequestList where approvedBy equals to
-        defaultAssetMovementRequestFiltering("approvedBy.equals=" + DEFAULT_APPROVED_BY, "approvedBy.equals=" + UPDATED_APPROVED_BY);
-    }
-
-    @Test
-    @Transactional
-    void getAllAssetMovementRequestsByApprovedByIsInShouldWork() throws Exception {
-        // Initialize the database
-        insertedAssetMovementRequest = assetMovementRequestRepository.saveAndFlush(assetMovementRequest);
-
-        // Get all the assetMovementRequestList where approvedBy in
-        defaultAssetMovementRequestFiltering(
-            "approvedBy.in=" + DEFAULT_APPROVED_BY + "," + UPDATED_APPROVED_BY,
-            "approvedBy.in=" + UPDATED_APPROVED_BY
-        );
-    }
-
-    @Test
-    @Transactional
-    void getAllAssetMovementRequestsByApprovedByIsNullOrNotNull() throws Exception {
-        // Initialize the database
-        insertedAssetMovementRequest = assetMovementRequestRepository.saveAndFlush(assetMovementRequest);
-
-        // Get all the assetMovementRequestList where approvedBy is not null
-        defaultAssetMovementRequestFiltering("approvedBy.specified=true", "approvedBy.specified=false");
-    }
-
-    @Test
-    @Transactional
-    void getAllAssetMovementRequestsByApprovedByContainsSomething() throws Exception {
-        // Initialize the database
-        insertedAssetMovementRequest = assetMovementRequestRepository.saveAndFlush(assetMovementRequest);
-
-        // Get all the assetMovementRequestList where approvedBy contains
-        defaultAssetMovementRequestFiltering("approvedBy.contains=" + DEFAULT_APPROVED_BY, "approvedBy.contains=" + UPDATED_APPROVED_BY);
-    }
-
-    @Test
-    @Transactional
-    void getAllAssetMovementRequestsByApprovedByNotContainsSomething() throws Exception {
-        // Initialize the database
-        insertedAssetMovementRequest = assetMovementRequestRepository.saveAndFlush(assetMovementRequest);
-
-        // Get all the assetMovementRequestList where approvedBy does not contain
-        defaultAssetMovementRequestFiltering(
-            "approvedBy.doesNotContain=" + UPDATED_APPROVED_BY,
-            "approvedBy.doesNotContain=" + DEFAULT_APPROVED_BY
-        );
-    }
-
-    @Test
-    @Transactional
     void getAllAssetMovementRequestsByAssetIsEqualToSomething() throws Exception {
         Asset asset;
         if (TestUtil.findAll(em, Asset.class).isEmpty()) {
@@ -931,6 +799,50 @@ class AssetMovementRequestResourceIT {
 
         // Get all the assetMovementRequestList where asset equals to (assetId + 1)
         defaultAssetMovementRequestShouldNotBeFound("assetId.equals=" + (assetId + 1));
+    }
+
+    @Test
+    @Transactional
+    void getAllAssetMovementRequestsByRequestedByIsEqualToSomething() throws Exception {
+        User requestedBy;
+        if (TestUtil.findAll(em, User.class).isEmpty()) {
+            assetMovementRequestRepository.saveAndFlush(assetMovementRequest);
+            requestedBy = UserResourceIT.createEntity();
+        } else {
+            requestedBy = TestUtil.findAll(em, User.class).get(0);
+        }
+        em.persist(requestedBy);
+        em.flush();
+        assetMovementRequest.setRequestedBy(requestedBy);
+        assetMovementRequestRepository.saveAndFlush(assetMovementRequest);
+        Long requestedById = requestedBy.getId();
+        // Get all the assetMovementRequestList where requestedBy equals to requestedById
+        defaultAssetMovementRequestShouldBeFound("requestedById.equals=" + requestedById);
+
+        // Get all the assetMovementRequestList where requestedBy equals to (requestedById + 1)
+        defaultAssetMovementRequestShouldNotBeFound("requestedById.equals=" + (requestedById + 1));
+    }
+
+    @Test
+    @Transactional
+    void getAllAssetMovementRequestsByApprovedByIsEqualToSomething() throws Exception {
+        User approvedBy;
+        if (TestUtil.findAll(em, User.class).isEmpty()) {
+            assetMovementRequestRepository.saveAndFlush(assetMovementRequest);
+            approvedBy = UserResourceIT.createEntity();
+        } else {
+            approvedBy = TestUtil.findAll(em, User.class).get(0);
+        }
+        em.persist(approvedBy);
+        em.flush();
+        assetMovementRequest.setApprovedBy(approvedBy);
+        assetMovementRequestRepository.saveAndFlush(assetMovementRequest);
+        Long approvedById = approvedBy.getId();
+        // Get all the assetMovementRequestList where approvedBy equals to approvedById
+        defaultAssetMovementRequestShouldBeFound("approvedById.equals=" + approvedById);
+
+        // Get all the assetMovementRequestList where approvedBy equals to (approvedById + 1)
+        defaultAssetMovementRequestShouldNotBeFound("approvedById.equals=" + (approvedById + 1));
     }
 
     private void defaultAssetMovementRequestFiltering(String shouldBeFound, String shouldNotBeFound) throws Exception {
@@ -953,12 +865,10 @@ class AssetMovementRequestResourceIT {
             .andExpect(jsonPath("$.[*].fromLocationLabel").value(hasItem(DEFAULT_FROM_LOCATION_LABEL)))
             .andExpect(jsonPath("$.[*].toLocationLabel").value(hasItem(DEFAULT_TO_LOCATION_LABEL)))
             .andExpect(jsonPath("$.[*].esignWorkflowId").value(hasItem(DEFAULT_ESIGN_WORKFLOW_ID)))
-            .andExpect(jsonPath("$.[*].esignStatus").value(hasItem(DEFAULT_ESIGN_STATUS)))
+            .andExpect(jsonPath("$.[*].esignStatus").value(hasItem(DEFAULT_ESIGN_STATUS.toString())))
             .andExpect(jsonPath("$.[*].esignLastUpdate").value(hasItem(DEFAULT_ESIGN_LAST_UPDATE.toString())))
             .andExpect(jsonPath("$.[*].signedAt").value(hasItem(DEFAULT_SIGNED_AT.toString())))
-            .andExpect(jsonPath("$.[*].executedAt").value(hasItem(DEFAULT_EXECUTED_AT.toString())))
-            .andExpect(jsonPath("$.[*].requestedBy").value(hasItem(DEFAULT_REQUESTED_BY)))
-            .andExpect(jsonPath("$.[*].approvedBy").value(hasItem(DEFAULT_APPROVED_BY)));
+            .andExpect(jsonPath("$.[*].executedAt").value(hasItem(DEFAULT_EXECUTED_AT.toString())));
 
         // Check, that the count call also returns 1
         restAssetMovementRequestMockMvc
@@ -1018,9 +928,7 @@ class AssetMovementRequestResourceIT {
             .esignStatus(UPDATED_ESIGN_STATUS)
             .esignLastUpdate(UPDATED_ESIGN_LAST_UPDATE)
             .signedAt(UPDATED_SIGNED_AT)
-            .executedAt(UPDATED_EXECUTED_AT)
-            .requestedBy(UPDATED_REQUESTED_BY)
-            .approvedBy(UPDATED_APPROVED_BY);
+            .executedAt(UPDATED_EXECUTED_AT);
         AssetMovementRequestDTO assetMovementRequestDTO = assetMovementRequestMapper.toDto(updatedAssetMovementRequest);
 
         restAssetMovementRequestMockMvc
@@ -1110,11 +1018,7 @@ class AssetMovementRequestResourceIT {
         AssetMovementRequest partialUpdatedAssetMovementRequest = new AssetMovementRequest();
         partialUpdatedAssetMovementRequest.setId(assetMovementRequest.getId());
 
-        partialUpdatedAssetMovementRequest
-            .fromLocationLabel(UPDATED_FROM_LOCATION_LABEL)
-            .esignWorkflowId(UPDATED_ESIGN_WORKFLOW_ID)
-            .requestedBy(UPDATED_REQUESTED_BY)
-            .approvedBy(UPDATED_APPROVED_BY);
+        partialUpdatedAssetMovementRequest.fromLocationLabel(UPDATED_FROM_LOCATION_LABEL).esignWorkflowId(UPDATED_ESIGN_WORKFLOW_ID);
 
         restAssetMovementRequestMockMvc
             .perform(
@@ -1155,9 +1059,7 @@ class AssetMovementRequestResourceIT {
             .esignStatus(UPDATED_ESIGN_STATUS)
             .esignLastUpdate(UPDATED_ESIGN_LAST_UPDATE)
             .signedAt(UPDATED_SIGNED_AT)
-            .executedAt(UPDATED_EXECUTED_AT)
-            .requestedBy(UPDATED_REQUESTED_BY)
-            .approvedBy(UPDATED_APPROVED_BY);
+            .executedAt(UPDATED_EXECUTED_AT);
 
         restAssetMovementRequestMockMvc
             .perform(

@@ -15,10 +15,7 @@ public class AssetMovementRequestTestSamples {
             .reason("reason1")
             .fromLocationLabel("fromLocationLabel1")
             .toLocationLabel("toLocationLabel1")
-            .esignWorkflowId("esignWorkflowId1")
-            .esignStatus("esignStatus1")
-            .requestedBy("requestedBy1")
-            .approvedBy("approvedBy1");
+            .esignWorkflowId("esignWorkflowId1");
     }
 
     public static AssetMovementRequest getAssetMovementRequestSample2() {
@@ -27,10 +24,7 @@ public class AssetMovementRequestTestSamples {
             .reason("reason2")
             .fromLocationLabel("fromLocationLabel2")
             .toLocationLabel("toLocationLabel2")
-            .esignWorkflowId("esignWorkflowId2")
-            .esignStatus("esignStatus2")
-            .requestedBy("requestedBy2")
-            .approvedBy("approvedBy2");
+            .esignWorkflowId("esignWorkflowId2");
     }
 
     public static AssetMovementRequest getAssetMovementRequestRandomSampleGenerator() {
@@ -39,9 +33,6 @@ public class AssetMovementRequestTestSamples {
             .reason(UUID.randomUUID().toString())
             .fromLocationLabel(UUID.randomUUID().toString())
             .toLocationLabel(UUID.randomUUID().toString())
-            .esignWorkflowId(UUID.randomUUID().toString())
-            .esignStatus(UUID.randomUUID().toString())
-            .requestedBy(UUID.randomUUID().toString())
-            .approvedBy(UUID.randomUUID().toString());
+            .esignWorkflowId(UUID.randomUUID().toString());
     }
 }

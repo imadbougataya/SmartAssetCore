@@ -7,8 +7,6 @@ import com.ailab.smartasset.service.mapper.ZoneMapper;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -77,15 +75,6 @@ public class ZoneService {
     }
 
     /**
-     * Get all the zones with eager load of many-to-many relationships.
-     *
-     * @return the list of entities.
-     */
-    public Page<ZoneDTO> findAllWithEagerRelationships(Pageable pageable) {
-        return zoneRepository.findAllWithEagerRelationships(pageable).map(zoneMapper::toDto);
-    }
-
-    /**
      * Get one zone by id.
      *
      * @param id the id of the entity.
@@ -94,7 +83,7 @@ public class ZoneService {
     @Transactional(readOnly = true)
     public Optional<ZoneDTO> findOne(Long id) {
         LOG.debug("Request to get Zone : {}", id);
-        return zoneRepository.findOneWithEagerRelationships(id).map(zoneMapper::toDto);
+        return zoneRepository.findById(id).map(zoneMapper::toDto);
     }
 
     /**

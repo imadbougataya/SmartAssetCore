@@ -30,6 +30,7 @@ public class ZoneDTO implements Serializable {
     @Min(value = 1)
     private Integer radiusMeters;
 
+    @NotNull
     private SiteDTO site;
 
     public Long getId() {

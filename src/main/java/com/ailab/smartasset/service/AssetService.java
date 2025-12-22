@@ -7,8 +7,6 @@ import com.ailab.smartasset.service.mapper.AssetMapper;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -77,15 +75,6 @@ public class AssetService {
     }
 
     /**
-     * Get all the assets with eager load of many-to-many relationships.
-     *
-     * @return the list of entities.
-     */
-    public Page<AssetDTO> findAllWithEagerRelationships(Pageable pageable) {
-        return assetRepository.findAllWithEagerRelationships(pageable).map(assetMapper::toDto);
-    }
-
-    /**
      * Get one asset by id.
      *
      * @param id the id of the entity.
@@ -94,7 +83,7 @@ public class AssetService {
     @Transactional(readOnly = true)
     public Optional<AssetDTO> findOne(Long id) {
         LOG.debug("Request to get Asset : {}", id);
-        return assetRepository.findOneWithEagerRelationships(id).map(assetMapper::toDto);
+        return assetRepository.findById(id).map(assetMapper::toDto);
     }
 
     /**

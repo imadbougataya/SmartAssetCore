@@ -57,7 +57,8 @@ public class Sensor implements Serializable {
     @Column(name = "active", nullable = false)
     private Boolean active;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(optional = false)
+    @NotNull
     @JsonIgnoreProperties(value = { "productionLine", "allowedSite", "allowedZone" }, allowSetters = true)
     private Asset asset;
 

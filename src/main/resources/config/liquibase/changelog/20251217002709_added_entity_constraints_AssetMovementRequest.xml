@@ -16,5 +16,19 @@
                                  referencedColumnNames="id"
                                  referencedTableName="asset"
                                  />
+
+        <addForeignKeyConstraint baseColumnNames="requested_by_id"
+                                 baseTableName="asset_movement_request"
+                                 constraintName="fk_asset_movement_request__requested_by_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="jhi_user"
+                                 />
+
+        <addForeignKeyConstraint baseColumnNames="approved_by_id"
+                                 baseTableName="asset_movement_request"
+                                 constraintName="fk_asset_movement_request__approved_by_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="jhi_user"
+                                 />
     </changeSet>
 </databaseChangeLog>

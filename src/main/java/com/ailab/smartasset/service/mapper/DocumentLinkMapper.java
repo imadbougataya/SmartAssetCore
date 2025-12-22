@@ -11,12 +11,11 @@ import org.mapstruct.*;
  */
 @Mapper(componentModel = "spring")
 public interface DocumentLinkMapper extends EntityMapper<DocumentLinkDTO, DocumentLink> {
-    @Mapping(target = "document", source = "document", qualifiedByName = "documentFileName")
+    @Mapping(target = "document", source = "document", qualifiedByName = "documentId")
     DocumentLinkDTO toDto(DocumentLink s);
 
-    @Named("documentFileName")
+    @Named("documentId")
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
-    @Mapping(target = "fileName", source = "fileName")
-    DocumentDTO toDtoDocumentFileName(Document document);
+    DocumentDTO toDtoDocumentId(Document document);
 }

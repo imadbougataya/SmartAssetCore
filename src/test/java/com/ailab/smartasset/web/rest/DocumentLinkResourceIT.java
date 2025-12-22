@@ -4,7 +4,6 @@ import static com.ailab.smartasset.domain.DocumentLinkAsserts.*;
 import static com.ailab.smartasset.web.rest.TestUtil.createUpdateProxyForBean;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
-import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -13,26 +12,19 @@ import com.ailab.smartasset.domain.Document;
 import com.ailab.smartasset.domain.DocumentLink;
 import com.ailab.smartasset.domain.enumeration.DocumentLinkEntityType;
 import com.ailab.smartasset.repository.DocumentLinkRepository;
-import com.ailab.smartasset.service.DocumentLinkService;
 import com.ailab.smartasset.service.dto.DocumentLinkDTO;
 import com.ailab.smartasset.service.mapper.DocumentLinkMapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityManager;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -42,7 +34,6 @@ import org.springframework.transaction.annotation.Transactional;
  * Integration tests for the {@link DocumentLinkResource} REST controller.
  */
 @IntegrationTest
-@ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
 @WithMockUser
 class DocumentLinkResourceIT {
@@ -84,14 +75,8 @@ class DocumentLinkResourceIT {
     @Autowired
     private DocumentLinkRepository documentLinkRepository;
 
-    @Mock
-    private DocumentLinkRepository documentLinkRepositoryMock;
-
     @Autowired
     private DocumentLinkMapper documentLinkMapper;
-
-    @Mock
-    private DocumentLinkService documentLinkServiceMock;
 
     @Autowired
     private EntityManager em;
@@ -122,7 +107,7 @@ class DocumentLinkResourceIT {
         // Add required entity
         Document document;
         if (TestUtil.findAll(em, Document.class).isEmpty()) {
-            document = DocumentResourceIT.createEntity(em);
+            document = DocumentResourceIT.createEntity();
             em.persist(document);
             em.flush();
         } else {
@@ -151,7 +136,7 @@ class DocumentLinkResourceIT {
         // Add required entity
         Document document;
         if (TestUtil.findAll(em, Document.class).isEmpty()) {
-            document = DocumentResourceIT.createUpdatedEntity(em);
+            document = DocumentResourceIT.createUpdatedEntity();
             em.persist(document);
             em.flush();
         } else {
@@ -287,23 +272,6 @@ class DocumentLinkResourceIT {
             .andExpect(jsonPath("$.[*].createdDate").value(hasItem(DEFAULT_CREATED_DATE.toString())))
             .andExpect(jsonPath("$.[*].lastModifiedBy").value(hasItem(DEFAULT_LAST_MODIFIED_BY)))
             .andExpect(jsonPath("$.[*].lastModifiedDate").value(hasItem(DEFAULT_LAST_MODIFIED_DATE.toString())));
-    }
-
-    @SuppressWarnings({ "unchecked" })
-    void getAllDocumentLinksWithEagerRelationshipsIsEnabled() throws Exception {
-        when(documentLinkServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
-
-        restDocumentLinkMockMvc.perform(get(ENTITY_API_URL + "?eagerload=true")).andExpect(status().isOk());
-
-        verify(documentLinkServiceMock, times(1)).findAllWithEagerRelationships(any());
-    }
-
-    @SuppressWarnings({ "unchecked" })
-    void getAllDocumentLinksWithEagerRelationshipsIsNotEnabled() throws Exception {
-        when(documentLinkServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
-
-        restDocumentLinkMockMvc.perform(get(ENTITY_API_URL + "?eagerload=false")).andExpect(status().isOk());
-        verify(documentLinkRepositoryMock, times(1)).findAll(any(Pageable.class));
     }
 
     @Test
@@ -716,7 +684,7 @@ class DocumentLinkResourceIT {
         Document document;
         if (TestUtil.findAll(em, Document.class).isEmpty()) {
             documentLinkRepository.saveAndFlush(documentLink);
-            document = DocumentResourceIT.createEntity(em);
+            document = DocumentResourceIT.createEntity();
         } else {
             document = TestUtil.findAll(em, Document.class).get(0);
         }

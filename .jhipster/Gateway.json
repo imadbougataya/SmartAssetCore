@@ -56,14 +56,12 @@
   "pagination": "pagination",
   "relationships": [
     {
-      "otherEntityField": "code",
       "otherEntityName": "site",
       "relationshipName": "site",
       "relationshipSide": "left",
       "relationshipType": "many-to-one"
     },
     {
-      "otherEntityField": "code",
       "otherEntityName": "zone",
       "relationshipName": "zone",
       "relationshipSide": "left",

@@ -72,11 +72,11 @@
   "pagination": "pagination",
   "relationships": [
     {
-      "otherEntityField": "assetCode",
       "otherEntityName": "asset",
       "relationshipName": "asset",
       "relationshipSide": "left",
-      "relationshipType": "many-to-one"
+      "relationshipType": "many-to-one",
+      "relationshipValidateRules": "required"
     }
   ],
   "searchEngine": "no",

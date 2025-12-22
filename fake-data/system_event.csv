@@ -1,11 +1,11 @@
 id;event_type;severity;source;message;created_at;created_by;correlation_id;payload
-1;SYSTEM_STARTUP;INFO;SYSTEM;Démarrage du système SmartAssetCore;2025-12-16T00:01:12;system;SYS-BOOT-20251216-0001;{}
-2;API_REQUEST;INFO;API;Requête API traitée avec succès;2025-12-16T02:38:28;api-gateway;API-REQ-20251216-0238;{}
-3;USER_LOGIN;INFO;UI;Connexion utilisateur réussie;2025-12-16T13:55:04;user-interface;UI-LOGIN-20251216-1355;{}
-4;UI_ERROR;ERROR;UI;Erreur inattendue dans l’interface utilisateur;2025-12-16T02:30:06;user-interface;UI-ERR-20251216-0230;{"component":"AssetForm"}
-5;GATEWAY_ERROR;ERROR;GATEWAY;Échec de communication avec un service aval;2025-12-16T14:47:11;api-gateway;GW-ERR-20251216-1447;{"service":"AssetService"}
-6;API_VALIDATION_WARNING;WARNING;API;Données reçues partiellement invalides;2025-12-16T17:30:55;api-gateway;API-WARN-20251216-1730;{"field":"asset_code"}
-7;ESIGN_EVENT;INFO;ESIGN;Document envoyé pour signature électronique;2025-12-16T23:24:42;esign-service;ESIGN-REQ-20251216-2324;{"documentId":"DOC-7845"}
-8;GATEWAY_HEALTHCHECK;INFO;GATEWAY;Vérification de santé du gateway réussie;2025-12-16T06:58:27;api-gateway;GW-HC-20251216-0658;{}
-9;SYSTEM_EXCEPTION;ERROR;SYSTEM;Exception système critique détectée;2025-12-16T01:32:40;system;SYS-EX-20251216-0132;{"exception":"NullPointerException"}
-10;UI_WARNING;WARNING;UI;Temps de réponse élevé détecté sur l’UI;2025-12-16T05:00:00;monitoring;UI-WARN-20251216-0500;{"responseTimeMs":1800}
+1;SYSTEM_STARTUP;INFO;SYSTEM;Démarrage du système SmartAssetCore;2025-12-16T00:01:12;system;SYS-BOOT-20251216-0001;
+2;API_REQUEST;INFO;API;Requête API traitée avec succès;2025-12-16T02:38:28;api-gateway;API-REQ-20251216-0238;
+3;USER_LOGIN;INFO;UI;Connexion utilisateur réussie;2025-12-16T13:55:04;user-interface;UI-LOGIN-20251216-1355;
+4;UI_ERROR;ERROR;UI;Erreur inattendue dans l’interface utilisateur;2025-12-16T02:30:06;user-interface;UI-ERR-20251216-0230;component=AssetForm
+5;GATEWAY_ERROR;ERROR;GATEWAY;Échec de communication avec un service aval;2025-12-16T14:47:11;api-gateway;GW-ERR-20251216-1447;service=AssetService
+6;API_VALIDATION_WARNING;WARNING;API;Données reçues partiellement invalides;2025-12-16T17:30:55;api-gateway;API-WARN-20251216-1730;field=asset_code
+7;ESIGN_EVENT;INFO;ESIGN;Document envoyé pour signature électronique;2025-12-16T23:24:42;esign-service;ESIGN-REQ-20251216-2324;documentId=DOC-7845
+8;GATEWAY_HEALTHCHECK;INFO;GATEWAY;Vérification de santé du gateway réussie;2025-12-16T06:58:27;api-gateway;GW-HC-20251216-0658;
+9;SYSTEM_EXCEPTION;ERROR;SYSTEM;Exception système critique détectée;2025-12-16T01:32:40;system;SYS-EX-20251216-0132;exception=NullPointerException
+10;UI_WARNING;WARNING;UI;Temps de réponse élevé détecté sur l’UI;2025-12-16T05:00:00;monitoring;UI-WARN-20251216-0500;responseTimeMs=1800

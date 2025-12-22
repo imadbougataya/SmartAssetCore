@@ -38,8 +38,6 @@ public class DocumentCriteria implements Serializable, Criteria {
 
     private StringFilter uploadedBy;
 
-    private LongFilter assetId;
-
     private Boolean distinct;
 
     public DocumentCriteria() {}
@@ -53,7 +51,6 @@ public class DocumentCriteria implements Serializable, Criteria {
         this.checksumSha256 = other.optionalChecksumSha256().map(StringFilter::copy).orElse(null);
         this.uploadedAt = other.optionalUploadedAt().map(InstantFilter::copy).orElse(null);
         this.uploadedBy = other.optionalUploadedBy().map(StringFilter::copy).orElse(null);
-        this.assetId = other.optionalAssetId().map(LongFilter::copy).orElse(null);
         this.distinct = other.distinct;
     }
 
@@ -214,25 +211,6 @@ public class DocumentCriteria implements Serializable, Criteria {
         this.uploadedBy = uploadedBy;
     }
 
-    public LongFilter getAssetId() {
-        return assetId;
-    }
-
-    public Optional<LongFilter> optionalAssetId() {
-        return Optional.ofNullable(assetId);
-    }
-
-    public LongFilter assetId() {
-        if (assetId == null) {
-            setAssetId(new LongFilter());
-        }
-        return assetId;
-    }
-
-    public void setAssetId(LongFilter assetId) {
-        this.assetId = assetId;
-    }
-
     public Boolean getDistinct() {
         return distinct;
     }
@@ -270,14 +248,13 @@ public class DocumentCriteria implements Serializable, Criteria {
             Objects.equals(checksumSha256, that.checksumSha256) &&
             Objects.equals(uploadedAt, that.uploadedAt) &&
             Objects.equals(uploadedBy, that.uploadedBy) &&
-            Objects.equals(assetId, that.assetId) &&
             Objects.equals(distinct, that.distinct)
         );
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, fileName, mimeType, sizeBytes, storageRef, checksumSha256, uploadedAt, uploadedBy, assetId, distinct);
+        return Objects.hash(id, fileName, mimeType, sizeBytes, storageRef, checksumSha256, uploadedAt, uploadedBy, distinct);
     }
 
     // prettier-ignore
@@ -292,7 +269,6 @@ public class DocumentCriteria implements Serializable, Criteria {
             optionalChecksumSha256().map(f -> "checksumSha256=" + f + ", ").orElse("") +
             optionalUploadedAt().map(f -> "uploadedAt=" + f + ", ").orElse("") +
             optionalUploadedBy().map(f -> "uploadedBy=" + f + ", ").orElse("") +
-            optionalAssetId().map(f -> "assetId=" + f + ", ").orElse("") +
             optionalDistinct().map(f -> "distinct=" + f + ", ").orElse("") +
         "}";
     }

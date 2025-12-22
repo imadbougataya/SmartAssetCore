@@ -1,11 +1,11 @@
-id;code;name;description
-1;ENG-306-A;Ligne Engrais 306 – Atelier A;Ligne de production engrais – Atelier A du site OCP Jorf Lasfar
-2;ENG-306-B;Ligne Engrais 306 – Atelier B;Ligne de production engrais – Atelier B du site OCP Jorf Lasfar
-3;ENG-306-C;Ligne Engrais 306 – Atelier C;Ligne de production engrais – Atelier C du site OCP Jorf Lasfar
-4;ENG-307-A;Ligne Engrais 307 – Atelier A;Ligne de production engrais – Atelier A du site OCP Jorf Lasfar
-5;ENG-307-B;Ligne Engrais 307 – Atelier B;Ligne de production engrais – Atelier B du site OCP Jorf Lasfar
-6;ENG-307-C;Ligne Engrais 307 – Atelier C;Ligne de production engrais – Atelier C du site OCP Jorf Lasfar
-7;BRY-308-A;Ligne Broyage 308 – Primaire;Ligne de broyage primaire – Site OCP Jorf Lasfar
-8;BRY-308-B;Ligne Broyage 308 – Secondaire;Ligne de broyage secondaire – Site OCP Jorf Lasfar
-9;BRY-308-C;Ligne Broyage 308 – Tertiaire;Ligne de broyage tertiaire – Site OCP Jorf Lasfar
-10;UTIL-COMMON;Ligne Utilités & Services;Équipements communs, utilités et auxiliaires du site OCP Jorf Lasfar
+id;code;name;description;zone_id
+1;ENG-306-A;Ligne Engrais 306 – Atelier A;Ligne de production engrais – Atelier A du site OCP Jorf Lasfar;1
+2;ENG-306-B;Ligne Engrais 306 – Atelier B;Ligne de production engrais – Atelier B du site OCP Jorf Lasfar;1
+3;ENG-306-C;Ligne Engrais 306 – Atelier C;Ligne de production engrais – Atelier C du site OCP Jorf Lasfar;1
+4;ENG-307-A;Ligne Engrais 307 – Atelier A;Ligne de production engrais – Atelier A du site OCP Jorf Lasfar;2
+5;ENG-307-B;Ligne Engrais 307 – Atelier B;Ligne de production engrais – Atelier B du site OCP Jorf Lasfar;2
+6;ENG-307-C;Ligne Engrais 307 – Atelier C;Ligne de production engrais – Atelier C du site OCP Jorf Lasfar;2
+7;BRY-308-A;Ligne Broyage 308 – Primaire;Ligne de broyage primaire – Site OCP Jorf Lasfar;3
+8;BRY-308-B;Ligne Broyage 308 – Secondaire;Ligne de broyage secondaire – Site OCP Jorf Lasfar;3
+9;BRY-308-C;Ligne Broyage 308 – Tertiaire;Ligne de broyage tertiaire – Site OCP Jorf Lasfar;3
+10;UTIL-COMMON;Ligne Utilités & Services;Équipements communs, utilités et auxiliaires du site OCP Jorf Lasfar;3

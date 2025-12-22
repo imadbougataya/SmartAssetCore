@@ -37,7 +37,8 @@ public class ProductionLine implements Serializable {
     @Column(name = "description", length = 500)
     private String description;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(optional = false)
+    @NotNull
     @JsonIgnoreProperties(value = { "site" }, allowSetters = true)
     private Zone zone;
 

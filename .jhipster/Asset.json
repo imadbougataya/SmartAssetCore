@@ -171,7 +171,6 @@
   "pagination": "pagination",
   "relationships": [
     {
-      "otherEntityField": "code",
       "otherEntityName": "productionLine",
       "relationshipName": "productionLine",
       "relationshipSide": "left",
@@ -179,14 +178,12 @@
       "relationshipValidateRules": "required"
     },
     {
-      "otherEntityField": "code",
       "otherEntityName": "site",
       "relationshipName": "allowedSite",
       "relationshipSide": "left",
       "relationshipType": "many-to-one"
     },
     {
-      "otherEntityField": "code",
       "otherEntityName": "zone",
       "relationshipName": "allowedZone",
       "relationshipSide": "left",

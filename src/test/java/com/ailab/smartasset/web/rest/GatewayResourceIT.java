@@ -4,7 +4,6 @@ import static com.ailab.smartasset.domain.GatewayAsserts.*;
 import static com.ailab.smartasset.web.rest.TestUtil.createUpdateProxyForBean;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
-import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -13,26 +12,19 @@ import com.ailab.smartasset.domain.Gateway;
 import com.ailab.smartasset.domain.Site;
 import com.ailab.smartasset.domain.Zone;
 import com.ailab.smartasset.repository.GatewayRepository;
-import com.ailab.smartasset.service.GatewayService;
 import com.ailab.smartasset.service.dto.GatewayDTO;
 import com.ailab.smartasset.service.mapper.GatewayMapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityManager;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -42,7 +34,6 @@ import org.springframework.transaction.annotation.Transactional;
  * Integration tests for the {@link GatewayResource} REST controller.
  */
 @IntegrationTest
-@ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
 @WithMockUser
 class GatewayResourceIT {
@@ -83,14 +74,8 @@ class GatewayResourceIT {
     @Autowired
     private GatewayRepository gatewayRepository;
 
-    @Mock
-    private GatewayRepository gatewayRepositoryMock;
-
     @Autowired
     private GatewayMapper gatewayMapper;
-
-    @Mock
-    private GatewayService gatewayServiceMock;
 
     @Autowired
     private EntityManager em;
@@ -247,23 +232,6 @@ class GatewayResourceIT {
             .andExpect(jsonPath("$.[*].ipAddress").value(hasItem(DEFAULT_IP_ADDRESS)))
             .andExpect(jsonPath("$.[*].installedAt").value(hasItem(DEFAULT_INSTALLED_AT.toString())))
             .andExpect(jsonPath("$.[*].active").value(hasItem(DEFAULT_ACTIVE)));
-    }
-
-    @SuppressWarnings({ "unchecked" })
-    void getAllGatewaysWithEagerRelationshipsIsEnabled() throws Exception {
-        when(gatewayServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
-
-        restGatewayMockMvc.perform(get(ENTITY_API_URL + "?eagerload=true")).andExpect(status().isOk());
-
-        verify(gatewayServiceMock, times(1)).findAllWithEagerRelationships(any());
-    }
-
-    @SuppressWarnings({ "unchecked" })
-    void getAllGatewaysWithEagerRelationshipsIsNotEnabled() throws Exception {
-        when(gatewayServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
-
-        restGatewayMockMvc.perform(get(ENTITY_API_URL + "?eagerload=false")).andExpect(status().isOk());
-        verify(gatewayRepositoryMock, times(1)).findAll(any(Pageable.class));
     }
 
     @Test
@@ -694,7 +662,7 @@ class GatewayResourceIT {
         Zone zone;
         if (TestUtil.findAll(em, Zone.class).isEmpty()) {
             gatewayRepository.saveAndFlush(gateway);
-            zone = ZoneResourceIT.createEntity();
+            zone = ZoneResourceIT.createEntity(em);
         } else {
             zone = TestUtil.findAll(em, Zone.class).get(0);
         }

@@ -46,7 +46,8 @@ public class Zone implements Serializable {
     @Column(name = "radius_meters")
     private Integer radiusMeters;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(optional = false)
+    @NotNull
     private Site site;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here

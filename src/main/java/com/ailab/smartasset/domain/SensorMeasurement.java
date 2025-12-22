@@ -41,7 +41,8 @@ public class SensorMeasurement implements Serializable {
     @Column(name = "source", length = 80)
     private String source;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(optional = false)
+    @NotNull
     @JsonIgnoreProperties(value = { "asset" }, allowSetters = true)
     private Sensor sensor;
 

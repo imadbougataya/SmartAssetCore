@@ -56,9 +56,7 @@ public class AssetMovementRequestAsserts {
             .satisfies(a -> assertThat(a.getEsignStatus()).as("check esignStatus").isEqualTo(expected.getEsignStatus()))
             .satisfies(a -> assertThat(a.getEsignLastUpdate()).as("check esignLastUpdate").isEqualTo(expected.getEsignLastUpdate()))
             .satisfies(a -> assertThat(a.getSignedAt()).as("check signedAt").isEqualTo(expected.getSignedAt()))
-            .satisfies(a -> assertThat(a.getExecutedAt()).as("check executedAt").isEqualTo(expected.getExecutedAt()))
-            .satisfies(a -> assertThat(a.getRequestedBy()).as("check requestedBy").isEqualTo(expected.getRequestedBy()))
-            .satisfies(a -> assertThat(a.getApprovedBy()).as("check approvedBy").isEqualTo(expected.getApprovedBy()));
+            .satisfies(a -> assertThat(a.getExecutedAt()).as("check executedAt").isEqualTo(expected.getExecutedAt()));
     }
 
     /**

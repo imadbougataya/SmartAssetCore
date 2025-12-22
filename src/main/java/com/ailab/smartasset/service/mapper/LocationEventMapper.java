@@ -17,33 +17,29 @@ import org.mapstruct.*;
  */
 @Mapper(componentModel = "spring")
 public interface LocationEventMapper extends EntityMapper<LocationEventDTO, LocationEvent> {
-    @Mapping(target = "asset", source = "asset", qualifiedByName = "assetAssetCode")
-    @Mapping(target = "sensor", source = "sensor", qualifiedByName = "sensorExternalId")
-    @Mapping(target = "matchedSite", source = "matchedSite", qualifiedByName = "siteCode")
-    @Mapping(target = "matchedZone", source = "matchedZone", qualifiedByName = "zoneCode")
+    @Mapping(target = "asset", source = "asset", qualifiedByName = "assetId")
+    @Mapping(target = "sensor", source = "sensor", qualifiedByName = "sensorId")
+    @Mapping(target = "matchedSite", source = "matchedSite", qualifiedByName = "siteId")
+    @Mapping(target = "matchedZone", source = "matchedZone", qualifiedByName = "zoneId")
     LocationEventDTO toDto(LocationEvent s);
 
-    @Named("assetAssetCode")
+    @Named("assetId")
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
-    @Mapping(target = "assetCode", source = "assetCode")
-    AssetDTO toDtoAssetAssetCode(Asset asset);
+    AssetDTO toDtoAssetId(Asset asset);
 
-    @Named("sensorExternalId")
+    @Named("sensorId")
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
-    @Mapping(target = "externalId", source = "externalId")
-    SensorDTO toDtoSensorExternalId(Sensor sensor);
+    SensorDTO toDtoSensorId(Sensor sensor);
 
-    @Named("siteCode")
+    @Named("siteId")
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
-    @Mapping(target = "code", source = "code")
-    SiteDTO toDtoSiteCode(Site site);
+    SiteDTO toDtoSiteId(Site site);
 
-    @Named("zoneCode")
+    @Named("zoneId")
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
-    @Mapping(target = "code", source = "code")
-    ZoneDTO toDtoZoneCode(Zone zone);
+    ZoneDTO toDtoZoneId(Zone zone);
 }

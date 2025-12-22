@@ -4,7 +4,6 @@ import static com.ailab.smartasset.domain.LocationEventAsserts.*;
 import static com.ailab.smartasset.web.rest.TestUtil.createUpdateProxyForBean;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
-import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -16,26 +15,19 @@ import com.ailab.smartasset.domain.Site;
 import com.ailab.smartasset.domain.Zone;
 import com.ailab.smartasset.domain.enumeration.LocationSource;
 import com.ailab.smartasset.repository.LocationEventRepository;
-import com.ailab.smartasset.service.LocationEventService;
 import com.ailab.smartasset.service.dto.LocationEventDTO;
 import com.ailab.smartasset.service.mapper.LocationEventMapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityManager;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -45,7 +37,6 @@ import org.springframework.transaction.annotation.Transactional;
  * Integration tests for the {@link LocationEventResource} REST controller.
  */
 @IntegrationTest
-@ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
 @WithMockUser
 class LocationEventResourceIT {
@@ -102,14 +93,8 @@ class LocationEventResourceIT {
     @Autowired
     private LocationEventRepository locationEventRepository;
 
-    @Mock
-    private LocationEventRepository locationEventRepositoryMock;
-
     @Autowired
     private LocationEventMapper locationEventMapper;
-
-    @Mock
-    private LocationEventService locationEventServiceMock;
 
     @Autowired
     private EntityManager em;
@@ -331,23 +316,6 @@ class LocationEventResourceIT {
             .andExpect(jsonPath("$.[*].speedKmh").value(hasItem(DEFAULT_SPEED_KMH)))
             .andExpect(jsonPath("$.[*].gnssConstellation").value(hasItem(DEFAULT_GNSS_CONSTELLATION)))
             .andExpect(jsonPath("$.[*].rawPayload").value(hasItem(DEFAULT_RAW_PAYLOAD)));
-    }
-
-    @SuppressWarnings({ "unchecked" })
-    void getAllLocationEventsWithEagerRelationshipsIsEnabled() throws Exception {
-        when(locationEventServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
-
-        restLocationEventMockMvc.perform(get(ENTITY_API_URL + "?eagerload=true")).andExpect(status().isOk());
-
-        verify(locationEventServiceMock, times(1)).findAllWithEagerRelationships(any());
-    }
-
-    @SuppressWarnings({ "unchecked" })
-    void getAllLocationEventsWithEagerRelationshipsIsNotEnabled() throws Exception {
-        when(locationEventServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
-
-        restLocationEventMockMvc.perform(get(ENTITY_API_URL + "?eagerload=false")).andExpect(status().isOk());
-        verify(locationEventRepositoryMock, times(1)).findAll(any(Pageable.class));
     }
 
     @Test
@@ -1131,7 +1099,7 @@ class LocationEventResourceIT {
         Sensor sensor;
         if (TestUtil.findAll(em, Sensor.class).isEmpty()) {
             locationEventRepository.saveAndFlush(locationEvent);
-            sensor = SensorResourceIT.createEntity();
+            sensor = SensorResourceIT.createEntity(em);
         } else {
             sensor = TestUtil.findAll(em, Sensor.class).get(0);
         }
@@ -1175,7 +1143,7 @@ class LocationEventResourceIT {
         Zone matchedZone;
         if (TestUtil.findAll(em, Zone.class).isEmpty()) {
             locationEventRepository.saveAndFlush(locationEvent);
-            matchedZone = ZoneResourceIT.createEntity();
+            matchedZone = ZoneResourceIT.createEntity(em);
         } else {
             matchedZone = TestUtil.findAll(em, Zone.class).get(0);
         }

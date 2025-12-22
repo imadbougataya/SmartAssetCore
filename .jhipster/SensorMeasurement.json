@@ -33,11 +33,11 @@
   "pagination": "pagination",
   "relationships": [
     {
-      "otherEntityField": "externalId",
       "otherEntityName": "sensor",
       "relationshipName": "sensor",
       "relationshipSide": "left",
-      "relationshipType": "many-to-one"
+      "relationshipType": "many-to-one",
+      "relationshipValidateRules": "required"
     }
   ],
   "searchEngine": "no",

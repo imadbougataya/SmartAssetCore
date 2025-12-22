@@ -32,8 +32,8 @@
             <column name="esign_workflow_id" type="varchar(120)">
                 <constraints nullable="true" />
             </column>
-            <column name="esign_status" type="varchar(80)">
-                <constraints nullable="true" />
+            <column name="esign_status" type="varchar(255)">
+                <constraints nullable="false" />
             </column>
             <column name="esign_last_update" type="${datetimeType}">
                 <constraints nullable="true" />
@@ -44,13 +44,13 @@
             <column name="executed_at" type="${datetimeType}">
                 <constraints nullable="true" />
             </column>
-            <column name="requested_by" type="varchar(120)">
-                <constraints nullable="true" />
-            </column>
-            <column name="approved_by" type="varchar(120)">
-                <constraints nullable="true" />
-            </column>
             <column name="asset_id" type="bigint">
+                <constraints nullable="false" />
+            </column>
+            <column name="requested_by_id" type="bigint">
+                <constraints nullable="false" />
+            </column>
+            <column name="approved_by_id" type="bigint">
                 <constraints nullable="true" />
             </column>
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here -->
@@ -88,8 +88,8 @@
             <column name="esign_last_update" type="date"/>
             <column name="signed_at" type="date"/>
             <column name="executed_at" type="date"/>
-            <column name="requested_by" type="string"/>
-            <column name="approved_by" type="string"/>
+            <column name="asset_id" type="numeric"/>
+            <column name="requested_by_id" type="numeric"/>
             <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here -->
         </loadData>
     </changeSet>

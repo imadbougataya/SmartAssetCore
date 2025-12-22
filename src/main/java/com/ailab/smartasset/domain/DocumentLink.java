@@ -1,7 +1,6 @@
 package com.ailab.smartasset.domain;
 
 import com.ailab.smartasset.domain.enumeration.DocumentLinkEntityType;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import java.io.Serializable;
@@ -58,7 +57,6 @@ public class DocumentLink implements Serializable {
 
     @ManyToOne(optional = false)
     @NotNull
-    @JsonIgnoreProperties(value = { "asset" }, allowSetters = true)
     private Document document;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here

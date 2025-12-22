@@ -83,7 +83,6 @@ class DocumentCriteriaTest {
         documentCriteria.checksumSha256();
         documentCriteria.uploadedAt();
         documentCriteria.uploadedBy();
-        documentCriteria.assetId();
         documentCriteria.distinct();
     }
 
@@ -98,7 +97,6 @@ class DocumentCriteriaTest {
                 condition.apply(criteria.getChecksumSha256()) &&
                 condition.apply(criteria.getUploadedAt()) &&
                 condition.apply(criteria.getUploadedBy()) &&
-                condition.apply(criteria.getAssetId()) &&
                 condition.apply(criteria.getDistinct()),
             "every filter matches"
         );
@@ -115,7 +113,6 @@ class DocumentCriteriaTest {
                 condition.apply(criteria.getChecksumSha256(), copy.getChecksumSha256()) &&
                 condition.apply(criteria.getUploadedAt(), copy.getUploadedAt()) &&
                 condition.apply(criteria.getUploadedBy(), copy.getUploadedBy()) &&
-                condition.apply(criteria.getAssetId(), copy.getAssetId()) &&
                 condition.apply(criteria.getDistinct(), copy.getDistinct()),
             "every filter matches"
         );

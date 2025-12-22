@@ -4,7 +4,6 @@ import static com.ailab.smartasset.domain.ZoneAsserts.*;
 import static com.ailab.smartasset.web.rest.TestUtil.createUpdateProxyForBean;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
-import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -12,24 +11,17 @@ import com.ailab.smartasset.IntegrationTest;
 import com.ailab.smartasset.domain.Site;
 import com.ailab.smartasset.domain.Zone;
 import com.ailab.smartasset.repository.ZoneRepository;
-import com.ailab.smartasset.service.ZoneService;
 import com.ailab.smartasset.service.dto.ZoneDTO;
 import com.ailab.smartasset.service.mapper.ZoneMapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityManager;
-import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -39,7 +31,6 @@ import org.springframework.transaction.annotation.Transactional;
  * Integration tests for the {@link ZoneResource} REST controller.
  */
 @IntegrationTest
-@ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
 @WithMockUser
 class ZoneResourceIT {
@@ -77,14 +68,8 @@ class ZoneResourceIT {
     @Autowired
     private ZoneRepository zoneRepository;
 
-    @Mock
-    private ZoneRepository zoneRepositoryMock;
-
     @Autowired
     private ZoneMapper zoneMapper;
-
-    @Mock
-    private ZoneService zoneServiceMock;
 
     @Autowired
     private EntityManager em;
@@ -102,14 +87,25 @@ class ZoneResourceIT {
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
-    public static Zone createEntity() {
-        return new Zone()
+    public static Zone createEntity(EntityManager em) {
+        Zone zone = new Zone()
             .code(DEFAULT_CODE)
             .name(DEFAULT_NAME)
             .description(DEFAULT_DESCRIPTION)
             .centerLat(DEFAULT_CENTER_LAT)
             .centerLon(DEFAULT_CENTER_LON)
             .radiusMeters(DEFAULT_RADIUS_METERS);
+        // Add required entity
+        Site site;
+        if (TestUtil.findAll(em, Site.class).isEmpty()) {
+            site = SiteResourceIT.createEntity();
+            em.persist(site);
+            em.flush();
+        } else {
+            site = TestUtil.findAll(em, Site.class).get(0);
+        }
+        zone.setSite(site);
+        return zone;
     }
 
     /**
@@ -118,19 +114,30 @@ class ZoneResourceIT {
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
-    public static Zone createUpdatedEntity() {
-        return new Zone()
+    public static Zone createUpdatedEntity(EntityManager em) {
+        Zone updatedZone = new Zone()
             .code(UPDATED_CODE)
             .name(UPDATED_NAME)
             .description(UPDATED_DESCRIPTION)
             .centerLat(UPDATED_CENTER_LAT)
             .centerLon(UPDATED_CENTER_LON)
             .radiusMeters(UPDATED_RADIUS_METERS);
+        // Add required entity
+        Site site;
+        if (TestUtil.findAll(em, Site.class).isEmpty()) {
+            site = SiteResourceIT.createUpdatedEntity();
+            em.persist(site);
+            em.flush();
+        } else {
+            site = TestUtil.findAll(em, Site.class).get(0);
+        }
+        updatedZone.setSite(site);
+        return updatedZone;
     }
 
     @BeforeEach
     void initTest() {
-        zone = createEntity();
+        zone = createEntity(em);
     }
 
     @AfterEach
@@ -235,23 +242,6 @@ class ZoneResourceIT {
             .andExpect(jsonPath("$.[*].centerLat").value(hasItem(DEFAULT_CENTER_LAT)))
             .andExpect(jsonPath("$.[*].centerLon").value(hasItem(DEFAULT_CENTER_LON)))
             .andExpect(jsonPath("$.[*].radiusMeters").value(hasItem(DEFAULT_RADIUS_METERS)));
-    }
-
-    @SuppressWarnings({ "unchecked" })
-    void getAllZonesWithEagerRelationshipsIsEnabled() throws Exception {
-        when(zoneServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
-
-        restZoneMockMvc.perform(get(ENTITY_API_URL + "?eagerload=true")).andExpect(status().isOk());
-
-        verify(zoneServiceMock, times(1)).findAllWithEagerRelationships(any());
-    }
-
-    @SuppressWarnings({ "unchecked" })
-    void getAllZonesWithEagerRelationshipsIsNotEnabled() throws Exception {
-        when(zoneServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
-
-        restZoneMockMvc.perform(get(ENTITY_API_URL + "?eagerload=false")).andExpect(status().isOk());
-        verify(zoneRepositoryMock, times(1)).findAll(any(Pageable.class));
     }
 
     @Test

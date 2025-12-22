@@ -1,5 +1,6 @@
 package com.ailab.smartasset.service.dto;
 
+import com.ailab.smartasset.domain.enumeration.EsignStatus;
 import com.ailab.smartasset.domain.enumeration.MovementRequestStatus;
 import jakarta.validation.constraints.*;
 import java.io.Serializable;
@@ -32,8 +33,8 @@ public class AssetMovementRequestDTO implements Serializable {
     @Size(max = 120)
     private String esignWorkflowId;
 
-    @Size(max = 80)
-    private String esignStatus;
+    @NotNull
+    private EsignStatus esignStatus;
 
     private Instant esignLastUpdate;
 
@@ -41,13 +42,13 @@ public class AssetMovementRequestDTO implements Serializable {
 
     private Instant executedAt;
 
-    @Size(max = 120)
-    private String requestedBy;
-
-    @Size(max = 120)
-    private String approvedBy;
-
+    @NotNull
     private AssetDTO asset;
+
+    @NotNull
+    private UserDTO requestedBy;
+
+    private UserDTO approvedBy;
 
     public Long getId() {
         return id;
@@ -105,11 +106,11 @@ public class AssetMovementRequestDTO implements Serializable {
         this.esignWorkflowId = esignWorkflowId;
     }
 
-    public String getEsignStatus() {
+    public EsignStatus getEsignStatus() {
         return esignStatus;
     }
 
-    public void setEsignStatus(String esignStatus) {
+    public void setEsignStatus(EsignStatus esignStatus) {
         this.esignStatus = esignStatus;
     }
 
@@ -137,28 +138,28 @@ public class AssetMovementRequestDTO implements Serializable {
         this.executedAt = executedAt;
     }
 
-    public String getRequestedBy() {
-        return requestedBy;
-    }
-
-    public void setRequestedBy(String requestedBy) {
-        this.requestedBy = requestedBy;
-    }
-
-    public String getApprovedBy() {
-        return approvedBy;
-    }
-
-    public void setApprovedBy(String approvedBy) {
-        this.approvedBy = approvedBy;
-    }
-
     public AssetDTO getAsset() {
         return asset;
     }
 
     public void setAsset(AssetDTO asset) {
         this.asset = asset;
+    }
+
+    public UserDTO getRequestedBy() {
+        return requestedBy;
+    }
+
+    public void setRequestedBy(UserDTO requestedBy) {
+        this.requestedBy = requestedBy;
+    }
+
+    public UserDTO getApprovedBy() {
+        return approvedBy;
+    }
+
+    public void setApprovedBy(UserDTO approvedBy) {
+        this.approvedBy = approvedBy;
     }
 
     @Override
@@ -197,9 +198,9 @@ public class AssetMovementRequestDTO implements Serializable {
             ", esignLastUpdate='" + getEsignLastUpdate() + "'" +
             ", signedAt='" + getSignedAt() + "'" +
             ", executedAt='" + getExecutedAt() + "'" +
-            ", requestedBy='" + getRequestedBy() + "'" +
-            ", approvedBy='" + getApprovedBy() + "'" +
             ", asset=" + getAsset() +
+            ", requestedBy=" + getRequestedBy() +
+            ", approvedBy=" + getApprovedBy() +
             "}";
     }
 }

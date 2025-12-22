@@ -7,8 +7,6 @@ import com.ailab.smartasset.service.mapper.SensorMeasurementMapper;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -80,15 +78,6 @@ public class SensorMeasurementService {
     }
 
     /**
-     * Get all the sensorMeasurements with eager load of many-to-many relationships.
-     *
-     * @return the list of entities.
-     */
-    public Page<SensorMeasurementDTO> findAllWithEagerRelationships(Pageable pageable) {
-        return sensorMeasurementRepository.findAllWithEagerRelationships(pageable).map(sensorMeasurementMapper::toDto);
-    }
-
-    /**
      * Get one sensorMeasurement by id.
      *
      * @param id the id of the entity.
@@ -97,7 +86,7 @@ public class SensorMeasurementService {
     @Transactional(readOnly = true)
     public Optional<SensorMeasurementDTO> findOne(Long id) {
         LOG.debug("Request to get SensorMeasurement : {}", id);
-        return sensorMeasurementRepository.findOneWithEagerRelationships(id).map(sensorMeasurementMapper::toDto);
+        return sensorMeasurementRepository.findById(id).map(sensorMeasurementMapper::toDto);
     }
 
     /**

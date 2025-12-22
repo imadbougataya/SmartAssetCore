@@ -72,7 +72,8 @@ public class MaintenanceEvent implements Serializable {
     @Column(name = "notes", length = 2000)
     private String notes;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(optional = false)
+    @NotNull
     @JsonIgnoreProperties(value = { "productionLine", "allowedSite", "allowedZone" }, allowSetters = true)
     private Asset asset;
 

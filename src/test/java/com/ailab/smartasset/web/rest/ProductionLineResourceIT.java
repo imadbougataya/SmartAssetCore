@@ -4,7 +4,6 @@ import static com.ailab.smartasset.domain.ProductionLineAsserts.*;
 import static com.ailab.smartasset.web.rest.TestUtil.createUpdateProxyForBean;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
-import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -12,24 +11,17 @@ import com.ailab.smartasset.IntegrationTest;
 import com.ailab.smartasset.domain.ProductionLine;
 import com.ailab.smartasset.domain.Zone;
 import com.ailab.smartasset.repository.ProductionLineRepository;
-import com.ailab.smartasset.service.ProductionLineService;
 import com.ailab.smartasset.service.dto.ProductionLineDTO;
 import com.ailab.smartasset.service.mapper.ProductionLineMapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityManager;
-import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -39,7 +31,6 @@ import org.springframework.transaction.annotation.Transactional;
  * Integration tests for the {@link ProductionLineResource} REST controller.
  */
 @IntegrationTest
-@ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
 @WithMockUser
 class ProductionLineResourceIT {
@@ -65,14 +56,8 @@ class ProductionLineResourceIT {
     @Autowired
     private ProductionLineRepository productionLineRepository;
 
-    @Mock
-    private ProductionLineRepository productionLineRepositoryMock;
-
     @Autowired
     private ProductionLineMapper productionLineMapper;
-
-    @Mock
-    private ProductionLineService productionLineServiceMock;
 
     @Autowired
     private EntityManager em;
@@ -90,8 +75,19 @@ class ProductionLineResourceIT {
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
-    public static ProductionLine createEntity() {
-        return new ProductionLine().code(DEFAULT_CODE).name(DEFAULT_NAME).description(DEFAULT_DESCRIPTION);
+    public static ProductionLine createEntity(EntityManager em) {
+        ProductionLine productionLine = new ProductionLine().code(DEFAULT_CODE).name(DEFAULT_NAME).description(DEFAULT_DESCRIPTION);
+        // Add required entity
+        Zone zone;
+        if (TestUtil.findAll(em, Zone.class).isEmpty()) {
+            zone = ZoneResourceIT.createEntity(em);
+            em.persist(zone);
+            em.flush();
+        } else {
+            zone = TestUtil.findAll(em, Zone.class).get(0);
+        }
+        productionLine.setZone(zone);
+        return productionLine;
     }
 
     /**
@@ -100,13 +96,24 @@ class ProductionLineResourceIT {
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
-    public static ProductionLine createUpdatedEntity() {
-        return new ProductionLine().code(UPDATED_CODE).name(UPDATED_NAME).description(UPDATED_DESCRIPTION);
+    public static ProductionLine createUpdatedEntity(EntityManager em) {
+        ProductionLine updatedProductionLine = new ProductionLine().code(UPDATED_CODE).name(UPDATED_NAME).description(UPDATED_DESCRIPTION);
+        // Add required entity
+        Zone zone;
+        if (TestUtil.findAll(em, Zone.class).isEmpty()) {
+            zone = ZoneResourceIT.createUpdatedEntity(em);
+            em.persist(zone);
+            em.flush();
+        } else {
+            zone = TestUtil.findAll(em, Zone.class).get(0);
+        }
+        updatedProductionLine.setZone(zone);
+        return updatedProductionLine;
     }
 
     @BeforeEach
     void initTest() {
-        productionLine = createEntity();
+        productionLine = createEntity(em);
     }
 
     @AfterEach
@@ -208,23 +215,6 @@ class ProductionLineResourceIT {
             .andExpect(jsonPath("$.[*].code").value(hasItem(DEFAULT_CODE)))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
             .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION)));
-    }
-
-    @SuppressWarnings({ "unchecked" })
-    void getAllProductionLinesWithEagerRelationshipsIsEnabled() throws Exception {
-        when(productionLineServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
-
-        restProductionLineMockMvc.perform(get(ENTITY_API_URL + "?eagerload=true")).andExpect(status().isOk());
-
-        verify(productionLineServiceMock, times(1)).findAllWithEagerRelationships(any());
-    }
-
-    @SuppressWarnings({ "unchecked" })
-    void getAllProductionLinesWithEagerRelationshipsIsNotEnabled() throws Exception {
-        when(productionLineServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
-
-        restProductionLineMockMvc.perform(get(ENTITY_API_URL + "?eagerload=false")).andExpect(status().isOk());
-        verify(productionLineRepositoryMock, times(1)).findAll(any(Pageable.class));
     }
 
     @Test
@@ -421,7 +411,7 @@ class ProductionLineResourceIT {
         Zone zone;
         if (TestUtil.findAll(em, Zone.class).isEmpty()) {
             productionLineRepository.saveAndFlush(productionLine);
-            zone = ZoneResourceIT.createEntity();
+            zone = ZoneResourceIT.createEntity(em);
         } else {
             zone = TestUtil.findAll(em, Zone.class).get(0);
         }

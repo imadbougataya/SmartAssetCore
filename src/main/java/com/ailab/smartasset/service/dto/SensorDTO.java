@@ -37,6 +37,7 @@ public class SensorDTO implements Serializable {
     @NotNull
     private Boolean active;
 
+    @NotNull
     private AssetDTO asset;
 
     public Long getId() {

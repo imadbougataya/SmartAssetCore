@@ -47,6 +47,7 @@ public class MaintenanceEventDTO implements Serializable {
     @Size(max = 2000)
     private String notes;
 
+    @NotNull
     private AssetDTO asset;
 
     public Long getId() {

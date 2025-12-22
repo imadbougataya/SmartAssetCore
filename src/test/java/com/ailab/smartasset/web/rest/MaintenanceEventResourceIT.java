@@ -5,7 +5,6 @@ import static com.ailab.smartasset.web.rest.TestUtil.createUpdateProxyForBean;
 import static com.ailab.smartasset.web.rest.TestUtil.sameNumber;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
-import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -15,7 +14,6 @@ import com.ailab.smartasset.domain.MaintenanceEvent;
 import com.ailab.smartasset.domain.enumeration.MaintenanceStatus;
 import com.ailab.smartasset.domain.enumeration.MaintenanceType;
 import com.ailab.smartasset.repository.MaintenanceEventRepository;
-import com.ailab.smartasset.service.MaintenanceEventService;
 import com.ailab.smartasset.service.dto.MaintenanceEventDTO;
 import com.ailab.smartasset.service.mapper.MaintenanceEventMapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -23,19 +21,13 @@ import jakarta.persistence.EntityManager;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -45,7 +37,6 @@ import org.springframework.transaction.annotation.Transactional;
  * Integration tests for the {@link MaintenanceEventResource} REST controller.
  */
 @IntegrationTest
-@ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
 @WithMockUser
 class MaintenanceEventResourceIT {
@@ -100,14 +91,8 @@ class MaintenanceEventResourceIT {
     @Autowired
     private MaintenanceEventRepository maintenanceEventRepository;
 
-    @Mock
-    private MaintenanceEventRepository maintenanceEventRepositoryMock;
-
     @Autowired
     private MaintenanceEventMapper maintenanceEventMapper;
-
-    @Mock
-    private MaintenanceEventService maintenanceEventServiceMock;
 
     @Autowired
     private EntityManager em;
@@ -125,8 +110,8 @@ class MaintenanceEventResourceIT {
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
-    public static MaintenanceEvent createEntity() {
-        return new MaintenanceEvent()
+    public static MaintenanceEvent createEntity(EntityManager em) {
+        MaintenanceEvent maintenanceEvent = new MaintenanceEvent()
             .maintenanceType(DEFAULT_MAINTENANCE_TYPE)
             .status(DEFAULT_STATUS)
             .requestedAt(DEFAULT_REQUESTED_AT)
@@ -139,6 +124,17 @@ class MaintenanceEventResourceIT {
             .downtimeMinutes(DEFAULT_DOWNTIME_MINUTES)
             .costAmount(DEFAULT_COST_AMOUNT)
             .notes(DEFAULT_NOTES);
+        // Add required entity
+        Asset asset;
+        if (TestUtil.findAll(em, Asset.class).isEmpty()) {
+            asset = AssetResourceIT.createEntity(em);
+            em.persist(asset);
+            em.flush();
+        } else {
+            asset = TestUtil.findAll(em, Asset.class).get(0);
+        }
+        maintenanceEvent.setAsset(asset);
+        return maintenanceEvent;
     }
 
     /**
@@ -147,8 +143,8 @@ class MaintenanceEventResourceIT {
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
-    public static MaintenanceEvent createUpdatedEntity() {
-        return new MaintenanceEvent()
+    public static MaintenanceEvent createUpdatedEntity(EntityManager em) {
+        MaintenanceEvent updatedMaintenanceEvent = new MaintenanceEvent()
             .maintenanceType(UPDATED_MAINTENANCE_TYPE)
             .status(UPDATED_STATUS)
             .requestedAt(UPDATED_REQUESTED_AT)
@@ -161,11 +157,22 @@ class MaintenanceEventResourceIT {
             .downtimeMinutes(UPDATED_DOWNTIME_MINUTES)
             .costAmount(UPDATED_COST_AMOUNT)
             .notes(UPDATED_NOTES);
+        // Add required entity
+        Asset asset;
+        if (TestUtil.findAll(em, Asset.class).isEmpty()) {
+            asset = AssetResourceIT.createUpdatedEntity(em);
+            em.persist(asset);
+            em.flush();
+        } else {
+            asset = TestUtil.findAll(em, Asset.class).get(0);
+        }
+        updatedMaintenanceEvent.setAsset(asset);
+        return updatedMaintenanceEvent;
     }
 
     @BeforeEach
     void initTest() {
-        maintenanceEvent = createEntity();
+        maintenanceEvent = createEntity(em);
     }
 
     @AfterEach
@@ -293,23 +300,6 @@ class MaintenanceEventResourceIT {
             .andExpect(jsonPath("$.[*].downtimeMinutes").value(hasItem(DEFAULT_DOWNTIME_MINUTES)))
             .andExpect(jsonPath("$.[*].costAmount").value(hasItem(sameNumber(DEFAULT_COST_AMOUNT))))
             .andExpect(jsonPath("$.[*].notes").value(hasItem(DEFAULT_NOTES)));
-    }
-
-    @SuppressWarnings({ "unchecked" })
-    void getAllMaintenanceEventsWithEagerRelationshipsIsEnabled() throws Exception {
-        when(maintenanceEventServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
-
-        restMaintenanceEventMockMvc.perform(get(ENTITY_API_URL + "?eagerload=true")).andExpect(status().isOk());
-
-        verify(maintenanceEventServiceMock, times(1)).findAllWithEagerRelationships(any());
-    }
-
-    @SuppressWarnings({ "unchecked" })
-    void getAllMaintenanceEventsWithEagerRelationshipsIsNotEnabled() throws Exception {
-        when(maintenanceEventServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
-
-        restMaintenanceEventMockMvc.perform(get(ENTITY_API_URL + "?eagerload=false")).andExpect(status().isOk());
-        verify(maintenanceEventRepositoryMock, times(1)).findAll(any(Pageable.class));
     }
 
     @Test

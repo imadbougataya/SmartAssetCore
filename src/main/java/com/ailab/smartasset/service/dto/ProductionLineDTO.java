@@ -23,6 +23,7 @@ public class ProductionLineDTO implements Serializable {
     @Size(max = 500)
     private String description;
 
+    @NotNull
     private ZoneDTO zone;
 
     public Long getId() {

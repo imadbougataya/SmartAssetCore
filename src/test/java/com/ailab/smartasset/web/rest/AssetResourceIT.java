@@ -5,7 +5,6 @@ import static com.ailab.smartasset.web.rest.TestUtil.createUpdateProxyForBean;
 import static com.ailab.smartasset.web.rest.TestUtil.sameNumber;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
-import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -21,7 +20,6 @@ import com.ailab.smartasset.domain.enumeration.Criticality;
 import com.ailab.smartasset.domain.enumeration.MountingType;
 import com.ailab.smartasset.domain.enumeration.TemperatureProbeType;
 import com.ailab.smartasset.repository.AssetRepository;
-import com.ailab.smartasset.service.AssetService;
 import com.ailab.smartasset.service.dto.AssetDTO;
 import com.ailab.smartasset.service.mapper.AssetMapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -29,19 +27,13 @@ import jakarta.persistence.EntityManager;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -51,7 +43,6 @@ import org.springframework.transaction.annotation.Transactional;
  * Integration tests for the {@link AssetResource} REST controller.
  */
 @IntegrationTest
-@ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
 @WithMockUser
 class AssetResourceIT {
@@ -178,14 +169,8 @@ class AssetResourceIT {
     @Autowired
     private AssetRepository assetRepository;
 
-    @Mock
-    private AssetRepository assetRepositoryMock;
-
     @Autowired
     private AssetMapper assetMapper;
-
-    @Mock
-    private AssetService assetServiceMock;
 
     @Autowired
     private EntityManager em;
@@ -240,7 +225,7 @@ class AssetResourceIT {
         // Add required entity
         ProductionLine productionLine;
         if (TestUtil.findAll(em, ProductionLine.class).isEmpty()) {
-            productionLine = ProductionLineResourceIT.createEntity();
+            productionLine = ProductionLineResourceIT.createEntity(em);
             em.persist(productionLine);
             em.flush();
         } else {
@@ -293,7 +278,7 @@ class AssetResourceIT {
         // Add required entity
         ProductionLine productionLine;
         if (TestUtil.findAll(em, ProductionLine.class).isEmpty()) {
-            productionLine = ProductionLineResourceIT.createUpdatedEntity();
+            productionLine = ProductionLineResourceIT.createUpdatedEntity(em);
             em.persist(productionLine);
             em.flush();
         } else {
@@ -487,23 +472,6 @@ class AssetResourceIT {
             .andExpect(jsonPath("$.[*].lastCommissioningDate").value(hasItem(DEFAULT_LAST_COMMISSIONING_DATE.toString())))
             .andExpect(jsonPath("$.[*].lastMaintenanceDate").value(hasItem(DEFAULT_LAST_MAINTENANCE_DATE.toString())))
             .andExpect(jsonPath("$.[*].maintenanceCount").value(hasItem(DEFAULT_MAINTENANCE_COUNT)));
-    }
-
-    @SuppressWarnings({ "unchecked" })
-    void getAllAssetsWithEagerRelationshipsIsEnabled() throws Exception {
-        when(assetServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
-
-        restAssetMockMvc.perform(get(ENTITY_API_URL + "?eagerload=true")).andExpect(status().isOk());
-
-        verify(assetServiceMock, times(1)).findAllWithEagerRelationships(any());
-    }
-
-    @SuppressWarnings({ "unchecked" })
-    void getAllAssetsWithEagerRelationshipsIsNotEnabled() throws Exception {
-        when(assetServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
-
-        restAssetMockMvc.perform(get(ENTITY_API_URL + "?eagerload=false")).andExpect(status().isOk());
-        verify(assetRepositoryMock, times(1)).findAll(any(Pageable.class));
     }
 
     @Test
@@ -2499,7 +2467,7 @@ class AssetResourceIT {
         ProductionLine productionLine;
         if (TestUtil.findAll(em, ProductionLine.class).isEmpty()) {
             assetRepository.saveAndFlush(asset);
-            productionLine = ProductionLineResourceIT.createEntity();
+            productionLine = ProductionLineResourceIT.createEntity(em);
         } else {
             productionLine = TestUtil.findAll(em, ProductionLine.class).get(0);
         }
@@ -2543,7 +2511,7 @@ class AssetResourceIT {
         Zone allowedZone;
         if (TestUtil.findAll(em, Zone.class).isEmpty()) {
             assetRepository.saveAndFlush(asset);
-            allowedZone = ZoneResourceIT.createEntity();
+            allowedZone = ZoneResourceIT.createEntity(em);
         } else {
             allowedZone = TestUtil.findAll(em, Zone.class).get(0);
         }

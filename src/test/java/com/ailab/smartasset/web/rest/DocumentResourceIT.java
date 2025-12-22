@@ -4,34 +4,25 @@ import static com.ailab.smartasset.domain.DocumentAsserts.*;
 import static com.ailab.smartasset.web.rest.TestUtil.createUpdateProxyForBean;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
-import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.ailab.smartasset.IntegrationTest;
-import com.ailab.smartasset.domain.Asset;
 import com.ailab.smartasset.domain.Document;
 import com.ailab.smartasset.repository.DocumentRepository;
-import com.ailab.smartasset.service.DocumentService;
 import com.ailab.smartasset.service.dto.DocumentDTO;
 import com.ailab.smartasset.service.mapper.DocumentMapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityManager;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -41,7 +32,6 @@ import org.springframework.transaction.annotation.Transactional;
  * Integration tests for the {@link DocumentResource} REST controller.
  */
 @IntegrationTest
-@ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
 @WithMockUser
 class DocumentResourceIT {
@@ -80,14 +70,8 @@ class DocumentResourceIT {
     @Autowired
     private DocumentRepository documentRepository;
 
-    @Mock
-    private DocumentRepository documentRepositoryMock;
-
     @Autowired
     private DocumentMapper documentMapper;
-
-    @Mock
-    private DocumentService documentServiceMock;
 
     @Autowired
     private EntityManager em;
@@ -105,8 +89,8 @@ class DocumentResourceIT {
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
-    public static Document createEntity(EntityManager em) {
-        Document document = new Document()
+    public static Document createEntity() {
+        return new Document()
             .fileName(DEFAULT_FILE_NAME)
             .mimeType(DEFAULT_MIME_TYPE)
             .sizeBytes(DEFAULT_SIZE_BYTES)
@@ -114,17 +98,6 @@ class DocumentResourceIT {
             .checksumSha256(DEFAULT_CHECKSUM_SHA_256)
             .uploadedAt(DEFAULT_UPLOADED_AT)
             .uploadedBy(DEFAULT_UPLOADED_BY);
-        // Add required entity
-        Asset asset;
-        if (TestUtil.findAll(em, Asset.class).isEmpty()) {
-            asset = AssetResourceIT.createEntity(em);
-            em.persist(asset);
-            em.flush();
-        } else {
-            asset = TestUtil.findAll(em, Asset.class).get(0);
-        }
-        document.setAsset(asset);
-        return document;
     }
 
     /**
@@ -133,8 +106,8 @@ class DocumentResourceIT {
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
-    public static Document createUpdatedEntity(EntityManager em) {
-        Document updatedDocument = new Document()
+    public static Document createUpdatedEntity() {
+        return new Document()
             .fileName(UPDATED_FILE_NAME)
             .mimeType(UPDATED_MIME_TYPE)
             .sizeBytes(UPDATED_SIZE_BYTES)
@@ -142,22 +115,11 @@ class DocumentResourceIT {
             .checksumSha256(UPDATED_CHECKSUM_SHA_256)
             .uploadedAt(UPDATED_UPLOADED_AT)
             .uploadedBy(UPDATED_UPLOADED_BY);
-        // Add required entity
-        Asset asset;
-        if (TestUtil.findAll(em, Asset.class).isEmpty()) {
-            asset = AssetResourceIT.createUpdatedEntity(em);
-            em.persist(asset);
-            em.flush();
-        } else {
-            asset = TestUtil.findAll(em, Asset.class).get(0);
-        }
-        updatedDocument.setAsset(asset);
-        return updatedDocument;
     }
 
     @BeforeEach
     void initTest() {
-        document = createEntity(em);
+        document = createEntity();
     }
 
     @AfterEach
@@ -297,23 +259,6 @@ class DocumentResourceIT {
             .andExpect(jsonPath("$.[*].checksumSha256").value(hasItem(DEFAULT_CHECKSUM_SHA_256)))
             .andExpect(jsonPath("$.[*].uploadedAt").value(hasItem(DEFAULT_UPLOADED_AT.toString())))
             .andExpect(jsonPath("$.[*].uploadedBy").value(hasItem(DEFAULT_UPLOADED_BY)));
-    }
-
-    @SuppressWarnings({ "unchecked" })
-    void getAllDocumentsWithEagerRelationshipsIsEnabled() throws Exception {
-        when(documentServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
-
-        restDocumentMockMvc.perform(get(ENTITY_API_URL + "?eagerload=true")).andExpect(status().isOk());
-
-        verify(documentServiceMock, times(1)).findAllWithEagerRelationships(any());
-    }
-
-    @SuppressWarnings({ "unchecked" })
-    void getAllDocumentsWithEagerRelationshipsIsNotEnabled() throws Exception {
-        when(documentServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
-
-        restDocumentMockMvc.perform(get(ENTITY_API_URL + "?eagerload=false")).andExpect(status().isOk());
-        verify(documentRepositoryMock, times(1)).findAll(any(Pageable.class));
     }
 
     @Test
@@ -721,28 +666,6 @@ class DocumentResourceIT {
 
         // Get all the documentList where uploadedBy does not contain
         defaultDocumentFiltering("uploadedBy.doesNotContain=" + UPDATED_UPLOADED_BY, "uploadedBy.doesNotContain=" + DEFAULT_UPLOADED_BY);
-    }
-
-    @Test
-    @Transactional
-    void getAllDocumentsByAssetIsEqualToSomething() throws Exception {
-        Asset asset;
-        if (TestUtil.findAll(em, Asset.class).isEmpty()) {
-            documentRepository.saveAndFlush(document);
-            asset = AssetResourceIT.createEntity(em);
-        } else {
-            asset = TestUtil.findAll(em, Asset.class).get(0);
-        }
-        em.persist(asset);
-        em.flush();
-        document.setAsset(asset);
-        documentRepository.saveAndFlush(document);
-        Long assetId = asset.getId();
-        // Get all the documentList where asset equals to assetId
-        defaultDocumentShouldBeFound("assetId.equals=" + assetId);
-
-        // Get all the documentList where asset equals to (assetId + 1)
-        defaultDocumentShouldNotBeFound("assetId.equals=" + (assetId + 1));
     }
 
     private void defaultDocumentFiltering(String shouldBeFound, String shouldNotBeFound) throws Exception {

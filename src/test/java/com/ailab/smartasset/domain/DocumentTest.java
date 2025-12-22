@@ -1,6 +1,5 @@
 package com.ailab.smartasset.domain;
 
-import static com.ailab.smartasset.domain.AssetTestSamples.*;
 import static com.ailab.smartasset.domain.DocumentTestSamples.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -21,17 +20,5 @@ class DocumentTest {
 
         document2 = getDocumentSample2();
         assertThat(document1).isNotEqualTo(document2);
-    }
-
-    @Test
-    void assetTest() {
-        Document document = getDocumentRandomSampleGenerator();
-        Asset assetBack = getAssetRandomSampleGenerator();
-
-        document.setAsset(assetBack);
-        assertThat(document.getAsset()).isEqualTo(assetBack);
-
-        document.asset(null);
-        assertThat(document.getAsset()).isNull();
     }
 }

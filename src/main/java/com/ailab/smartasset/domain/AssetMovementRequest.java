@@ -1,5 +1,6 @@
 package com.ailab.smartasset.domain;
 
+import com.ailab.smartasset.domain.enumeration.EsignStatus;
 import com.ailab.smartasset.domain.enumeration.MovementRequestStatus;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
@@ -50,9 +51,10 @@ public class AssetMovementRequest implements Serializable {
     @Column(name = "esign_workflow_id", length = 120)
     private String esignWorkflowId;
 
-    @Size(max = 80)
-    @Column(name = "esign_status", length = 80)
-    private String esignStatus;
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @Column(name = "esign_status", nullable = false)
+    private EsignStatus esignStatus;
 
     @Column(name = "esign_last_update")
     private Instant esignLastUpdate;
@@ -63,17 +65,17 @@ public class AssetMovementRequest implements Serializable {
     @Column(name = "executed_at")
     private Instant executedAt;
 
-    @Size(max = 120)
-    @Column(name = "requested_by", length = 120)
-    private String requestedBy;
-
-    @Size(max = 120)
-    @Column(name = "approved_by", length = 120)
-    private String approvedBy;
-
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(optional = false)
+    @NotNull
     @JsonIgnoreProperties(value = { "productionLine", "allowedSite", "allowedZone" }, allowSetters = true)
     private Asset asset;
+
+    @ManyToOne(optional = false)
+    @NotNull
+    private User requestedBy;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User approvedBy;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -168,16 +170,16 @@ public class AssetMovementRequest implements Serializable {
         this.esignWorkflowId = esignWorkflowId;
     }
 
-    public String getEsignStatus() {
+    public EsignStatus getEsignStatus() {
         return this.esignStatus;
     }
 
-    public AssetMovementRequest esignStatus(String esignStatus) {
+    public AssetMovementRequest esignStatus(EsignStatus esignStatus) {
         this.setEsignStatus(esignStatus);
         return this;
     }
 
-    public void setEsignStatus(String esignStatus) {
+    public void setEsignStatus(EsignStatus esignStatus) {
         this.esignStatus = esignStatus;
     }
 
@@ -220,32 +222,6 @@ public class AssetMovementRequest implements Serializable {
         this.executedAt = executedAt;
     }
 
-    public String getRequestedBy() {
-        return this.requestedBy;
-    }
-
-    public AssetMovementRequest requestedBy(String requestedBy) {
-        this.setRequestedBy(requestedBy);
-        return this;
-    }
-
-    public void setRequestedBy(String requestedBy) {
-        this.requestedBy = requestedBy;
-    }
-
-    public String getApprovedBy() {
-        return this.approvedBy;
-    }
-
-    public AssetMovementRequest approvedBy(String approvedBy) {
-        this.setApprovedBy(approvedBy);
-        return this;
-    }
-
-    public void setApprovedBy(String approvedBy) {
-        this.approvedBy = approvedBy;
-    }
-
     public Asset getAsset() {
         return this.asset;
     }
@@ -256,6 +232,32 @@ public class AssetMovementRequest implements Serializable {
 
     public AssetMovementRequest asset(Asset asset) {
         this.setAsset(asset);
+        return this;
+    }
+
+    public User getRequestedBy() {
+        return this.requestedBy;
+    }
+
+    public void setRequestedBy(User user) {
+        this.requestedBy = user;
+    }
+
+    public AssetMovementRequest requestedBy(User user) {
+        this.setRequestedBy(user);
+        return this;
+    }
+
+    public User getApprovedBy() {
+        return this.approvedBy;
+    }
+
+    public void setApprovedBy(User user) {
+        this.approvedBy = user;
+    }
+
+    public AssetMovementRequest approvedBy(User user) {
+        this.setApprovedBy(user);
         return this;
     }
 
@@ -293,8 +295,6 @@ public class AssetMovementRequest implements Serializable {
             ", esignLastUpdate='" + getEsignLastUpdate() + "'" +
             ", signedAt='" + getSignedAt() + "'" +
             ", executedAt='" + getExecutedAt() + "'" +
-            ", requestedBy='" + getRequestedBy() + "'" +
-            ", approvedBy='" + getApprovedBy() + "'" +
             "}";
     }
 }

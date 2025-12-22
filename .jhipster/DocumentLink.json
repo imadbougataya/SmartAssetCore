@@ -53,7 +53,6 @@
   "pagination": "pagination",
   "relationships": [
     {
-      "otherEntityField": "fileName",
       "otherEntityName": "document",
       "relationshipName": "document",
       "relationshipSide": "left",

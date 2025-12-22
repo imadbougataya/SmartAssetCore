@@ -11,12 +11,11 @@ import org.mapstruct.*;
  */
 @Mapper(componentModel = "spring")
 public interface SensorMeasurementMapper extends EntityMapper<SensorMeasurementDTO, SensorMeasurement> {
-    @Mapping(target = "sensor", source = "sensor", qualifiedByName = "sensorExternalId")
+    @Mapping(target = "sensor", source = "sensor", qualifiedByName = "sensorId")
     SensorMeasurementDTO toDto(SensorMeasurement s);
 
-    @Named("sensorExternalId")
+    @Named("sensorId")
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
-    @Mapping(target = "externalId", source = "externalId")
-    SensorDTO toDtoSensorExternalId(Sensor sensor);
+    SensorDTO toDtoSensorId(Sensor sensor);
 }

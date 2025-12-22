@@ -7,8 +7,6 @@ import com.ailab.smartasset.service.mapper.LocationEventMapper;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -77,15 +75,6 @@ public class LocationEventService {
     }
 
     /**
-     * Get all the locationEvents with eager load of many-to-many relationships.
-     *
-     * @return the list of entities.
-     */
-    public Page<LocationEventDTO> findAllWithEagerRelationships(Pageable pageable) {
-        return locationEventRepository.findAllWithEagerRelationships(pageable).map(locationEventMapper::toDto);
-    }
-
-    /**
      * Get one locationEvent by id.
      *
      * @param id the id of the entity.
@@ -94,7 +83,7 @@ public class LocationEventService {
     @Transactional(readOnly = true)
     public Optional<LocationEventDTO> findOne(Long id) {
         LOG.debug("Request to get LocationEvent : {}", id);
-        return locationEventRepository.findOneWithEagerRelationships(id).map(locationEventMapper::toDto);
+        return locationEventRepository.findById(id).map(locationEventMapper::toDto);
     }
 
     /**

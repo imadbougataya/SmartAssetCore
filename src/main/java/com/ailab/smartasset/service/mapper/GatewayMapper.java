@@ -13,19 +13,17 @@ import org.mapstruct.*;
  */
 @Mapper(componentModel = "spring")
 public interface GatewayMapper extends EntityMapper<GatewayDTO, Gateway> {
-    @Mapping(target = "site", source = "site", qualifiedByName = "siteCode")
-    @Mapping(target = "zone", source = "zone", qualifiedByName = "zoneCode")
+    @Mapping(target = "site", source = "site", qualifiedByName = "siteId")
+    @Mapping(target = "zone", source = "zone", qualifiedByName = "zoneId")
     GatewayDTO toDto(Gateway s);
 
-    @Named("siteCode")
+    @Named("siteId")
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
-    @Mapping(target = "code", source = "code")
-    SiteDTO toDtoSiteCode(Site site);
+    SiteDTO toDtoSiteId(Site site);
 
-    @Named("zoneCode")
+    @Named("zoneId")
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
-    @Mapping(target = "code", source = "code")
-    ZoneDTO toDtoZoneCode(Zone zone);
+    ZoneDTO toDtoZoneId(Zone zone);
 }

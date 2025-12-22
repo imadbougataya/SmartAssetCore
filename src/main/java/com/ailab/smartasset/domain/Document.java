@@ -1,6 +1,5 @@
 package com.ailab.smartasset.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import java.io.Serializable;
@@ -53,11 +52,6 @@ public class Document implements Serializable {
     @Size(max = 120)
     @Column(name = "uploaded_by", length = 120)
     private String uploadedBy;
-
-    @ManyToOne(optional = false)
-    @NotNull
-    @JsonIgnoreProperties(value = { "productionLine", "allowedSite", "allowedZone" }, allowSetters = true)
-    private Asset asset;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -163,19 +157,6 @@ public class Document implements Serializable {
 
     public void setUploadedBy(String uploadedBy) {
         this.uploadedBy = uploadedBy;
-    }
-
-    public Asset getAsset() {
-        return this.asset;
-    }
-
-    public void setAsset(Asset asset) {
-        this.asset = asset;
-    }
-
-    public Document asset(Asset asset) {
-        this.setAsset(asset);
-        return this;
     }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here

@@ -42,9 +42,9 @@
     },
     {
       "fieldName": "esignStatus",
-      "fieldType": "String",
-      "fieldValidateRules": ["maxlength"],
-      "fieldValidateRulesMaxlength": "80"
+      "fieldType": "EsignStatus",
+      "fieldValidateRules": ["required"],
+      "fieldValues": "NOT_STARTED,SENT,IN_PROGRESS,SIGNED,REJECTED,FAILED,CANCELLED"
     },
     {
       "fieldName": "esignLastUpdate",
@@ -57,18 +57,6 @@
     {
       "fieldName": "executedAt",
       "fieldType": "Instant"
-    },
-    {
-      "fieldName": "requestedBy",
-      "fieldType": "String",
-      "fieldValidateRules": ["maxlength"],
-      "fieldValidateRulesMaxlength": "120"
-    },
-    {
-      "fieldName": "approvedBy",
-      "fieldType": "String",
-      "fieldValidateRules": ["maxlength"],
-      "fieldValidateRulesMaxlength": "120"
     }
   ],
   "jpaMetamodelFiltering": true,
@@ -76,11 +64,26 @@
   "pagination": "pagination",
   "relationships": [
     {
-      "otherEntityField": "assetCode",
       "otherEntityName": "asset",
       "relationshipName": "asset",
       "relationshipSide": "left",
-      "relationshipType": "many-to-one"
+      "relationshipType": "many-to-one",
+      "relationshipValidateRules": "required"
+    },
+    {
+      "otherEntityName": "user",
+      "relationshipName": "requestedBy",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-one",
+      "relationshipValidateRules": "required",
+      "relationshipWithBuiltInEntity": true
+    },
+    {
+      "otherEntityName": "user",
+      "relationshipName": "approvedBy",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-one",
+      "relationshipWithBuiltInEntity": true
     }
   ],
   "searchEngine": "no",

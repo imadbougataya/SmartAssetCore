@@ -86,9 +86,9 @@ class AssetMovementRequestCriteriaTest {
         assetMovementRequestCriteria.esignLastUpdate();
         assetMovementRequestCriteria.signedAt();
         assetMovementRequestCriteria.executedAt();
-        assetMovementRequestCriteria.requestedBy();
-        assetMovementRequestCriteria.approvedBy();
         assetMovementRequestCriteria.assetId();
+        assetMovementRequestCriteria.requestedById();
+        assetMovementRequestCriteria.approvedById();
         assetMovementRequestCriteria.distinct();
     }
 
@@ -106,9 +106,9 @@ class AssetMovementRequestCriteriaTest {
                 condition.apply(criteria.getEsignLastUpdate()) &&
                 condition.apply(criteria.getSignedAt()) &&
                 condition.apply(criteria.getExecutedAt()) &&
-                condition.apply(criteria.getRequestedBy()) &&
-                condition.apply(criteria.getApprovedBy()) &&
                 condition.apply(criteria.getAssetId()) &&
+                condition.apply(criteria.getRequestedById()) &&
+                condition.apply(criteria.getApprovedById()) &&
                 condition.apply(criteria.getDistinct()),
             "every filter matches"
         );
@@ -131,9 +131,9 @@ class AssetMovementRequestCriteriaTest {
                 condition.apply(criteria.getEsignLastUpdate(), copy.getEsignLastUpdate()) &&
                 condition.apply(criteria.getSignedAt(), copy.getSignedAt()) &&
                 condition.apply(criteria.getExecutedAt(), copy.getExecutedAt()) &&
-                condition.apply(criteria.getRequestedBy(), copy.getRequestedBy()) &&
-                condition.apply(criteria.getApprovedBy(), copy.getApprovedBy()) &&
                 condition.apply(criteria.getAssetId(), copy.getAssetId()) &&
+                condition.apply(criteria.getRequestedById(), copy.getRequestedById()) &&
+                condition.apply(criteria.getApprovedById(), copy.getApprovedById()) &&
                 condition.apply(criteria.getDistinct(), copy.getDistinct()),
             "every filter matches"
         );

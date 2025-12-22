@@ -5,7 +5,6 @@ import static com.ailab.smartasset.web.rest.TestUtil.createUpdateProxyForBean;
 import static com.ailab.smartasset.web.rest.TestUtil.sameNumber;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
-import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -13,7 +12,6 @@ import com.ailab.smartasset.IntegrationTest;
 import com.ailab.smartasset.domain.Sensor;
 import com.ailab.smartasset.domain.SensorMeasurement;
 import com.ailab.smartasset.repository.SensorMeasurementRepository;
-import com.ailab.smartasset.service.SensorMeasurementService;
 import com.ailab.smartasset.service.dto.SensorMeasurementDTO;
 import com.ailab.smartasset.service.mapper.SensorMeasurementMapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -21,19 +19,13 @@ import jakarta.persistence.EntityManager;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -43,7 +35,6 @@ import org.springframework.transaction.annotation.Transactional;
  * Integration tests for the {@link SensorMeasurementResource} REST controller.
  */
 @IntegrationTest
-@ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
 @WithMockUser
 class SensorMeasurementResourceIT {
@@ -73,14 +64,8 @@ class SensorMeasurementResourceIT {
     @Autowired
     private SensorMeasurementRepository sensorMeasurementRepository;
 
-    @Mock
-    private SensorMeasurementRepository sensorMeasurementRepositoryMock;
-
     @Autowired
     private SensorMeasurementMapper sensorMeasurementMapper;
-
-    @Mock
-    private SensorMeasurementService sensorMeasurementServiceMock;
 
     @Autowired
     private EntityManager em;
@@ -98,8 +83,23 @@ class SensorMeasurementResourceIT {
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
-    public static SensorMeasurement createEntity() {
-        return new SensorMeasurement().measuredAt(DEFAULT_MEASURED_AT).value(DEFAULT_VALUE).quality(DEFAULT_QUALITY).source(DEFAULT_SOURCE);
+    public static SensorMeasurement createEntity(EntityManager em) {
+        SensorMeasurement sensorMeasurement = new SensorMeasurement()
+            .measuredAt(DEFAULT_MEASURED_AT)
+            .value(DEFAULT_VALUE)
+            .quality(DEFAULT_QUALITY)
+            .source(DEFAULT_SOURCE);
+        // Add required entity
+        Sensor sensor;
+        if (TestUtil.findAll(em, Sensor.class).isEmpty()) {
+            sensor = SensorResourceIT.createEntity(em);
+            em.persist(sensor);
+            em.flush();
+        } else {
+            sensor = TestUtil.findAll(em, Sensor.class).get(0);
+        }
+        sensorMeasurement.setSensor(sensor);
+        return sensorMeasurement;
     }
 
     /**
@@ -108,13 +108,28 @@ class SensorMeasurementResourceIT {
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
-    public static SensorMeasurement createUpdatedEntity() {
-        return new SensorMeasurement().measuredAt(UPDATED_MEASURED_AT).value(UPDATED_VALUE).quality(UPDATED_QUALITY).source(UPDATED_SOURCE);
+    public static SensorMeasurement createUpdatedEntity(EntityManager em) {
+        SensorMeasurement updatedSensorMeasurement = new SensorMeasurement()
+            .measuredAt(UPDATED_MEASURED_AT)
+            .value(UPDATED_VALUE)
+            .quality(UPDATED_QUALITY)
+            .source(UPDATED_SOURCE);
+        // Add required entity
+        Sensor sensor;
+        if (TestUtil.findAll(em, Sensor.class).isEmpty()) {
+            sensor = SensorResourceIT.createUpdatedEntity(em);
+            em.persist(sensor);
+            em.flush();
+        } else {
+            sensor = TestUtil.findAll(em, Sensor.class).get(0);
+        }
+        updatedSensorMeasurement.setSensor(sensor);
+        return updatedSensorMeasurement;
     }
 
     @BeforeEach
     void initTest() {
-        sensorMeasurement = createEntity();
+        sensorMeasurement = createEntity(em);
     }
 
     @AfterEach
@@ -217,23 +232,6 @@ class SensorMeasurementResourceIT {
             .andExpect(jsonPath("$.[*].value").value(hasItem(sameNumber(DEFAULT_VALUE))))
             .andExpect(jsonPath("$.[*].quality").value(hasItem(DEFAULT_QUALITY)))
             .andExpect(jsonPath("$.[*].source").value(hasItem(DEFAULT_SOURCE)));
-    }
-
-    @SuppressWarnings({ "unchecked" })
-    void getAllSensorMeasurementsWithEagerRelationshipsIsEnabled() throws Exception {
-        when(sensorMeasurementServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
-
-        restSensorMeasurementMockMvc.perform(get(ENTITY_API_URL + "?eagerload=true")).andExpect(status().isOk());
-
-        verify(sensorMeasurementServiceMock, times(1)).findAllWithEagerRelationships(any());
-    }
-
-    @SuppressWarnings({ "unchecked" })
-    void getAllSensorMeasurementsWithEagerRelationshipsIsNotEnabled() throws Exception {
-        when(sensorMeasurementServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
-
-        restSensorMeasurementMockMvc.perform(get(ENTITY_API_URL + "?eagerload=false")).andExpect(status().isOk());
-        verify(sensorMeasurementRepositoryMock, times(1)).findAll(any(Pageable.class));
     }
 
     @Test
@@ -478,7 +476,7 @@ class SensorMeasurementResourceIT {
         Sensor sensor;
         if (TestUtil.findAll(em, Sensor.class).isEmpty()) {
             sensorMeasurementRepository.saveAndFlush(sensorMeasurement);
-            sensor = SensorResourceIT.createEntity();
+            sensor = SensorResourceIT.createEntity(em);
         } else {
             sensor = TestUtil.findAll(em, Sensor.class).get(0);
         }

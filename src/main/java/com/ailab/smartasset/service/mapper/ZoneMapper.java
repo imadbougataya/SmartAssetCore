@@ -11,12 +11,11 @@ import org.mapstruct.*;
  */
 @Mapper(componentModel = "spring")
 public interface ZoneMapper extends EntityMapper<ZoneDTO, Zone> {
-    @Mapping(target = "site", source = "site", qualifiedByName = "siteCode")
+    @Mapping(target = "site", source = "site", qualifiedByName = "siteId")
     ZoneDTO toDto(Zone s);
 
-    @Named("siteCode")
+    @Named("siteId")
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
-    @Mapping(target = "code", source = "code")
-    SiteDTO toDtoSiteCode(Site site);
+    SiteDTO toDtoSiteId(Site site);
 }

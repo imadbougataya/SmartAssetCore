@@ -15,26 +15,23 @@ import org.mapstruct.*;
  */
 @Mapper(componentModel = "spring")
 public interface AssetMapper extends EntityMapper<AssetDTO, Asset> {
-    @Mapping(target = "productionLine", source = "productionLine", qualifiedByName = "productionLineCode")
-    @Mapping(target = "allowedSite", source = "allowedSite", qualifiedByName = "siteCode")
-    @Mapping(target = "allowedZone", source = "allowedZone", qualifiedByName = "zoneCode")
+    @Mapping(target = "productionLine", source = "productionLine", qualifiedByName = "productionLineId")
+    @Mapping(target = "allowedSite", source = "allowedSite", qualifiedByName = "siteId")
+    @Mapping(target = "allowedZone", source = "allowedZone", qualifiedByName = "zoneId")
     AssetDTO toDto(Asset s);
 
-    @Named("productionLineCode")
+    @Named("productionLineId")
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
-    @Mapping(target = "code", source = "code")
-    ProductionLineDTO toDtoProductionLineCode(ProductionLine productionLine);
+    ProductionLineDTO toDtoProductionLineId(ProductionLine productionLine);
 
-    @Named("siteCode")
+    @Named("siteId")
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
-    @Mapping(target = "code", source = "code")
-    SiteDTO toDtoSiteCode(Site site);
+    SiteDTO toDtoSiteId(Site site);
 
-    @Named("zoneCode")
+    @Named("zoneId")
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
-    @Mapping(target = "code", source = "code")
-    ZoneDTO toDtoZoneCode(Zone zone);
+    ZoneDTO toDtoZoneId(Zone zone);
 }

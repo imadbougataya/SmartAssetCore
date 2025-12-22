@@ -43,11 +43,11 @@
   "pagination": "pagination",
   "relationships": [
     {
-      "otherEntityField": "code",
       "otherEntityName": "site",
       "relationshipName": "site",
       "relationshipSide": "left",
-      "relationshipType": "many-to-one"
+      "relationshipType": "many-to-one",
+      "relationshipValidateRules": "required"
     }
   ],
   "searchEngine": "no",
