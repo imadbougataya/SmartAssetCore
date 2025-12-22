@@ -1,14 +1,11 @@
 package com.ailab.smartasset.domain;
 
 import static com.ailab.smartasset.domain.GatewayTestSamples.*;
-import static com.ailab.smartasset.domain.LocationEventTestSamples.*;
 import static com.ailab.smartasset.domain.SiteTestSamples.*;
 import static com.ailab.smartasset.domain.ZoneTestSamples.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ailab.smartasset.web.rest.TestUtil;
-import java.util.HashSet;
-import java.util.Set;
 import org.junit.jupiter.api.Test;
 
 class GatewayTest {
@@ -25,28 +22,6 @@ class GatewayTest {
 
         gateway2 = getGatewaySample2();
         assertThat(gateway1).isNotEqualTo(gateway2);
-    }
-
-    @Test
-    void locationEventsTest() {
-        Gateway gateway = getGatewayRandomSampleGenerator();
-        LocationEvent locationEventBack = getLocationEventRandomSampleGenerator();
-
-        gateway.addLocationEvents(locationEventBack);
-        assertThat(gateway.getLocationEvents()).containsOnly(locationEventBack);
-        assertThat(locationEventBack.getGateway()).isEqualTo(gateway);
-
-        gateway.removeLocationEvents(locationEventBack);
-        assertThat(gateway.getLocationEvents()).doesNotContain(locationEventBack);
-        assertThat(locationEventBack.getGateway()).isNull();
-
-        gateway.locationEvents(new HashSet<>(Set.of(locationEventBack)));
-        assertThat(gateway.getLocationEvents()).containsOnly(locationEventBack);
-        assertThat(locationEventBack.getGateway()).isEqualTo(gateway);
-
-        gateway.setLocationEvents(new HashSet<>());
-        assertThat(gateway.getLocationEvents()).doesNotContain(locationEventBack);
-        assertThat(locationEventBack.getGateway()).isNull();
     }
 
     @Test

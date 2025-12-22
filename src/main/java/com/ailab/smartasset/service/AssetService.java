@@ -52,7 +52,6 @@ public class AssetService {
     public AssetDTO update(AssetDTO assetDTO) {
         LOG.debug("Request to update Asset : {}", assetDTO);
         Asset asset = assetMapper.toEntity(assetDTO);
-        asset.setIsPersisted();
         asset = assetRepository.save(asset);
         return assetMapper.toDto(asset);
     }

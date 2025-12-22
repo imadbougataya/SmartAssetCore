@@ -60,21 +60,17 @@ public class LocationEventCriteria implements Serializable, Criteria {
 
     private DoubleFilter speedKmh;
 
+    private StringFilter gnssConstellation;
+
     private StringFilter rawPayload;
-
-    private StringFilter createdBy;
-
-    private InstantFilter createdDate;
-
-    private StringFilter lastModifiedBy;
-
-    private InstantFilter lastModifiedDate;
 
     private LongFilter assetId;
 
-    private LongFilter zoneId;
+    private LongFilter sensorId;
 
-    private LongFilter gatewayId;
+    private LongFilter matchedSiteId;
+
+    private LongFilter matchedZoneId;
 
     private Boolean distinct;
 
@@ -91,14 +87,12 @@ public class LocationEventCriteria implements Serializable, Criteria {
         this.longitude = other.optionalLongitude().map(DoubleFilter::copy).orElse(null);
         this.accuracyMeters = other.optionalAccuracyMeters().map(DoubleFilter::copy).orElse(null);
         this.speedKmh = other.optionalSpeedKmh().map(DoubleFilter::copy).orElse(null);
+        this.gnssConstellation = other.optionalGnssConstellation().map(StringFilter::copy).orElse(null);
         this.rawPayload = other.optionalRawPayload().map(StringFilter::copy).orElse(null);
-        this.createdBy = other.optionalCreatedBy().map(StringFilter::copy).orElse(null);
-        this.createdDate = other.optionalCreatedDate().map(InstantFilter::copy).orElse(null);
-        this.lastModifiedBy = other.optionalLastModifiedBy().map(StringFilter::copy).orElse(null);
-        this.lastModifiedDate = other.optionalLastModifiedDate().map(InstantFilter::copy).orElse(null);
         this.assetId = other.optionalAssetId().map(LongFilter::copy).orElse(null);
-        this.zoneId = other.optionalZoneId().map(LongFilter::copy).orElse(null);
-        this.gatewayId = other.optionalGatewayId().map(LongFilter::copy).orElse(null);
+        this.sensorId = other.optionalSensorId().map(LongFilter::copy).orElse(null);
+        this.matchedSiteId = other.optionalMatchedSiteId().map(LongFilter::copy).orElse(null);
+        this.matchedZoneId = other.optionalMatchedZoneId().map(LongFilter::copy).orElse(null);
         this.distinct = other.distinct;
     }
 
@@ -297,6 +291,25 @@ public class LocationEventCriteria implements Serializable, Criteria {
         this.speedKmh = speedKmh;
     }
 
+    public StringFilter getGnssConstellation() {
+        return gnssConstellation;
+    }
+
+    public Optional<StringFilter> optionalGnssConstellation() {
+        return Optional.ofNullable(gnssConstellation);
+    }
+
+    public StringFilter gnssConstellation() {
+        if (gnssConstellation == null) {
+            setGnssConstellation(new StringFilter());
+        }
+        return gnssConstellation;
+    }
+
+    public void setGnssConstellation(StringFilter gnssConstellation) {
+        this.gnssConstellation = gnssConstellation;
+    }
+
     public StringFilter getRawPayload() {
         return rawPayload;
     }
@@ -314,82 +327,6 @@ public class LocationEventCriteria implements Serializable, Criteria {
 
     public void setRawPayload(StringFilter rawPayload) {
         this.rawPayload = rawPayload;
-    }
-
-    public StringFilter getCreatedBy() {
-        return createdBy;
-    }
-
-    public Optional<StringFilter> optionalCreatedBy() {
-        return Optional.ofNullable(createdBy);
-    }
-
-    public StringFilter createdBy() {
-        if (createdBy == null) {
-            setCreatedBy(new StringFilter());
-        }
-        return createdBy;
-    }
-
-    public void setCreatedBy(StringFilter createdBy) {
-        this.createdBy = createdBy;
-    }
-
-    public InstantFilter getCreatedDate() {
-        return createdDate;
-    }
-
-    public Optional<InstantFilter> optionalCreatedDate() {
-        return Optional.ofNullable(createdDate);
-    }
-
-    public InstantFilter createdDate() {
-        if (createdDate == null) {
-            setCreatedDate(new InstantFilter());
-        }
-        return createdDate;
-    }
-
-    public void setCreatedDate(InstantFilter createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    public StringFilter getLastModifiedBy() {
-        return lastModifiedBy;
-    }
-
-    public Optional<StringFilter> optionalLastModifiedBy() {
-        return Optional.ofNullable(lastModifiedBy);
-    }
-
-    public StringFilter lastModifiedBy() {
-        if (lastModifiedBy == null) {
-            setLastModifiedBy(new StringFilter());
-        }
-        return lastModifiedBy;
-    }
-
-    public void setLastModifiedBy(StringFilter lastModifiedBy) {
-        this.lastModifiedBy = lastModifiedBy;
-    }
-
-    public InstantFilter getLastModifiedDate() {
-        return lastModifiedDate;
-    }
-
-    public Optional<InstantFilter> optionalLastModifiedDate() {
-        return Optional.ofNullable(lastModifiedDate);
-    }
-
-    public InstantFilter lastModifiedDate() {
-        if (lastModifiedDate == null) {
-            setLastModifiedDate(new InstantFilter());
-        }
-        return lastModifiedDate;
-    }
-
-    public void setLastModifiedDate(InstantFilter lastModifiedDate) {
-        this.lastModifiedDate = lastModifiedDate;
     }
 
     public LongFilter getAssetId() {
@@ -411,42 +348,61 @@ public class LocationEventCriteria implements Serializable, Criteria {
         this.assetId = assetId;
     }
 
-    public LongFilter getZoneId() {
-        return zoneId;
+    public LongFilter getSensorId() {
+        return sensorId;
     }
 
-    public Optional<LongFilter> optionalZoneId() {
-        return Optional.ofNullable(zoneId);
+    public Optional<LongFilter> optionalSensorId() {
+        return Optional.ofNullable(sensorId);
     }
 
-    public LongFilter zoneId() {
-        if (zoneId == null) {
-            setZoneId(new LongFilter());
+    public LongFilter sensorId() {
+        if (sensorId == null) {
+            setSensorId(new LongFilter());
         }
-        return zoneId;
+        return sensorId;
     }
 
-    public void setZoneId(LongFilter zoneId) {
-        this.zoneId = zoneId;
+    public void setSensorId(LongFilter sensorId) {
+        this.sensorId = sensorId;
     }
 
-    public LongFilter getGatewayId() {
-        return gatewayId;
+    public LongFilter getMatchedSiteId() {
+        return matchedSiteId;
     }
 
-    public Optional<LongFilter> optionalGatewayId() {
-        return Optional.ofNullable(gatewayId);
+    public Optional<LongFilter> optionalMatchedSiteId() {
+        return Optional.ofNullable(matchedSiteId);
     }
 
-    public LongFilter gatewayId() {
-        if (gatewayId == null) {
-            setGatewayId(new LongFilter());
+    public LongFilter matchedSiteId() {
+        if (matchedSiteId == null) {
+            setMatchedSiteId(new LongFilter());
         }
-        return gatewayId;
+        return matchedSiteId;
     }
 
-    public void setGatewayId(LongFilter gatewayId) {
-        this.gatewayId = gatewayId;
+    public void setMatchedSiteId(LongFilter matchedSiteId) {
+        this.matchedSiteId = matchedSiteId;
+    }
+
+    public LongFilter getMatchedZoneId() {
+        return matchedZoneId;
+    }
+
+    public Optional<LongFilter> optionalMatchedZoneId() {
+        return Optional.ofNullable(matchedZoneId);
+    }
+
+    public LongFilter matchedZoneId() {
+        if (matchedZoneId == null) {
+            setMatchedZoneId(new LongFilter());
+        }
+        return matchedZoneId;
+    }
+
+    public void setMatchedZoneId(LongFilter matchedZoneId) {
+        this.matchedZoneId = matchedZoneId;
     }
 
     public Boolean getDistinct() {
@@ -488,14 +444,12 @@ public class LocationEventCriteria implements Serializable, Criteria {
             Objects.equals(longitude, that.longitude) &&
             Objects.equals(accuracyMeters, that.accuracyMeters) &&
             Objects.equals(speedKmh, that.speedKmh) &&
+            Objects.equals(gnssConstellation, that.gnssConstellation) &&
             Objects.equals(rawPayload, that.rawPayload) &&
-            Objects.equals(createdBy, that.createdBy) &&
-            Objects.equals(createdDate, that.createdDate) &&
-            Objects.equals(lastModifiedBy, that.lastModifiedBy) &&
-            Objects.equals(lastModifiedDate, that.lastModifiedDate) &&
             Objects.equals(assetId, that.assetId) &&
-            Objects.equals(zoneId, that.zoneId) &&
-            Objects.equals(gatewayId, that.gatewayId) &&
+            Objects.equals(sensorId, that.sensorId) &&
+            Objects.equals(matchedSiteId, that.matchedSiteId) &&
+            Objects.equals(matchedZoneId, that.matchedZoneId) &&
             Objects.equals(distinct, that.distinct)
         );
     }
@@ -513,14 +467,12 @@ public class LocationEventCriteria implements Serializable, Criteria {
             longitude,
             accuracyMeters,
             speedKmh,
+            gnssConstellation,
             rawPayload,
-            createdBy,
-            createdDate,
-            lastModifiedBy,
-            lastModifiedDate,
             assetId,
-            zoneId,
-            gatewayId,
+            sensorId,
+            matchedSiteId,
+            matchedZoneId,
             distinct
         );
     }
@@ -539,14 +491,12 @@ public class LocationEventCriteria implements Serializable, Criteria {
             optionalLongitude().map(f -> "longitude=" + f + ", ").orElse("") +
             optionalAccuracyMeters().map(f -> "accuracyMeters=" + f + ", ").orElse("") +
             optionalSpeedKmh().map(f -> "speedKmh=" + f + ", ").orElse("") +
+            optionalGnssConstellation().map(f -> "gnssConstellation=" + f + ", ").orElse("") +
             optionalRawPayload().map(f -> "rawPayload=" + f + ", ").orElse("") +
-            optionalCreatedBy().map(f -> "createdBy=" + f + ", ").orElse("") +
-            optionalCreatedDate().map(f -> "createdDate=" + f + ", ").orElse("") +
-            optionalLastModifiedBy().map(f -> "lastModifiedBy=" + f + ", ").orElse("") +
-            optionalLastModifiedDate().map(f -> "lastModifiedDate=" + f + ", ").orElse("") +
             optionalAssetId().map(f -> "assetId=" + f + ", ").orElse("") +
-            optionalZoneId().map(f -> "zoneId=" + f + ", ").orElse("") +
-            optionalGatewayId().map(f -> "gatewayId=" + f + ", ").orElse("") +
+            optionalSensorId().map(f -> "sensorId=" + f + ", ").orElse("") +
+            optionalMatchedSiteId().map(f -> "matchedSiteId=" + f + ", ").orElse("") +
+            optionalMatchedZoneId().map(f -> "matchedZoneId=" + f + ", ").orElse("") +
             optionalDistinct().map(f -> "distinct=" + f + ", ").orElse("") +
         "}";
     }

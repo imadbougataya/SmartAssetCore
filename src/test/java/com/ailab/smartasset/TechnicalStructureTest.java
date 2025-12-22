@@ -19,25 +19,26 @@ class TechnicalStructureTest {
     // prettier-ignore
     @ArchTest
     static final ArchRule respectsTechnicalArchitectureLayers = layeredArchitecture()
-            .consideringAllDependencies()
-            .layer("Config").definedBy("..config..")
-            .layer("Web").definedBy("..web..")
-            .optionalLayer("Service").definedBy("..service..")
-            .layer("Security").definedBy("..security..")
-            .optionalLayer("Persistence").definedBy("..repository..")
-            .layer("Domain").definedBy("..domain..")
+        .consideringAllDependencies()
+        .layer("Config").definedBy("..config..")
+        .layer("Web").definedBy("..web..")
+        .optionalLayer("Service").definedBy("..service..")
+        .layer("Security").definedBy("..security..")
+        .optionalLayer("Persistence").definedBy("..repository..")
+        .layer("Domain").definedBy("..domain..")
 
-            .whereLayer("Config").mayNotBeAccessedByAnyLayer()
-            .whereLayer("Web").mayOnlyBeAccessedByLayers("Config")
-            .whereLayer("Service").mayOnlyBeAccessedByLayers("Web", "Config")
-            .whereLayer("Security").mayOnlyBeAccessedByLayers("Config", "Service", "Web")
-            .whereLayer("Persistence").mayOnlyBeAccessedByLayers("Service", "Security", "Web", "Config")
-            .whereLayer("Domain").mayOnlyBeAccessedByLayers("Persistence", "Service", "Security", "Web", "Config")
+        .whereLayer("Config").mayNotBeAccessedByAnyLayer()
+        .whereLayer("Web").mayOnlyBeAccessedByLayers("Config")
+        .whereLayer("Service").mayOnlyBeAccessedByLayers("Web", "Config")
+        .whereLayer("Security").mayOnlyBeAccessedByLayers("Config", "Service", "Web")
+        .whereLayer("Persistence").mayOnlyBeAccessedByLayers("Service", "Security", "Web", "Config")
+        .whereLayer("Domain").mayOnlyBeAccessedByLayers("Persistence", "Service", "Security", "Web", "Config")
 
-            .ignoreDependency(resideInAPackage("com.ailab.smartasset.audit"), alwaysTrue())
-            .ignoreDependency(type(AbstractAuditingEntity.class), type(EntityAuditEventListener.class))
-            .ignoreDependency(belongToAnyOf(SmartAssetCoreApp.class), alwaysTrue())
-            .ignoreDependency(alwaysTrue(), belongToAnyOf(
-                    com.ailab.smartasset.config.Constants.class,
-                    com.ailab.smartasset.config.ApplicationProperties.class));
+        .ignoreDependency(resideInAPackage("com.ailab.smartasset.audit"), alwaysTrue())
+        .ignoreDependency(type(AbstractAuditingEntity.class), type(EntityAuditEventListener.class))
+        .ignoreDependency(belongToAnyOf(SmartAssetCoreApp.class), alwaysTrue())
+        .ignoreDependency(alwaysTrue(), belongToAnyOf(
+            com.ailab.smartasset.config.Constants.class,
+            com.ailab.smartasset.config.ApplicationProperties.class
+        ));
 }

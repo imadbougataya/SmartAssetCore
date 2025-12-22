@@ -52,7 +52,6 @@ public class GatewayService {
     public GatewayDTO update(GatewayDTO gatewayDTO) {
         LOG.debug("Request to update Gateway : {}", gatewayDTO);
         Gateway gateway = gatewayMapper.toEntity(gatewayDTO);
-        gateway.setIsPersisted();
         gateway = gatewayRepository.save(gateway);
         return gatewayMapper.toDto(gateway);
     }

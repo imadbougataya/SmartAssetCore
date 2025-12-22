@@ -917,7 +917,7 @@ class AssetMovementRequestResourceIT {
         Asset asset;
         if (TestUtil.findAll(em, Asset.class).isEmpty()) {
             assetMovementRequestRepository.saveAndFlush(assetMovementRequest);
-            asset = AssetResourceIT.createEntity();
+            asset = AssetResourceIT.createEntity(em);
         } else {
             asset = TestUtil.findAll(em, Asset.class).get(0);
         }
@@ -1111,13 +1111,9 @@ class AssetMovementRequestResourceIT {
         partialUpdatedAssetMovementRequest.setId(assetMovementRequest.getId());
 
         partialUpdatedAssetMovementRequest
-            .status(UPDATED_STATUS)
-            .requestedAt(UPDATED_REQUESTED_AT)
             .fromLocationLabel(UPDATED_FROM_LOCATION_LABEL)
-            .toLocationLabel(UPDATED_TO_LOCATION_LABEL)
             .esignWorkflowId(UPDATED_ESIGN_WORKFLOW_ID)
-            .esignStatus(UPDATED_ESIGN_STATUS)
-            .esignLastUpdate(UPDATED_ESIGN_LAST_UPDATE)
+            .requestedBy(UPDATED_REQUESTED_BY)
             .approvedBy(UPDATED_APPROVED_BY);
 
         restAssetMovementRequestMockMvc

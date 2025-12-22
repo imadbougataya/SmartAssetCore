@@ -18,9 +18,7 @@ public class AssetMovementRequestTestSamples {
             .esignWorkflowId("esignWorkflowId1")
             .esignStatus("esignStatus1")
             .requestedBy("requestedBy1")
-            .approvedBy("approvedBy1")
-            .createdBy("createdBy1")
-            .lastModifiedBy("lastModifiedBy1");
+            .approvedBy("approvedBy1");
     }
 
     public static AssetMovementRequest getAssetMovementRequestSample2() {
@@ -32,9 +30,7 @@ public class AssetMovementRequestTestSamples {
             .esignWorkflowId("esignWorkflowId2")
             .esignStatus("esignStatus2")
             .requestedBy("requestedBy2")
-            .approvedBy("approvedBy2")
-            .createdBy("createdBy2")
-            .lastModifiedBy("lastModifiedBy2");
+            .approvedBy("approvedBy2");
     }
 
     public static AssetMovementRequest getAssetMovementRequestRandomSampleGenerator() {
@@ -46,8 +42,6 @@ public class AssetMovementRequestTestSamples {
             .esignWorkflowId(UUID.randomUUID().toString())
             .esignStatus(UUID.randomUUID().toString())
             .requestedBy(UUID.randomUUID().toString())
-            .approvedBy(UUID.randomUUID().toString())
-            .createdBy(UUID.randomUUID().toString())
-            .lastModifiedBy(UUID.randomUUID().toString());
+            .approvedBy(UUID.randomUUID().toString());
     }
 }

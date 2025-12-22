@@ -1,16 +1,13 @@
 package com.ailab.smartasset.domain;
 
-import com.ailab.smartasset.domain.enumeration.SystemEntityType;
 import com.ailab.smartasset.domain.enumeration.SystemEventSeverity;
 import com.ailab.smartasset.domain.enumeration.SystemEventSource;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import java.io.Serializable;
 import java.time.Instant;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.springframework.data.domain.Persistable;
 
 /**
  * A SystemEvent.
@@ -18,9 +15,8 @@ import org.springframework.data.domain.Persistable;
 @Entity
 @Table(name = "system_event")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@JsonIgnoreProperties(value = { "new" })
 @SuppressWarnings("common-java:DuplicatedBlocks")
-public class SystemEvent implements Serializable, Persistable<Long> {
+public class SystemEvent implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -33,14 +29,6 @@ public class SystemEvent implements Serializable, Persistable<Long> {
     @Size(max = 120)
     @Column(name = "event_type", length = 120, nullable = false)
     private String eventType;
-
-    @NotNull
-    @Enumerated(EnumType.STRING)
-    @Column(name = "entity_type", nullable = false)
-    private SystemEntityType entityType;
-
-    @Column(name = "entity_id")
-    private Long entityId;
 
     @NotNull
     @Enumerated(EnumType.STRING)
@@ -72,20 +60,6 @@ public class SystemEvent implements Serializable, Persistable<Long> {
     @Column(name = "payload")
     private String payload;
 
-    // Inherited createdDate definition
-    // Inherited lastModifiedBy definition
-    // Inherited lastModifiedDate definition
-    @org.springframework.data.annotation.Transient
-    @Transient
-    private boolean isPersisted;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JsonIgnoreProperties(
-        value = { "sensors", "maintenanceEvents", "movementRequests", "locationEvents", "site", "productionLine", "currentZone" },
-        allowSetters = true
-    )
-    private Asset asset;
-
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
     public Long getId() {
@@ -112,32 +86,6 @@ public class SystemEvent implements Serializable, Persistable<Long> {
 
     public void setEventType(String eventType) {
         this.eventType = eventType;
-    }
-
-    public SystemEntityType getEntityType() {
-        return this.entityType;
-    }
-
-    public SystemEvent entityType(SystemEntityType entityType) {
-        this.setEntityType(entityType);
-        return this;
-    }
-
-    public void setEntityType(SystemEntityType entityType) {
-        this.entityType = entityType;
-    }
-
-    public Long getEntityId() {
-        return this.entityId;
-    }
-
-    public SystemEvent entityId(Long entityId) {
-        this.setEntityId(entityId);
-        return this;
-    }
-
-    public void setEntityId(Long entityId) {
-        this.entityId = entityId;
     }
 
     public SystemEventSeverity getSeverity() {
@@ -231,39 +179,7 @@ public class SystemEvent implements Serializable, Persistable<Long> {
         this.payload = payload;
     }
 
-    @PostLoad
-    @PostPersist
-    public void updateEntityState() {
-        this.setIsPersisted();
-    }
-
-    @org.springframework.data.annotation.Transient
-    @Transient
-    @Override
-    public boolean isNew() {
-        return !this.isPersisted;
-    }
-
-    public SystemEvent setIsPersisted() {
-        this.isPersisted = true;
-        return this;
-    }
-
-    public Asset getAsset() {
-        return this.asset;
-    }
-
-    public void setAsset(Asset asset) {
-        this.asset = asset;
-    }
-
-    public SystemEvent asset(Asset asset) {
-        this.setAsset(asset);
-        return this;
-    }
-
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and
-    // setters here
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
     public boolean equals(Object o) {
@@ -278,8 +194,7 @@ public class SystemEvent implements Serializable, Persistable<Long> {
 
     @Override
     public int hashCode() {
-        // see
-        // https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
         return getClass().hashCode();
     }
 
@@ -287,17 +202,15 @@ public class SystemEvent implements Serializable, Persistable<Long> {
     @Override
     public String toString() {
         return "SystemEvent{" +
-                "id=" + getId() +
-                ", eventType='" + getEventType() + "'" +
-                ", entityType='" + getEntityType() + "'" +
-                ", entityId=" + getEntityId() +
-                ", severity='" + getSeverity() + "'" +
-                ", source='" + getSource() + "'" +
-                ", message='" + getMessage() + "'" +
-                ", createdAt='" + getCreatedAt() + "'" +
-                ", createdBy='" + getCreatedBy() + "'" +
-                ", correlationId='" + getCorrelationId() + "'" +
-                ", payload='" + getPayload() + "'" +
-                "}";
+            "id=" + getId() +
+            ", eventType='" + getEventType() + "'" +
+            ", severity='" + getSeverity() + "'" +
+            ", source='" + getSource() + "'" +
+            ", message='" + getMessage() + "'" +
+            ", createdAt='" + getCreatedAt() + "'" +
+            ", createdBy='" + getCreatedBy() + "'" +
+            ", correlationId='" + getCorrelationId() + "'" +
+            ", payload='" + getPayload() + "'" +
+            "}";
     }
 }

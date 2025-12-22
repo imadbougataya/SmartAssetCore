@@ -10,23 +10,11 @@ public class ProductionLineTestSamples {
     private static final AtomicLong longCount = new AtomicLong(random.nextInt() + (2 * Integer.MAX_VALUE));
 
     public static ProductionLine getProductionLineSample1() {
-        return new ProductionLine()
-            .id(1L)
-            .code("code1")
-            .name("name1")
-            .description("description1")
-            .createdBy("createdBy1")
-            .lastModifiedBy("lastModifiedBy1");
+        return new ProductionLine().id(1L).code("code1").name("name1").description("description1");
     }
 
     public static ProductionLine getProductionLineSample2() {
-        return new ProductionLine()
-            .id(2L)
-            .code("code2")
-            .name("name2")
-            .description("description2")
-            .createdBy("createdBy2")
-            .lastModifiedBy("lastModifiedBy2");
+        return new ProductionLine().id(2L).code("code2").name("name2").description("description2");
     }
 
     public static ProductionLine getProductionLineRandomSampleGenerator() {
@@ -34,8 +22,6 @@ public class ProductionLineTestSamples {
             .id(longCount.incrementAndGet())
             .code(UUID.randomUUID().toString())
             .name(UUID.randomUUID().toString())
-            .description(UUID.randomUUID().toString())
-            .createdBy(UUID.randomUUID().toString())
-            .lastModifiedBy(UUID.randomUUID().toString());
+            .description(UUID.randomUUID().toString());
     }
 }

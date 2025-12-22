@@ -27,18 +27,18 @@ public interface AssetRepository extends JpaRepository<Asset, Long>, JpaSpecific
     }
 
     @Query(
-        value = "select asset from Asset asset left join fetch asset.site left join fetch asset.productionLine left join fetch asset.currentZone",
+        value = "select asset from Asset asset left join fetch asset.productionLine left join fetch asset.allowedSite left join fetch asset.allowedZone",
         countQuery = "select count(asset) from Asset asset"
     )
     Page<Asset> findAllWithToOneRelationships(Pageable pageable);
 
     @Query(
-        "select asset from Asset asset left join fetch asset.site left join fetch asset.productionLine left join fetch asset.currentZone"
+        "select asset from Asset asset left join fetch asset.productionLine left join fetch asset.allowedSite left join fetch asset.allowedZone"
     )
     List<Asset> findAllWithToOneRelationships();
 
     @Query(
-        "select asset from Asset asset left join fetch asset.site left join fetch asset.productionLine left join fetch asset.currentZone where asset.id =:id"
+        "select asset from Asset asset left join fetch asset.productionLine left join fetch asset.allowedSite left join fetch asset.allowedZone where asset.id =:id"
     )
     Optional<Asset> findOneWithToOneRelationships(@Param("id") Long id);
 }

@@ -2,7 +2,6 @@ package com.ailab.smartasset.service.dto;
 
 import jakarta.validation.constraints.*;
 import java.io.Serializable;
-import java.time.Instant;
 import java.util.Objects;
 
 /**
@@ -24,22 +23,12 @@ public class ZoneDTO implements Serializable {
     @Size(max = 500)
     private String description;
 
-    @Size(max = 80)
-    private String zoneType;
-
     private Double centerLat;
 
     private Double centerLon;
 
-    private Double radiusMeters;
-
-    private String createdBy;
-
-    private Instant createdDate;
-
-    private String lastModifiedBy;
-
-    private Instant lastModifiedDate;
+    @Min(value = 1)
+    private Integer radiusMeters;
 
     private SiteDTO site;
 
@@ -75,14 +64,6 @@ public class ZoneDTO implements Serializable {
         this.description = description;
     }
 
-    public String getZoneType() {
-        return zoneType;
-    }
-
-    public void setZoneType(String zoneType) {
-        this.zoneType = zoneType;
-    }
-
     public Double getCenterLat() {
         return centerLat;
     }
@@ -99,44 +80,12 @@ public class ZoneDTO implements Serializable {
         this.centerLon = centerLon;
     }
 
-    public Double getRadiusMeters() {
+    public Integer getRadiusMeters() {
         return radiusMeters;
     }
 
-    public void setRadiusMeters(Double radiusMeters) {
+    public void setRadiusMeters(Integer radiusMeters) {
         this.radiusMeters = radiusMeters;
-    }
-
-    public String getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
-    }
-
-    public Instant getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(Instant createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    public String getLastModifiedBy() {
-        return lastModifiedBy;
-    }
-
-    public void setLastModifiedBy(String lastModifiedBy) {
-        this.lastModifiedBy = lastModifiedBy;
-    }
-
-    public Instant getLastModifiedDate() {
-        return lastModifiedDate;
-    }
-
-    public void setLastModifiedDate(Instant lastModifiedDate) {
-        this.lastModifiedDate = lastModifiedDate;
     }
 
     public SiteDTO getSite() {
@@ -176,14 +125,9 @@ public class ZoneDTO implements Serializable {
             ", code='" + getCode() + "'" +
             ", name='" + getName() + "'" +
             ", description='" + getDescription() + "'" +
-            ", zoneType='" + getZoneType() + "'" +
             ", centerLat=" + getCenterLat() +
             ", centerLon=" + getCenterLon() +
             ", radiusMeters=" + getRadiusMeters() +
-            ", createdBy='" + getCreatedBy() + "'" +
-            ", createdDate='" + getCreatedDate() + "'" +
-            ", lastModifiedBy='" + getLastModifiedBy() + "'" +
-            ", lastModifiedDate='" + getLastModifiedDate() + "'" +
             ", site=" + getSite() +
             "}";
     }

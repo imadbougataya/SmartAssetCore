@@ -7,9 +7,10 @@ import com.ailab.smartasset.service.criteria.DocumentLinkCriteria;
 import com.ailab.smartasset.service.dto.DocumentLinkDTO;
 import com.ailab.smartasset.service.mapper.DocumentLinkMapper;
 import jakarta.persistence.criteria.JoinType;
-import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,7 +20,7 @@ import tech.jhipster.service.QueryService;
  * Service for executing complex queries for {@link DocumentLink} entities in the database.
  * The main input is a {@link DocumentLinkCriteria} which gets converted to {@link Specification},
  * in a way that all the filters must apply.
- * It returns a {@link List} of {@link DocumentLinkDTO} which fulfills the criteria.
+ * It returns a {@link Page} of {@link DocumentLinkDTO} which fulfills the criteria.
  */
 @Service
 @Transactional(readOnly = true)
@@ -37,15 +38,16 @@ public class DocumentLinkQueryService extends QueryService<DocumentLink> {
     }
 
     /**
-     * Return a {@link List} of {@link DocumentLinkDTO} which matches the criteria from the database.
+     * Return a {@link Page} of {@link DocumentLinkDTO} which matches the criteria from the database.
      * @param criteria The object which holds all the filters, which the entities should match.
+     * @param page The page, which should be returned.
      * @return the matching entities.
      */
     @Transactional(readOnly = true)
-    public List<DocumentLinkDTO> findByCriteria(DocumentLinkCriteria criteria) {
-        LOG.debug("find by criteria : {}", criteria);
+    public Page<DocumentLinkDTO> findByCriteria(DocumentLinkCriteria criteria, Pageable page) {
+        LOG.debug("find by criteria : {}, page: {}", criteria, page);
         final Specification<DocumentLink> specification = createSpecification(criteria);
-        return documentLinkMapper.toDto(documentLinkRepository.findAll(specification));
+        return documentLinkRepository.findAll(specification, page).map(documentLinkMapper::toDto);
     }
 
     /**

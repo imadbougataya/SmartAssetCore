@@ -1,0 +1,11 @@
+id;sensor_type;name;unit;min_threshold;max_threshold;installed_at;active;external_id
+1;PRESSURE;Capteur pression hydraulique;bar;0.0;250.0;2025-12-16T13:25:27;true;PRS-HYD-306-01
+2;VIBRATION;Capteur vibration moteur;mm/s;0.0;25.0;2025-12-16T06:21:04;true;VIB-MOT-307-02
+3;HUMIDITY;Capteur humidité ambiante;%RH;10.0;90.0;2025-12-16T00:28:24;true;HUM-AMB-PLANT-01
+4;TEMPERATURE;Capteur température palier;°C;-20.0;120.0;2025-12-16T09:00:29;true;TMP-BRG-308-01
+5;LIQUID_LEVEL;Capteur niveau cuve;%;0.0;100.0;2025-12-16T13:02:54;false;LVL-TANK-306-01
+6;GNSS_TRACKER;Tracker GNSS équipement mobile;°;0.0;0.0;2025-12-16T04:59:18;true;GNSS-MOB-ASF-01
+7;BLE_TAG;Tag BLE localisation indoor;RSSI;-100.0;-20.0;2025-12-16T05:56:26;true;BLE-ZONE-307-05
+8;OIL_LEVEL;Capteur niveau huile;% ;0.0;100.0;2025-12-16T20:04:05;true;OIL-LVL-GEAR-01
+9;TEMPERATURE;Capteur température moteur;°C;-20.0;180.0;2025-12-16T18:10:46;true;TMP-MOT-306-07
+10;TEMPERATURE;Capteur température ambiante site;°C;-10.0;60.0;2025-12-16T03:41:33;true;TMP-AMB-JLF-01

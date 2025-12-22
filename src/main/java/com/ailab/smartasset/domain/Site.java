@@ -1,13 +1,10 @@
 package com.ailab.smartasset.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import java.io.Serializable;
-import java.time.Instant;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.springframework.data.domain.Persistable;
 
 /**
  * A Site.
@@ -15,9 +12,8 @@ import org.springframework.data.domain.Persistable;
 @Entity
 @Table(name = "site")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@JsonIgnoreProperties(value = { "new" })
 @SuppressWarnings("common-java:DuplicatedBlocks")
-public class Site extends AbstractAuditingEntity<Long> implements Serializable, Persistable<Long> {
+public class Site implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -40,13 +36,15 @@ public class Site extends AbstractAuditingEntity<Long> implements Serializable, 
     @Column(name = "description", length = 500)
     private String description;
 
-    // Inherited createdBy definition
-    // Inherited createdDate definition
-    // Inherited lastModifiedBy definition
-    // Inherited lastModifiedDate definition
-    @org.springframework.data.annotation.Transient
-    @Transient
-    private boolean isPersisted;
+    @Column(name = "center_lat")
+    private Double centerLat;
+
+    @Column(name = "center_lon")
+    private Double centerLon;
+
+    @Min(value = 1)
+    @Column(name = "radius_meters")
+    private Integer radiusMeters;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -102,46 +100,43 @@ public class Site extends AbstractAuditingEntity<Long> implements Serializable, 
         this.description = description;
     }
 
-    // Inherited createdBy methods
-    public Site createdBy(String createdBy) {
-        this.setCreatedBy(createdBy);
+    public Double getCenterLat() {
+        return this.centerLat;
+    }
+
+    public Site centerLat(Double centerLat) {
+        this.setCenterLat(centerLat);
         return this;
     }
 
-    // Inherited createdDate methods
-    public Site createdDate(Instant createdDate) {
-        this.setCreatedDate(createdDate);
+    public void setCenterLat(Double centerLat) {
+        this.centerLat = centerLat;
+    }
+
+    public Double getCenterLon() {
+        return this.centerLon;
+    }
+
+    public Site centerLon(Double centerLon) {
+        this.setCenterLon(centerLon);
         return this;
     }
 
-    // Inherited lastModifiedBy methods
-    public Site lastModifiedBy(String lastModifiedBy) {
-        this.setLastModifiedBy(lastModifiedBy);
+    public void setCenterLon(Double centerLon) {
+        this.centerLon = centerLon;
+    }
+
+    public Integer getRadiusMeters() {
+        return this.radiusMeters;
+    }
+
+    public Site radiusMeters(Integer radiusMeters) {
+        this.setRadiusMeters(radiusMeters);
         return this;
     }
 
-    // Inherited lastModifiedDate methods
-    public Site lastModifiedDate(Instant lastModifiedDate) {
-        this.setLastModifiedDate(lastModifiedDate);
-        return this;
-    }
-
-    @PostLoad
-    @PostPersist
-    public void updateEntityState() {
-        this.setIsPersisted();
-    }
-
-    @org.springframework.data.annotation.Transient
-    @Transient
-    @Override
-    public boolean isNew() {
-        return !this.isPersisted;
-    }
-
-    public Site setIsPersisted() {
-        this.isPersisted = true;
-        return this;
+    public void setRadiusMeters(Integer radiusMeters) {
+        this.radiusMeters = radiusMeters;
     }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
@@ -171,10 +166,9 @@ public class Site extends AbstractAuditingEntity<Long> implements Serializable, 
             ", code='" + getCode() + "'" +
             ", name='" + getName() + "'" +
             ", description='" + getDescription() + "'" +
-            ", createdBy='" + getCreatedBy() + "'" +
-            ", createdDate='" + getCreatedDate() + "'" +
-            ", lastModifiedBy='" + getLastModifiedBy() + "'" +
-            ", lastModifiedDate='" + getLastModifiedDate() + "'" +
+            ", centerLat=" + getCenterLat() +
+            ", centerLon=" + getCenterLon() +
+            ", radiusMeters=" + getRadiusMeters() +
             "}";
     }
 }

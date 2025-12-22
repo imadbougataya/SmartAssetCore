@@ -1,6 +1,5 @@
 package com.ailab.smartasset.service.dto;
 
-import com.ailab.smartasset.domain.enumeration.SystemEntityType;
 import com.ailab.smartasset.domain.enumeration.SystemEventSeverity;
 import com.ailab.smartasset.domain.enumeration.SystemEventSource;
 import jakarta.persistence.Lob;
@@ -20,11 +19,6 @@ public class SystemEventDTO implements Serializable {
     @NotNull
     @Size(max = 120)
     private String eventType;
-
-    @NotNull
-    private SystemEntityType entityType;
-
-    private Long entityId;
 
     @NotNull
     private SystemEventSeverity severity;
@@ -47,14 +41,6 @@ public class SystemEventDTO implements Serializable {
     @Lob
     private String payload;
 
-    private Instant createdDate;
-
-    private String lastModifiedBy;
-
-    private Instant lastModifiedDate;
-
-    private AssetDTO asset;
-
     public Long getId() {
         return id;
     }
@@ -69,22 +55,6 @@ public class SystemEventDTO implements Serializable {
 
     public void setEventType(String eventType) {
         this.eventType = eventType;
-    }
-
-    public SystemEntityType getEntityType() {
-        return entityType;
-    }
-
-    public void setEntityType(SystemEntityType entityType) {
-        this.entityType = entityType;
-    }
-
-    public Long getEntityId() {
-        return entityId;
-    }
-
-    public void setEntityId(Long entityId) {
-        this.entityId = entityId;
     }
 
     public SystemEventSeverity getSeverity() {
@@ -143,38 +113,6 @@ public class SystemEventDTO implements Serializable {
         this.payload = payload;
     }
 
-    public Instant getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(Instant createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    public String getLastModifiedBy() {
-        return lastModifiedBy;
-    }
-
-    public void setLastModifiedBy(String lastModifiedBy) {
-        this.lastModifiedBy = lastModifiedBy;
-    }
-
-    public Instant getLastModifiedDate() {
-        return lastModifiedDate;
-    }
-
-    public void setLastModifiedDate(Instant lastModifiedDate) {
-        this.lastModifiedDate = lastModifiedDate;
-    }
-
-    public AssetDTO getAsset() {
-        return asset;
-    }
-
-    public void setAsset(AssetDTO asset) {
-        this.asset = asset;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -202,8 +140,6 @@ public class SystemEventDTO implements Serializable {
         return "SystemEventDTO{" +
             "id=" + getId() +
             ", eventType='" + getEventType() + "'" +
-            ", entityType='" + getEntityType() + "'" +
-            ", entityId=" + getEntityId() +
             ", severity='" + getSeverity() + "'" +
             ", source='" + getSource() + "'" +
             ", message='" + getMessage() + "'" +
@@ -211,10 +147,6 @@ public class SystemEventDTO implements Serializable {
             ", createdBy='" + getCreatedBy() + "'" +
             ", correlationId='" + getCorrelationId() + "'" +
             ", payload='" + getPayload() + "'" +
-            ", createdDate='" + getCreatedDate() + "'" +
-            ", lastModifiedBy='" + getLastModifiedBy() + "'" +
-            ", lastModifiedDate='" + getLastModifiedDate() + "'" +
-            ", asset=" + getAsset() +
             "}";
     }
 }

@@ -17,18 +17,25 @@
                                  referencedTableName="asset"
                                  />
 
-        <addForeignKeyConstraint baseColumnNames="zone_id"
+        <addForeignKeyConstraint baseColumnNames="sensor_id"
                                  baseTableName="location_event"
-                                 constraintName="fk_location_event__zone_id"
+                                 constraintName="fk_location_event__sensor_id"
                                  referencedColumnNames="id"
-                                 referencedTableName="zone"
+                                 referencedTableName="sensor"
                                  />
 
-        <addForeignKeyConstraint baseColumnNames="gateway_id"
+        <addForeignKeyConstraint baseColumnNames="matched_site_id"
                                  baseTableName="location_event"
-                                 constraintName="fk_location_event__gateway_id"
+                                 constraintName="fk_location_event__matched_site_id"
                                  referencedColumnNames="id"
-                                 referencedTableName="gateway"
+                                 referencedTableName="site"
+                                 />
+
+        <addForeignKeyConstraint baseColumnNames="matched_zone_id"
+                                 baseTableName="location_event"
+                                 constraintName="fk_location_event__matched_zone_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="zone"
                                  />
     </changeSet>
 </databaseChangeLog>

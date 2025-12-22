@@ -79,11 +79,7 @@ class ProductionLineCriteriaTest {
         productionLineCriteria.code();
         productionLineCriteria.name();
         productionLineCriteria.description();
-        productionLineCriteria.createdBy();
-        productionLineCriteria.createdDate();
-        productionLineCriteria.lastModifiedBy();
-        productionLineCriteria.lastModifiedDate();
-        productionLineCriteria.siteId();
+        productionLineCriteria.zoneId();
         productionLineCriteria.distinct();
     }
 
@@ -94,11 +90,7 @@ class ProductionLineCriteriaTest {
                 condition.apply(criteria.getCode()) &&
                 condition.apply(criteria.getName()) &&
                 condition.apply(criteria.getDescription()) &&
-                condition.apply(criteria.getCreatedBy()) &&
-                condition.apply(criteria.getCreatedDate()) &&
-                condition.apply(criteria.getLastModifiedBy()) &&
-                condition.apply(criteria.getLastModifiedDate()) &&
-                condition.apply(criteria.getSiteId()) &&
+                condition.apply(criteria.getZoneId()) &&
                 condition.apply(criteria.getDistinct()),
             "every filter matches"
         );
@@ -114,11 +106,7 @@ class ProductionLineCriteriaTest {
                 condition.apply(criteria.getCode(), copy.getCode()) &&
                 condition.apply(criteria.getName(), copy.getName()) &&
                 condition.apply(criteria.getDescription(), copy.getDescription()) &&
-                condition.apply(criteria.getCreatedBy(), copy.getCreatedBy()) &&
-                condition.apply(criteria.getCreatedDate(), copy.getCreatedDate()) &&
-                condition.apply(criteria.getLastModifiedBy(), copy.getLastModifiedBy()) &&
-                condition.apply(criteria.getLastModifiedDate(), copy.getLastModifiedDate()) &&
-                condition.apply(criteria.getSiteId(), copy.getSiteId()) &&
+                condition.apply(criteria.getZoneId(), copy.getZoneId()) &&
                 condition.apply(criteria.getDistinct(), copy.getDistinct()),
             "every filter matches"
         );

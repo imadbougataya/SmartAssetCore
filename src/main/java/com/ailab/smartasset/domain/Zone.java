@@ -1,15 +1,10 @@
 package com.ailab.smartasset.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import java.io.Serializable;
-import java.time.Instant;
-import java.util.HashSet;
-import java.util.Set;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.springframework.data.domain.Persistable;
 
 /**
  * A Zone.
@@ -17,9 +12,8 @@ import org.springframework.data.domain.Persistable;
 @Entity
 @Table(name = "zone")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@JsonIgnoreProperties(value = { "new" })
 @SuppressWarnings("common-java:DuplicatedBlocks")
-public class Zone extends AbstractAuditingEntity<Long> implements Serializable, Persistable<Long> {
+public class Zone implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -42,31 +36,15 @@ public class Zone extends AbstractAuditingEntity<Long> implements Serializable, 
     @Column(name = "description", length = 500)
     private String description;
 
-    @Size(max = 80)
-    @Column(name = "zone_type", length = 80)
-    private String zoneType;
-
     @Column(name = "center_lat")
     private Double centerLat;
 
     @Column(name = "center_lon")
     private Double centerLon;
 
+    @Min(value = 1)
     @Column(name = "radius_meters")
-    private Double radiusMeters;
-
-    // Inherited createdBy definition
-    // Inherited createdDate definition
-    // Inherited lastModifiedBy definition
-    // Inherited lastModifiedDate definition
-    @org.springframework.data.annotation.Transient
-    @Transient
-    private boolean isPersisted;
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "zone")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnoreProperties(value = { "asset", "zone", "gateway" }, allowSetters = true)
-    private Set<LocationEvent> locationEvents = new HashSet<>();
+    private Integer radiusMeters;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Site site;
@@ -125,19 +103,6 @@ public class Zone extends AbstractAuditingEntity<Long> implements Serializable, 
         this.description = description;
     }
 
-    public String getZoneType() {
-        return this.zoneType;
-    }
-
-    public Zone zoneType(String zoneType) {
-        this.setZoneType(zoneType);
-        return this;
-    }
-
-    public void setZoneType(String zoneType) {
-        this.zoneType = zoneType;
-    }
-
     public Double getCenterLat() {
         return this.centerLat;
     }
@@ -164,90 +129,17 @@ public class Zone extends AbstractAuditingEntity<Long> implements Serializable, 
         this.centerLon = centerLon;
     }
 
-    public Double getRadiusMeters() {
+    public Integer getRadiusMeters() {
         return this.radiusMeters;
     }
 
-    public Zone radiusMeters(Double radiusMeters) {
+    public Zone radiusMeters(Integer radiusMeters) {
         this.setRadiusMeters(radiusMeters);
         return this;
     }
 
-    public void setRadiusMeters(Double radiusMeters) {
+    public void setRadiusMeters(Integer radiusMeters) {
         this.radiusMeters = radiusMeters;
-    }
-
-    // Inherited createdBy methods
-    public Zone createdBy(String createdBy) {
-        this.setCreatedBy(createdBy);
-        return this;
-    }
-
-    // Inherited createdDate methods
-    public Zone createdDate(Instant createdDate) {
-        this.setCreatedDate(createdDate);
-        return this;
-    }
-
-    // Inherited lastModifiedBy methods
-    public Zone lastModifiedBy(String lastModifiedBy) {
-        this.setLastModifiedBy(lastModifiedBy);
-        return this;
-    }
-
-    // Inherited lastModifiedDate methods
-    public Zone lastModifiedDate(Instant lastModifiedDate) {
-        this.setLastModifiedDate(lastModifiedDate);
-        return this;
-    }
-
-    @PostLoad
-    @PostPersist
-    public void updateEntityState() {
-        this.setIsPersisted();
-    }
-
-    @org.springframework.data.annotation.Transient
-    @Transient
-    @Override
-    public boolean isNew() {
-        return !this.isPersisted;
-    }
-
-    public Zone setIsPersisted() {
-        this.isPersisted = true;
-        return this;
-    }
-
-    public Set<LocationEvent> getLocationEvents() {
-        return this.locationEvents;
-    }
-
-    public void setLocationEvents(Set<LocationEvent> locationEvents) {
-        if (this.locationEvents != null) {
-            this.locationEvents.forEach(i -> i.setZone(null));
-        }
-        if (locationEvents != null) {
-            locationEvents.forEach(i -> i.setZone(this));
-        }
-        this.locationEvents = locationEvents;
-    }
-
-    public Zone locationEvents(Set<LocationEvent> locationEvents) {
-        this.setLocationEvents(locationEvents);
-        return this;
-    }
-
-    public Zone addLocationEvents(LocationEvent locationEvent) {
-        this.locationEvents.add(locationEvent);
-        locationEvent.setZone(this);
-        return this;
-    }
-
-    public Zone removeLocationEvents(LocationEvent locationEvent) {
-        this.locationEvents.remove(locationEvent);
-        locationEvent.setZone(null);
-        return this;
     }
 
     public Site getSite() {
@@ -290,14 +182,9 @@ public class Zone extends AbstractAuditingEntity<Long> implements Serializable, 
             ", code='" + getCode() + "'" +
             ", name='" + getName() + "'" +
             ", description='" + getDescription() + "'" +
-            ", zoneType='" + getZoneType() + "'" +
             ", centerLat=" + getCenterLat() +
             ", centerLon=" + getCenterLon() +
             ", radiusMeters=" + getRadiusMeters() +
-            ", createdBy='" + getCreatedBy() + "'" +
-            ", createdDate='" + getCreatedDate() + "'" +
-            ", lastModifiedBy='" + getLastModifiedBy() + "'" +
-            ", lastModifiedDate='" + getLastModifiedDate() + "'" +
             "}";
     }
 }

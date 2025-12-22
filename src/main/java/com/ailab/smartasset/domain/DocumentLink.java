@@ -1,6 +1,6 @@
 package com.ailab.smartasset.domain;
 
-import com.ailab.smartasset.domain.enumeration.DocumentEntityType;
+import com.ailab.smartasset.domain.enumeration.DocumentLinkEntityType;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
@@ -8,7 +8,6 @@ import java.io.Serializable;
 import java.time.Instant;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.springframework.data.domain.Persistable;
 
 /**
  * A DocumentLink.
@@ -16,9 +15,8 @@ import org.springframework.data.domain.Persistable;
 @Entity
 @Table(name = "document_link")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@JsonIgnoreProperties(value = { "new" })
 @SuppressWarnings("common-java:DuplicatedBlocks")
-public class DocumentLink extends AbstractAuditingEntity<Long> implements Serializable, Persistable<Long> {
+public class DocumentLink implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -30,30 +28,37 @@ public class DocumentLink extends AbstractAuditingEntity<Long> implements Serial
     @NotNull
     @Enumerated(EnumType.STRING)
     @Column(name = "entity_type", nullable = false)
-    private DocumentEntityType entityType;
+    private DocumentLinkEntityType entityType;
 
     @NotNull
     @Column(name = "entity_id", nullable = false)
     private Long entityId;
 
-    @Size(max = 150)
-    @Column(name = "label", length = 150)
+    @Size(max = 200)
+    @Column(name = "label", length = 200)
     private String label;
 
     @NotNull
     @Column(name = "linked_at", nullable = false)
     private Instant linkedAt;
 
-    // Inherited createdBy definition
-    // Inherited createdDate definition
-    // Inherited lastModifiedBy definition
-    // Inherited lastModifiedDate definition
-    @org.springframework.data.annotation.Transient
-    @Transient
-    private boolean isPersisted;
+    @Size(max = 120)
+    @Column(name = "created_by", length = 120)
+    private String createdBy;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JsonIgnoreProperties(value = { "links" }, allowSetters = true)
+    @Column(name = "created_date")
+    private Instant createdDate;
+
+    @Size(max = 120)
+    @Column(name = "last_modified_by", length = 120)
+    private String lastModifiedBy;
+
+    @Column(name = "last_modified_date")
+    private Instant lastModifiedDate;
+
+    @ManyToOne(optional = false)
+    @NotNull
+    @JsonIgnoreProperties(value = { "asset" }, allowSetters = true)
     private Document document;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
@@ -71,16 +76,16 @@ public class DocumentLink extends AbstractAuditingEntity<Long> implements Serial
         this.id = id;
     }
 
-    public DocumentEntityType getEntityType() {
+    public DocumentLinkEntityType getEntityType() {
         return this.entityType;
     }
 
-    public DocumentLink entityType(DocumentEntityType entityType) {
+    public DocumentLink entityType(DocumentLinkEntityType entityType) {
         this.setEntityType(entityType);
         return this;
     }
 
-    public void setEntityType(DocumentEntityType entityType) {
+    public void setEntityType(DocumentLinkEntityType entityType) {
         this.entityType = entityType;
     }
 
@@ -123,46 +128,56 @@ public class DocumentLink extends AbstractAuditingEntity<Long> implements Serial
         this.linkedAt = linkedAt;
     }
 
-    // Inherited createdBy methods
+    public String getCreatedBy() {
+        return this.createdBy;
+    }
+
     public DocumentLink createdBy(String createdBy) {
         this.setCreatedBy(createdBy);
         return this;
     }
 
-    // Inherited createdDate methods
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public Instant getCreatedDate() {
+        return this.createdDate;
+    }
+
     public DocumentLink createdDate(Instant createdDate) {
         this.setCreatedDate(createdDate);
         return this;
     }
 
-    // Inherited lastModifiedBy methods
+    public void setCreatedDate(Instant createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public String getLastModifiedBy() {
+        return this.lastModifiedBy;
+    }
+
     public DocumentLink lastModifiedBy(String lastModifiedBy) {
         this.setLastModifiedBy(lastModifiedBy);
         return this;
     }
 
-    // Inherited lastModifiedDate methods
+    public void setLastModifiedBy(String lastModifiedBy) {
+        this.lastModifiedBy = lastModifiedBy;
+    }
+
+    public Instant getLastModifiedDate() {
+        return this.lastModifiedDate;
+    }
+
     public DocumentLink lastModifiedDate(Instant lastModifiedDate) {
         this.setLastModifiedDate(lastModifiedDate);
         return this;
     }
 
-    @PostLoad
-    @PostPersist
-    public void updateEntityState() {
-        this.setIsPersisted();
-    }
-
-    @org.springframework.data.annotation.Transient
-    @Transient
-    @Override
-    public boolean isNew() {
-        return !this.isPersisted;
-    }
-
-    public DocumentLink setIsPersisted() {
-        this.isPersisted = true;
-        return this;
+    public void setLastModifiedDate(Instant lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
     }
 
     public Document getDocument() {

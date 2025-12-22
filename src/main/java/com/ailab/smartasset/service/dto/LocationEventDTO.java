@@ -26,30 +26,30 @@ public class LocationEventDTO implements Serializable {
 
     private Integer txPower;
 
+    @NotNull
     private Double latitude;
 
+    @NotNull
     private Double longitude;
 
     private Double accuracyMeters;
 
     private Double speedKmh;
 
+    @Size(max = 50)
+    private String gnssConstellation;
+
     @Size(max = 4000)
     private String rawPayload;
 
-    private String createdBy;
-
-    private Instant createdDate;
-
-    private String lastModifiedBy;
-
-    private Instant lastModifiedDate;
-
+    @NotNull
     private AssetDTO asset;
 
-    private ZoneDTO zone;
+    private SensorDTO sensor;
 
-    private GatewayDTO gateway;
+    private SiteDTO matchedSite;
+
+    private ZoneDTO matchedZone;
 
     public Long getId() {
         return id;
@@ -131,44 +131,20 @@ public class LocationEventDTO implements Serializable {
         this.speedKmh = speedKmh;
     }
 
+    public String getGnssConstellation() {
+        return gnssConstellation;
+    }
+
+    public void setGnssConstellation(String gnssConstellation) {
+        this.gnssConstellation = gnssConstellation;
+    }
+
     public String getRawPayload() {
         return rawPayload;
     }
 
     public void setRawPayload(String rawPayload) {
         this.rawPayload = rawPayload;
-    }
-
-    public String getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
-    }
-
-    public Instant getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(Instant createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    public String getLastModifiedBy() {
-        return lastModifiedBy;
-    }
-
-    public void setLastModifiedBy(String lastModifiedBy) {
-        this.lastModifiedBy = lastModifiedBy;
-    }
-
-    public Instant getLastModifiedDate() {
-        return lastModifiedDate;
-    }
-
-    public void setLastModifiedDate(Instant lastModifiedDate) {
-        this.lastModifiedDate = lastModifiedDate;
     }
 
     public AssetDTO getAsset() {
@@ -179,20 +155,28 @@ public class LocationEventDTO implements Serializable {
         this.asset = asset;
     }
 
-    public ZoneDTO getZone() {
-        return zone;
+    public SensorDTO getSensor() {
+        return sensor;
     }
 
-    public void setZone(ZoneDTO zone) {
-        this.zone = zone;
+    public void setSensor(SensorDTO sensor) {
+        this.sensor = sensor;
     }
 
-    public GatewayDTO getGateway() {
-        return gateway;
+    public SiteDTO getMatchedSite() {
+        return matchedSite;
     }
 
-    public void setGateway(GatewayDTO gateway) {
-        this.gateway = gateway;
+    public void setMatchedSite(SiteDTO matchedSite) {
+        this.matchedSite = matchedSite;
+    }
+
+    public ZoneDTO getMatchedZone() {
+        return matchedZone;
+    }
+
+    public void setMatchedZone(ZoneDTO matchedZone) {
+        this.matchedZone = matchedZone;
     }
 
     @Override
@@ -230,14 +214,12 @@ public class LocationEventDTO implements Serializable {
             ", longitude=" + getLongitude() +
             ", accuracyMeters=" + getAccuracyMeters() +
             ", speedKmh=" + getSpeedKmh() +
+            ", gnssConstellation='" + getGnssConstellation() + "'" +
             ", rawPayload='" + getRawPayload() + "'" +
-            ", createdBy='" + getCreatedBy() + "'" +
-            ", createdDate='" + getCreatedDate() + "'" +
-            ", lastModifiedBy='" + getLastModifiedBy() + "'" +
-            ", lastModifiedDate='" + getLastModifiedDate() + "'" +
             ", asset=" + getAsset() +
-            ", zone=" + getZone() +
-            ", gateway=" + getGateway() +
+            ", sensor=" + getSensor() +
+            ", matchedSite=" + getMatchedSite() +
+            ", matchedZone=" + getMatchedZone() +
             "}";
     }
 }

@@ -27,18 +27,18 @@ public interface LocationEventRepository extends JpaRepository<LocationEvent, Lo
     }
 
     @Query(
-        value = "select locationEvent from LocationEvent locationEvent left join fetch locationEvent.asset left join fetch locationEvent.zone left join fetch locationEvent.gateway",
+        value = "select locationEvent from LocationEvent locationEvent left join fetch locationEvent.asset left join fetch locationEvent.sensor left join fetch locationEvent.matchedSite left join fetch locationEvent.matchedZone",
         countQuery = "select count(locationEvent) from LocationEvent locationEvent"
     )
     Page<LocationEvent> findAllWithToOneRelationships(Pageable pageable);
 
     @Query(
-        "select locationEvent from LocationEvent locationEvent left join fetch locationEvent.asset left join fetch locationEvent.zone left join fetch locationEvent.gateway"
+        "select locationEvent from LocationEvent locationEvent left join fetch locationEvent.asset left join fetch locationEvent.sensor left join fetch locationEvent.matchedSite left join fetch locationEvent.matchedZone"
     )
     List<LocationEvent> findAllWithToOneRelationships();
 
     @Query(
-        "select locationEvent from LocationEvent locationEvent left join fetch locationEvent.asset left join fetch locationEvent.zone left join fetch locationEvent.gateway where locationEvent.id =:id"
+        "select locationEvent from LocationEvent locationEvent left join fetch locationEvent.asset left join fetch locationEvent.sensor left join fetch locationEvent.matchedSite left join fetch locationEvent.matchedZone where locationEvent.id =:id"
     )
     Optional<LocationEvent> findOneWithToOneRelationships(@Param("id") Long id);
 }

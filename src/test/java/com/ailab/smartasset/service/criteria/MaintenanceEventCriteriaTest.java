@@ -88,10 +88,6 @@ class MaintenanceEventCriteriaTest {
         maintenanceEventCriteria.downtimeMinutes();
         maintenanceEventCriteria.costAmount();
         maintenanceEventCriteria.notes();
-        maintenanceEventCriteria.createdBy();
-        maintenanceEventCriteria.createdDate();
-        maintenanceEventCriteria.lastModifiedBy();
-        maintenanceEventCriteria.lastModifiedDate();
         maintenanceEventCriteria.assetId();
         maintenanceEventCriteria.distinct();
     }
@@ -112,10 +108,6 @@ class MaintenanceEventCriteriaTest {
                 condition.apply(criteria.getDowntimeMinutes()) &&
                 condition.apply(criteria.getCostAmount()) &&
                 condition.apply(criteria.getNotes()) &&
-                condition.apply(criteria.getCreatedBy()) &&
-                condition.apply(criteria.getCreatedDate()) &&
-                condition.apply(criteria.getLastModifiedBy()) &&
-                condition.apply(criteria.getLastModifiedDate()) &&
                 condition.apply(criteria.getAssetId()) &&
                 condition.apply(criteria.getDistinct()),
             "every filter matches"
@@ -141,10 +133,6 @@ class MaintenanceEventCriteriaTest {
                 condition.apply(criteria.getDowntimeMinutes(), copy.getDowntimeMinutes()) &&
                 condition.apply(criteria.getCostAmount(), copy.getCostAmount()) &&
                 condition.apply(criteria.getNotes(), copy.getNotes()) &&
-                condition.apply(criteria.getCreatedBy(), copy.getCreatedBy()) &&
-                condition.apply(criteria.getCreatedDate(), copy.getCreatedDate()) &&
-                condition.apply(criteria.getLastModifiedBy(), copy.getLastModifiedBy()) &&
-                condition.apply(criteria.getLastModifiedDate(), copy.getLastModifiedDate()) &&
                 condition.apply(criteria.getAssetId(), copy.getAssetId()) &&
                 condition.apply(criteria.getDistinct(), copy.getDistinct()),
             "every filter matches"

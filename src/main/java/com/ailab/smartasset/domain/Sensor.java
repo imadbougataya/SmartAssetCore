@@ -7,11 +7,8 @@ import jakarta.validation.constraints.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.Instant;
-import java.util.HashSet;
-import java.util.Set;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.springframework.data.domain.Persistable;
 
 /**
  * A Sensor.
@@ -19,9 +16,8 @@ import org.springframework.data.domain.Persistable;
 @Entity
 @Table(name = "sensor")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@JsonIgnoreProperties(value = { "new" })
 @SuppressWarnings("common-java:DuplicatedBlocks")
-public class Sensor extends AbstractAuditingEntity<Long> implements Serializable, Persistable<Long> {
+public class Sensor implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -34,6 +30,11 @@ public class Sensor extends AbstractAuditingEntity<Long> implements Serializable
     @Enumerated(EnumType.STRING)
     @Column(name = "sensor_type", nullable = false)
     private SensorType sensorType;
+
+    @NotNull
+    @Size(max = 120)
+    @Column(name = "external_id", length = 120, nullable = false, unique = true)
+    private String externalId;
 
     @Size(max = 150)
     @Column(name = "name", length = 150)
@@ -56,28 +57,8 @@ public class Sensor extends AbstractAuditingEntity<Long> implements Serializable
     @Column(name = "active", nullable = false)
     private Boolean active;
 
-    @Size(max = 120)
-    @Column(name = "external_id", length = 120)
-    private String externalId;
-
-    // Inherited createdBy definition
-    // Inherited createdDate definition
-    // Inherited lastModifiedBy definition
-    // Inherited lastModifiedDate definition
-    @org.springframework.data.annotation.Transient
-    @Transient
-    private boolean isPersisted;
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "sensor")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnoreProperties(value = { "sensor" }, allowSetters = true)
-    private Set<SensorMeasurement> measurements = new HashSet<>();
-
     @ManyToOne(fetch = FetchType.LAZY)
-    @JsonIgnoreProperties(
-        value = { "sensors", "maintenanceEvents", "movementRequests", "locationEvents", "site", "productionLine", "currentZone" },
-        allowSetters = true
-    )
+    @JsonIgnoreProperties(value = { "productionLine", "allowedSite", "allowedZone" }, allowSetters = true)
     private Asset asset;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
@@ -106,6 +87,19 @@ public class Sensor extends AbstractAuditingEntity<Long> implements Serializable
 
     public void setSensorType(SensorType sensorType) {
         this.sensorType = sensorType;
+    }
+
+    public String getExternalId() {
+        return this.externalId;
+    }
+
+    public Sensor externalId(String externalId) {
+        this.setExternalId(externalId);
+        return this;
+    }
+
+    public void setExternalId(String externalId) {
+        this.externalId = externalId;
     }
 
     public String getName() {
@@ -186,92 +180,6 @@ public class Sensor extends AbstractAuditingEntity<Long> implements Serializable
         this.active = active;
     }
 
-    public String getExternalId() {
-        return this.externalId;
-    }
-
-    public Sensor externalId(String externalId) {
-        this.setExternalId(externalId);
-        return this;
-    }
-
-    public void setExternalId(String externalId) {
-        this.externalId = externalId;
-    }
-
-    // Inherited createdBy methods
-    public Sensor createdBy(String createdBy) {
-        this.setCreatedBy(createdBy);
-        return this;
-    }
-
-    // Inherited createdDate methods
-    public Sensor createdDate(Instant createdDate) {
-        this.setCreatedDate(createdDate);
-        return this;
-    }
-
-    // Inherited lastModifiedBy methods
-    public Sensor lastModifiedBy(String lastModifiedBy) {
-        this.setLastModifiedBy(lastModifiedBy);
-        return this;
-    }
-
-    // Inherited lastModifiedDate methods
-    public Sensor lastModifiedDate(Instant lastModifiedDate) {
-        this.setLastModifiedDate(lastModifiedDate);
-        return this;
-    }
-
-    @PostLoad
-    @PostPersist
-    public void updateEntityState() {
-        this.setIsPersisted();
-    }
-
-    @org.springframework.data.annotation.Transient
-    @Transient
-    @Override
-    public boolean isNew() {
-        return !this.isPersisted;
-    }
-
-    public Sensor setIsPersisted() {
-        this.isPersisted = true;
-        return this;
-    }
-
-    public Set<SensorMeasurement> getMeasurements() {
-        return this.measurements;
-    }
-
-    public void setMeasurements(Set<SensorMeasurement> sensorMeasurements) {
-        if (this.measurements != null) {
-            this.measurements.forEach(i -> i.setSensor(null));
-        }
-        if (sensorMeasurements != null) {
-            sensorMeasurements.forEach(i -> i.setSensor(this));
-        }
-        this.measurements = sensorMeasurements;
-    }
-
-    public Sensor measurements(Set<SensorMeasurement> sensorMeasurements) {
-        this.setMeasurements(sensorMeasurements);
-        return this;
-    }
-
-    public Sensor addMeasurements(SensorMeasurement sensorMeasurement) {
-        this.measurements.add(sensorMeasurement);
-        sensorMeasurement.setSensor(this);
-        return this;
-    }
-
-    public Sensor removeMeasurements(SensorMeasurement sensorMeasurement) {
-        this.measurements.remove(sensorMeasurement);
-        sensorMeasurement.setSensor(null);
-        return this;
-    }
-
     public Asset getAsset() {
         return this.asset;
     }
@@ -310,17 +218,13 @@ public class Sensor extends AbstractAuditingEntity<Long> implements Serializable
         return "Sensor{" +
             "id=" + getId() +
             ", sensorType='" + getSensorType() + "'" +
+            ", externalId='" + getExternalId() + "'" +
             ", name='" + getName() + "'" +
             ", unit='" + getUnit() + "'" +
             ", minThreshold=" + getMinThreshold() +
             ", maxThreshold=" + getMaxThreshold() +
             ", installedAt='" + getInstalledAt() + "'" +
             ", active='" + getActive() + "'" +
-            ", externalId='" + getExternalId() + "'" +
-            ", createdBy='" + getCreatedBy() + "'" +
-            ", createdDate='" + getCreatedDate() + "'" +
-            ", lastModifiedBy='" + getLastModifiedBy() + "'" +
-            ", lastModifiedDate='" + getLastModifiedDate() + "'" +
             "}";
     }
 }

@@ -38,15 +38,7 @@ public class DocumentCriteria implements Serializable, Criteria {
 
     private StringFilter uploadedBy;
 
-    private StringFilter createdBy;
-
-    private InstantFilter createdDate;
-
-    private StringFilter lastModifiedBy;
-
-    private InstantFilter lastModifiedDate;
-
-    private LongFilter linksId;
+    private LongFilter assetId;
 
     private Boolean distinct;
 
@@ -61,11 +53,7 @@ public class DocumentCriteria implements Serializable, Criteria {
         this.checksumSha256 = other.optionalChecksumSha256().map(StringFilter::copy).orElse(null);
         this.uploadedAt = other.optionalUploadedAt().map(InstantFilter::copy).orElse(null);
         this.uploadedBy = other.optionalUploadedBy().map(StringFilter::copy).orElse(null);
-        this.createdBy = other.optionalCreatedBy().map(StringFilter::copy).orElse(null);
-        this.createdDate = other.optionalCreatedDate().map(InstantFilter::copy).orElse(null);
-        this.lastModifiedBy = other.optionalLastModifiedBy().map(StringFilter::copy).orElse(null);
-        this.lastModifiedDate = other.optionalLastModifiedDate().map(InstantFilter::copy).orElse(null);
-        this.linksId = other.optionalLinksId().map(LongFilter::copy).orElse(null);
+        this.assetId = other.optionalAssetId().map(LongFilter::copy).orElse(null);
         this.distinct = other.distinct;
     }
 
@@ -226,99 +214,23 @@ public class DocumentCriteria implements Serializable, Criteria {
         this.uploadedBy = uploadedBy;
     }
 
-    public StringFilter getCreatedBy() {
-        return createdBy;
+    public LongFilter getAssetId() {
+        return assetId;
     }
 
-    public Optional<StringFilter> optionalCreatedBy() {
-        return Optional.ofNullable(createdBy);
+    public Optional<LongFilter> optionalAssetId() {
+        return Optional.ofNullable(assetId);
     }
 
-    public StringFilter createdBy() {
-        if (createdBy == null) {
-            setCreatedBy(new StringFilter());
+    public LongFilter assetId() {
+        if (assetId == null) {
+            setAssetId(new LongFilter());
         }
-        return createdBy;
+        return assetId;
     }
 
-    public void setCreatedBy(StringFilter createdBy) {
-        this.createdBy = createdBy;
-    }
-
-    public InstantFilter getCreatedDate() {
-        return createdDate;
-    }
-
-    public Optional<InstantFilter> optionalCreatedDate() {
-        return Optional.ofNullable(createdDate);
-    }
-
-    public InstantFilter createdDate() {
-        if (createdDate == null) {
-            setCreatedDate(new InstantFilter());
-        }
-        return createdDate;
-    }
-
-    public void setCreatedDate(InstantFilter createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    public StringFilter getLastModifiedBy() {
-        return lastModifiedBy;
-    }
-
-    public Optional<StringFilter> optionalLastModifiedBy() {
-        return Optional.ofNullable(lastModifiedBy);
-    }
-
-    public StringFilter lastModifiedBy() {
-        if (lastModifiedBy == null) {
-            setLastModifiedBy(new StringFilter());
-        }
-        return lastModifiedBy;
-    }
-
-    public void setLastModifiedBy(StringFilter lastModifiedBy) {
-        this.lastModifiedBy = lastModifiedBy;
-    }
-
-    public InstantFilter getLastModifiedDate() {
-        return lastModifiedDate;
-    }
-
-    public Optional<InstantFilter> optionalLastModifiedDate() {
-        return Optional.ofNullable(lastModifiedDate);
-    }
-
-    public InstantFilter lastModifiedDate() {
-        if (lastModifiedDate == null) {
-            setLastModifiedDate(new InstantFilter());
-        }
-        return lastModifiedDate;
-    }
-
-    public void setLastModifiedDate(InstantFilter lastModifiedDate) {
-        this.lastModifiedDate = lastModifiedDate;
-    }
-
-    public LongFilter getLinksId() {
-        return linksId;
-    }
-
-    public Optional<LongFilter> optionalLinksId() {
-        return Optional.ofNullable(linksId);
-    }
-
-    public LongFilter linksId() {
-        if (linksId == null) {
-            setLinksId(new LongFilter());
-        }
-        return linksId;
-    }
-
-    public void setLinksId(LongFilter linksId) {
-        this.linksId = linksId;
+    public void setAssetId(LongFilter assetId) {
+        this.assetId = assetId;
     }
 
     public Boolean getDistinct() {
@@ -358,33 +270,14 @@ public class DocumentCriteria implements Serializable, Criteria {
             Objects.equals(checksumSha256, that.checksumSha256) &&
             Objects.equals(uploadedAt, that.uploadedAt) &&
             Objects.equals(uploadedBy, that.uploadedBy) &&
-            Objects.equals(createdBy, that.createdBy) &&
-            Objects.equals(createdDate, that.createdDate) &&
-            Objects.equals(lastModifiedBy, that.lastModifiedBy) &&
-            Objects.equals(lastModifiedDate, that.lastModifiedDate) &&
-            Objects.equals(linksId, that.linksId) &&
+            Objects.equals(assetId, that.assetId) &&
             Objects.equals(distinct, that.distinct)
         );
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(
-            id,
-            fileName,
-            mimeType,
-            sizeBytes,
-            storageRef,
-            checksumSha256,
-            uploadedAt,
-            uploadedBy,
-            createdBy,
-            createdDate,
-            lastModifiedBy,
-            lastModifiedDate,
-            linksId,
-            distinct
-        );
+        return Objects.hash(id, fileName, mimeType, sizeBytes, storageRef, checksumSha256, uploadedAt, uploadedBy, assetId, distinct);
     }
 
     // prettier-ignore
@@ -399,11 +292,7 @@ public class DocumentCriteria implements Serializable, Criteria {
             optionalChecksumSha256().map(f -> "checksumSha256=" + f + ", ").orElse("") +
             optionalUploadedAt().map(f -> "uploadedAt=" + f + ", ").orElse("") +
             optionalUploadedBy().map(f -> "uploadedBy=" + f + ", ").orElse("") +
-            optionalCreatedBy().map(f -> "createdBy=" + f + ", ").orElse("") +
-            optionalCreatedDate().map(f -> "createdDate=" + f + ", ").orElse("") +
-            optionalLastModifiedBy().map(f -> "lastModifiedBy=" + f + ", ").orElse("") +
-            optionalLastModifiedDate().map(f -> "lastModifiedDate=" + f + ", ").orElse("") +
-            optionalLinksId().map(f -> "linksId=" + f + ", ").orElse("") +
+            optionalAssetId().map(f -> "assetId=" + f + ", ").orElse("") +
             optionalDistinct().map(f -> "distinct=" + f + ", ").orElse("") +
         "}";
     }

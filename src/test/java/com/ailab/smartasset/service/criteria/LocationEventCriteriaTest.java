@@ -85,14 +85,12 @@ class LocationEventCriteriaTest {
         locationEventCriteria.longitude();
         locationEventCriteria.accuracyMeters();
         locationEventCriteria.speedKmh();
+        locationEventCriteria.gnssConstellation();
         locationEventCriteria.rawPayload();
-        locationEventCriteria.createdBy();
-        locationEventCriteria.createdDate();
-        locationEventCriteria.lastModifiedBy();
-        locationEventCriteria.lastModifiedDate();
         locationEventCriteria.assetId();
-        locationEventCriteria.zoneId();
-        locationEventCriteria.gatewayId();
+        locationEventCriteria.sensorId();
+        locationEventCriteria.matchedSiteId();
+        locationEventCriteria.matchedZoneId();
         locationEventCriteria.distinct();
     }
 
@@ -109,14 +107,12 @@ class LocationEventCriteriaTest {
                 condition.apply(criteria.getLongitude()) &&
                 condition.apply(criteria.getAccuracyMeters()) &&
                 condition.apply(criteria.getSpeedKmh()) &&
+                condition.apply(criteria.getGnssConstellation()) &&
                 condition.apply(criteria.getRawPayload()) &&
-                condition.apply(criteria.getCreatedBy()) &&
-                condition.apply(criteria.getCreatedDate()) &&
-                condition.apply(criteria.getLastModifiedBy()) &&
-                condition.apply(criteria.getLastModifiedDate()) &&
                 condition.apply(criteria.getAssetId()) &&
-                condition.apply(criteria.getZoneId()) &&
-                condition.apply(criteria.getGatewayId()) &&
+                condition.apply(criteria.getSensorId()) &&
+                condition.apply(criteria.getMatchedSiteId()) &&
+                condition.apply(criteria.getMatchedZoneId()) &&
                 condition.apply(criteria.getDistinct()),
             "every filter matches"
         );
@@ -138,14 +134,12 @@ class LocationEventCriteriaTest {
                 condition.apply(criteria.getLongitude(), copy.getLongitude()) &&
                 condition.apply(criteria.getAccuracyMeters(), copy.getAccuracyMeters()) &&
                 condition.apply(criteria.getSpeedKmh(), copy.getSpeedKmh()) &&
+                condition.apply(criteria.getGnssConstellation(), copy.getGnssConstellation()) &&
                 condition.apply(criteria.getRawPayload(), copy.getRawPayload()) &&
-                condition.apply(criteria.getCreatedBy(), copy.getCreatedBy()) &&
-                condition.apply(criteria.getCreatedDate(), copy.getCreatedDate()) &&
-                condition.apply(criteria.getLastModifiedBy(), copy.getLastModifiedBy()) &&
-                condition.apply(criteria.getLastModifiedDate(), copy.getLastModifiedDate()) &&
                 condition.apply(criteria.getAssetId(), copy.getAssetId()) &&
-                condition.apply(criteria.getZoneId(), copy.getZoneId()) &&
-                condition.apply(criteria.getGatewayId(), copy.getGatewayId()) &&
+                condition.apply(criteria.getSensorId(), copy.getSensorId()) &&
+                condition.apply(criteria.getMatchedSiteId(), copy.getMatchedSiteId()) &&
+                condition.apply(criteria.getMatchedZoneId(), copy.getMatchedZoneId()) &&
                 condition.apply(criteria.getDistinct(), copy.getDistinct()),
             "every filter matches"
         );

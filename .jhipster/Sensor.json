@@ -1,9 +1,8 @@
 {
   "annotations": {
-    "changelogDate": "20251217002704",
-    "enableAudit": true
+    "changelogDate": "20251217002704"
   },
-  "applications": ["smartassetcore"],
+  "applications": ["SmartAssetCore"],
   "dto": "mapstruct",
   "fields": [
     {
@@ -11,6 +10,12 @@
       "fieldType": "SensorType",
       "fieldValidateRules": ["required"],
       "fieldValues": "TEMPERATURE,VIBRATION,PRESSURE,CURRENT,VOLTAGE,OIL_LEVEL,LIQUID_LEVEL,HUMIDITY,BLE_TAG,GNSS_TRACKER"
+    },
+    {
+      "fieldName": "externalId",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "unique", "maxlength"],
+      "fieldValidateRulesMaxlength": "120"
     },
     {
       "fieldName": "name",
@@ -40,46 +45,6 @@
       "fieldName": "active",
       "fieldType": "Boolean",
       "fieldValidateRules": ["required"]
-    },
-    {
-      "fieldName": "externalId",
-      "fieldType": "String",
-      "fieldValidateRules": ["maxlength"],
-      "fieldValidateRulesMaxlength": "120"
-    },
-    {
-      "auditField": true,
-      "autoGenerate": true,
-      "columnType": "varchar(50)",
-      "fieldName": "createdBy",
-      "fieldType": "String",
-      "nullable": false,
-      "readonly": true
-    },
-    {
-      "auditField": true,
-      "autoGenerate": true,
-      "fieldName": "createdDate",
-      "fieldType": "Instant",
-      "nullable": false,
-      "readonly": true
-    },
-    {
-      "auditField": true,
-      "autoGenerate": true,
-      "columnType": "varchar(50)",
-      "fieldName": "lastModifiedBy",
-      "fieldType": "String",
-      "nullable": false,
-      "readonly": true
-    },
-    {
-      "auditField": true,
-      "autoGenerate": true,
-      "fieldName": "lastModifiedDate",
-      "fieldType": "Instant",
-      "nullable": false,
-      "readonly": true
     }
   ],
   "jpaMetamodelFiltering": true,
@@ -87,19 +52,10 @@
   "pagination": "pagination",
   "relationships": [
     {
-      "otherEntityField": "measuredAt",
-      "otherEntityName": "sensorMeasurement",
-      "otherEntityRelationshipName": "sensor",
-      "relationshipName": "measurements",
-      "relationshipSide": "left",
-      "relationshipType": "one-to-many"
-    },
-    {
       "otherEntityField": "assetCode",
       "otherEntityName": "asset",
-      "otherEntityRelationshipName": "sensors",
       "relationshipName": "asset",
-      "relationshipSide": "right",
+      "relationshipSide": "left",
       "relationshipType": "many-to-one"
     }
   ],

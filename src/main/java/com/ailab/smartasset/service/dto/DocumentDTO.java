@@ -36,13 +36,8 @@ public class DocumentDTO implements Serializable {
     @Size(max = 120)
     private String uploadedBy;
 
-    private String createdBy;
-
-    private Instant createdDate;
-
-    private String lastModifiedBy;
-
-    private Instant lastModifiedDate;
+    @NotNull
+    private AssetDTO asset;
 
     public Long getId() {
         return id;
@@ -108,36 +103,12 @@ public class DocumentDTO implements Serializable {
         this.uploadedBy = uploadedBy;
     }
 
-    public String getCreatedBy() {
-        return createdBy;
+    public AssetDTO getAsset() {
+        return asset;
     }
 
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
-    }
-
-    public Instant getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(Instant createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    public String getLastModifiedBy() {
-        return lastModifiedBy;
-    }
-
-    public void setLastModifiedBy(String lastModifiedBy) {
-        this.lastModifiedBy = lastModifiedBy;
-    }
-
-    public Instant getLastModifiedDate() {
-        return lastModifiedDate;
-    }
-
-    public void setLastModifiedDate(Instant lastModifiedDate) {
-        this.lastModifiedDate = lastModifiedDate;
+    public void setAsset(AssetDTO asset) {
+        this.asset = asset;
     }
 
     @Override
@@ -173,10 +144,7 @@ public class DocumentDTO implements Serializable {
             ", checksumSha256='" + getChecksumSha256() + "'" +
             ", uploadedAt='" + getUploadedAt() + "'" +
             ", uploadedBy='" + getUploadedBy() + "'" +
-            ", createdBy='" + getCreatedBy() + "'" +
-            ", createdDate='" + getCreatedDate() + "'" +
-            ", lastModifiedBy='" + getLastModifiedBy() + "'" +
-            ", lastModifiedDate='" + getLastModifiedDate() + "'" +
+            ", asset=" + getAsset() +
             "}";
     }
 }

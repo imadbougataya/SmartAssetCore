@@ -18,9 +18,7 @@ public class MaintenanceEventTestSamples {
             .description("description1")
             .technician("technician1")
             .downtimeMinutes(1)
-            .notes("notes1")
-            .createdBy("createdBy1")
-            .lastModifiedBy("lastModifiedBy1");
+            .notes("notes1");
     }
 
     public static MaintenanceEvent getMaintenanceEventSample2() {
@@ -30,9 +28,7 @@ public class MaintenanceEventTestSamples {
             .description("description2")
             .technician("technician2")
             .downtimeMinutes(2)
-            .notes("notes2")
-            .createdBy("createdBy2")
-            .lastModifiedBy("lastModifiedBy2");
+            .notes("notes2");
     }
 
     public static MaintenanceEvent getMaintenanceEventRandomSampleGenerator() {
@@ -42,8 +38,6 @@ public class MaintenanceEventTestSamples {
             .description(UUID.randomUUID().toString())
             .technician(UUID.randomUUID().toString())
             .downtimeMinutes(intCount.incrementAndGet())
-            .notes(UUID.randomUUID().toString())
-            .createdBy(UUID.randomUUID().toString())
-            .lastModifiedBy(UUID.randomUUID().toString());
+            .notes(UUID.randomUUID().toString());
     }
 }

@@ -17,9 +17,7 @@ public class DocumentTestSamples {
             .sizeBytes(1L)
             .storageRef("storageRef1")
             .checksumSha256("checksumSha2561")
-            .uploadedBy("uploadedBy1")
-            .createdBy("createdBy1")
-            .lastModifiedBy("lastModifiedBy1");
+            .uploadedBy("uploadedBy1");
     }
 
     public static Document getDocumentSample2() {
@@ -30,9 +28,7 @@ public class DocumentTestSamples {
             .sizeBytes(2L)
             .storageRef("storageRef2")
             .checksumSha256("checksumSha2562")
-            .uploadedBy("uploadedBy2")
-            .createdBy("createdBy2")
-            .lastModifiedBy("lastModifiedBy2");
+            .uploadedBy("uploadedBy2");
     }
 
     public static Document getDocumentRandomSampleGenerator() {
@@ -43,8 +39,6 @@ public class DocumentTestSamples {
             .sizeBytes(longCount.incrementAndGet())
             .storageRef(UUID.randomUUID().toString())
             .checksumSha256(UUID.randomUUID().toString())
-            .uploadedBy(UUID.randomUUID().toString())
-            .createdBy(UUID.randomUUID().toString())
-            .lastModifiedBy(UUID.randomUUID().toString());
+            .uploadedBy(UUID.randomUUID().toString());
     }
 }

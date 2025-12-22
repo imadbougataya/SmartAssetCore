@@ -66,14 +66,6 @@ public class AssetMovementRequestCriteria implements Serializable, Criteria {
 
     private StringFilter approvedBy;
 
-    private StringFilter createdBy;
-
-    private InstantFilter createdDate;
-
-    private StringFilter lastModifiedBy;
-
-    private InstantFilter lastModifiedDate;
-
     private LongFilter assetId;
 
     private Boolean distinct;
@@ -94,10 +86,6 @@ public class AssetMovementRequestCriteria implements Serializable, Criteria {
         this.executedAt = other.optionalExecutedAt().map(InstantFilter::copy).orElse(null);
         this.requestedBy = other.optionalRequestedBy().map(StringFilter::copy).orElse(null);
         this.approvedBy = other.optionalApprovedBy().map(StringFilter::copy).orElse(null);
-        this.createdBy = other.optionalCreatedBy().map(StringFilter::copy).orElse(null);
-        this.createdDate = other.optionalCreatedDate().map(InstantFilter::copy).orElse(null);
-        this.lastModifiedBy = other.optionalLastModifiedBy().map(StringFilter::copy).orElse(null);
-        this.lastModifiedDate = other.optionalLastModifiedDate().map(InstantFilter::copy).orElse(null);
         this.assetId = other.optionalAssetId().map(LongFilter::copy).orElse(null);
         this.distinct = other.distinct;
     }
@@ -354,82 +342,6 @@ public class AssetMovementRequestCriteria implements Serializable, Criteria {
         this.approvedBy = approvedBy;
     }
 
-    public StringFilter getCreatedBy() {
-        return createdBy;
-    }
-
-    public Optional<StringFilter> optionalCreatedBy() {
-        return Optional.ofNullable(createdBy);
-    }
-
-    public StringFilter createdBy() {
-        if (createdBy == null) {
-            setCreatedBy(new StringFilter());
-        }
-        return createdBy;
-    }
-
-    public void setCreatedBy(StringFilter createdBy) {
-        this.createdBy = createdBy;
-    }
-
-    public InstantFilter getCreatedDate() {
-        return createdDate;
-    }
-
-    public Optional<InstantFilter> optionalCreatedDate() {
-        return Optional.ofNullable(createdDate);
-    }
-
-    public InstantFilter createdDate() {
-        if (createdDate == null) {
-            setCreatedDate(new InstantFilter());
-        }
-        return createdDate;
-    }
-
-    public void setCreatedDate(InstantFilter createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    public StringFilter getLastModifiedBy() {
-        return lastModifiedBy;
-    }
-
-    public Optional<StringFilter> optionalLastModifiedBy() {
-        return Optional.ofNullable(lastModifiedBy);
-    }
-
-    public StringFilter lastModifiedBy() {
-        if (lastModifiedBy == null) {
-            setLastModifiedBy(new StringFilter());
-        }
-        return lastModifiedBy;
-    }
-
-    public void setLastModifiedBy(StringFilter lastModifiedBy) {
-        this.lastModifiedBy = lastModifiedBy;
-    }
-
-    public InstantFilter getLastModifiedDate() {
-        return lastModifiedDate;
-    }
-
-    public Optional<InstantFilter> optionalLastModifiedDate() {
-        return Optional.ofNullable(lastModifiedDate);
-    }
-
-    public InstantFilter lastModifiedDate() {
-        if (lastModifiedDate == null) {
-            setLastModifiedDate(new InstantFilter());
-        }
-        return lastModifiedDate;
-    }
-
-    public void setLastModifiedDate(InstantFilter lastModifiedDate) {
-        this.lastModifiedDate = lastModifiedDate;
-    }
-
     public LongFilter getAssetId() {
         return assetId;
     }
@@ -491,10 +403,6 @@ public class AssetMovementRequestCriteria implements Serializable, Criteria {
             Objects.equals(executedAt, that.executedAt) &&
             Objects.equals(requestedBy, that.requestedBy) &&
             Objects.equals(approvedBy, that.approvedBy) &&
-            Objects.equals(createdBy, that.createdBy) &&
-            Objects.equals(createdDate, that.createdDate) &&
-            Objects.equals(lastModifiedBy, that.lastModifiedBy) &&
-            Objects.equals(lastModifiedDate, that.lastModifiedDate) &&
             Objects.equals(assetId, that.assetId) &&
             Objects.equals(distinct, that.distinct)
         );
@@ -516,10 +424,6 @@ public class AssetMovementRequestCriteria implements Serializable, Criteria {
             executedAt,
             requestedBy,
             approvedBy,
-            createdBy,
-            createdDate,
-            lastModifiedBy,
-            lastModifiedDate,
             assetId,
             distinct
         );
@@ -542,10 +446,6 @@ public class AssetMovementRequestCriteria implements Serializable, Criteria {
             optionalExecutedAt().map(f -> "executedAt=" + f + ", ").orElse("") +
             optionalRequestedBy().map(f -> "requestedBy=" + f + ", ").orElse("") +
             optionalApprovedBy().map(f -> "approvedBy=" + f + ", ").orElse("") +
-            optionalCreatedBy().map(f -> "createdBy=" + f + ", ").orElse("") +
-            optionalCreatedDate().map(f -> "createdDate=" + f + ", ").orElse("") +
-            optionalLastModifiedBy().map(f -> "lastModifiedBy=" + f + ", ").orElse("") +
-            optionalLastModifiedDate().map(f -> "lastModifiedDate=" + f + ", ").orElse("") +
             optionalAssetId().map(f -> "assetId=" + f + ", ").orElse("") +
             optionalDistinct().map(f -> "distinct=" + f + ", ").orElse("") +
         "}";

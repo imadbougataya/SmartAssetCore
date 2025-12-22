@@ -1,6 +1,6 @@
 package com.ailab.smartasset.service.dto;
 
-import com.ailab.smartasset.domain.enumeration.DocumentEntityType;
+import com.ailab.smartasset.domain.enumeration.DocumentLinkEntityType;
 import jakarta.validation.constraints.*;
 import java.io.Serializable;
 import java.time.Instant;
@@ -15,25 +15,28 @@ public class DocumentLinkDTO implements Serializable {
     private Long id;
 
     @NotNull
-    private DocumentEntityType entityType;
+    private DocumentLinkEntityType entityType;
 
     @NotNull
     private Long entityId;
 
-    @Size(max = 150)
+    @Size(max = 200)
     private String label;
 
     @NotNull
     private Instant linkedAt;
 
+    @Size(max = 120)
     private String createdBy;
 
     private Instant createdDate;
 
+    @Size(max = 120)
     private String lastModifiedBy;
 
     private Instant lastModifiedDate;
 
+    @NotNull
     private DocumentDTO document;
 
     public Long getId() {
@@ -44,11 +47,11 @@ public class DocumentLinkDTO implements Serializable {
         this.id = id;
     }
 
-    public DocumentEntityType getEntityType() {
+    public DocumentLinkEntityType getEntityType() {
         return entityType;
     }
 
-    public void setEntityType(DocumentEntityType entityType) {
+    public void setEntityType(DocumentLinkEntityType entityType) {
         this.entityType = entityType;
     }
 

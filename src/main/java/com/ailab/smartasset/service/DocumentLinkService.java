@@ -52,7 +52,6 @@ public class DocumentLinkService {
     public DocumentLinkDTO update(DocumentLinkDTO documentLinkDTO) {
         LOG.debug("Request to update DocumentLink : {}", documentLinkDTO);
         DocumentLink documentLink = documentLinkMapper.toEntity(documentLinkDTO);
-        documentLink.setIsPersisted();
         documentLink = documentLinkRepository.save(documentLink);
         return documentLinkMapper.toDto(documentLink);
     }

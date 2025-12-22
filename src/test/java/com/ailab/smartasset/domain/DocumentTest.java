@@ -1,12 +1,10 @@
 package com.ailab.smartasset.domain;
 
-import static com.ailab.smartasset.domain.DocumentLinkTestSamples.*;
+import static com.ailab.smartasset.domain.AssetTestSamples.*;
 import static com.ailab.smartasset.domain.DocumentTestSamples.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ailab.smartasset.web.rest.TestUtil;
-import java.util.HashSet;
-import java.util.Set;
 import org.junit.jupiter.api.Test;
 
 class DocumentTest {
@@ -26,24 +24,14 @@ class DocumentTest {
     }
 
     @Test
-    void linksTest() {
+    void assetTest() {
         Document document = getDocumentRandomSampleGenerator();
-        DocumentLink documentLinkBack = getDocumentLinkRandomSampleGenerator();
+        Asset assetBack = getAssetRandomSampleGenerator();
 
-        document.addLinks(documentLinkBack);
-        assertThat(document.getLinks()).containsOnly(documentLinkBack);
-        assertThat(documentLinkBack.getDocument()).isEqualTo(document);
+        document.setAsset(assetBack);
+        assertThat(document.getAsset()).isEqualTo(assetBack);
 
-        document.removeLinks(documentLinkBack);
-        assertThat(document.getLinks()).doesNotContain(documentLinkBack);
-        assertThat(documentLinkBack.getDocument()).isNull();
-
-        document.links(new HashSet<>(Set.of(documentLinkBack)));
-        assertThat(document.getLinks()).containsOnly(documentLinkBack);
-        assertThat(documentLinkBack.getDocument()).isEqualTo(document);
-
-        document.setLinks(new HashSet<>());
-        assertThat(document.getLinks()).doesNotContain(documentLinkBack);
-        assertThat(documentLinkBack.getDocument()).isNull();
+        document.asset(null);
+        assertThat(document.getAsset()).isNull();
     }
 }

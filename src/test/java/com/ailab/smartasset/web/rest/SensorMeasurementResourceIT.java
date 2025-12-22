@@ -649,11 +649,7 @@ class SensorMeasurementResourceIT {
         SensorMeasurement partialUpdatedSensorMeasurement = new SensorMeasurement();
         partialUpdatedSensorMeasurement.setId(sensorMeasurement.getId());
 
-        partialUpdatedSensorMeasurement
-            .measuredAt(UPDATED_MEASURED_AT)
-            .value(UPDATED_VALUE)
-            .quality(UPDATED_QUALITY)
-            .source(UPDATED_SOURCE);
+        partialUpdatedSensorMeasurement.measuredAt(UPDATED_MEASURED_AT).value(UPDATED_VALUE);
 
         restSensorMeasurementMockMvc
             .perform(

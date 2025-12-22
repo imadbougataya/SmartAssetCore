@@ -40,16 +40,6 @@ public class GatewayCriteria implements Serializable, Criteria {
 
     private BooleanFilter active;
 
-    private StringFilter createdBy;
-
-    private InstantFilter createdDate;
-
-    private StringFilter lastModifiedBy;
-
-    private InstantFilter lastModifiedDate;
-
-    private LongFilter locationEventsId;
-
     private LongFilter siteId;
 
     private LongFilter zoneId;
@@ -68,11 +58,6 @@ public class GatewayCriteria implements Serializable, Criteria {
         this.ipAddress = other.optionalIpAddress().map(StringFilter::copy).orElse(null);
         this.installedAt = other.optionalInstalledAt().map(InstantFilter::copy).orElse(null);
         this.active = other.optionalActive().map(BooleanFilter::copy).orElse(null);
-        this.createdBy = other.optionalCreatedBy().map(StringFilter::copy).orElse(null);
-        this.createdDate = other.optionalCreatedDate().map(InstantFilter::copy).orElse(null);
-        this.lastModifiedBy = other.optionalLastModifiedBy().map(StringFilter::copy).orElse(null);
-        this.lastModifiedDate = other.optionalLastModifiedDate().map(InstantFilter::copy).orElse(null);
-        this.locationEventsId = other.optionalLocationEventsId().map(LongFilter::copy).orElse(null);
         this.siteId = other.optionalSiteId().map(LongFilter::copy).orElse(null);
         this.zoneId = other.optionalZoneId().map(LongFilter::copy).orElse(null);
         this.distinct = other.distinct;
@@ -254,101 +239,6 @@ public class GatewayCriteria implements Serializable, Criteria {
         this.active = active;
     }
 
-    public StringFilter getCreatedBy() {
-        return createdBy;
-    }
-
-    public Optional<StringFilter> optionalCreatedBy() {
-        return Optional.ofNullable(createdBy);
-    }
-
-    public StringFilter createdBy() {
-        if (createdBy == null) {
-            setCreatedBy(new StringFilter());
-        }
-        return createdBy;
-    }
-
-    public void setCreatedBy(StringFilter createdBy) {
-        this.createdBy = createdBy;
-    }
-
-    public InstantFilter getCreatedDate() {
-        return createdDate;
-    }
-
-    public Optional<InstantFilter> optionalCreatedDate() {
-        return Optional.ofNullable(createdDate);
-    }
-
-    public InstantFilter createdDate() {
-        if (createdDate == null) {
-            setCreatedDate(new InstantFilter());
-        }
-        return createdDate;
-    }
-
-    public void setCreatedDate(InstantFilter createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    public StringFilter getLastModifiedBy() {
-        return lastModifiedBy;
-    }
-
-    public Optional<StringFilter> optionalLastModifiedBy() {
-        return Optional.ofNullable(lastModifiedBy);
-    }
-
-    public StringFilter lastModifiedBy() {
-        if (lastModifiedBy == null) {
-            setLastModifiedBy(new StringFilter());
-        }
-        return lastModifiedBy;
-    }
-
-    public void setLastModifiedBy(StringFilter lastModifiedBy) {
-        this.lastModifiedBy = lastModifiedBy;
-    }
-
-    public InstantFilter getLastModifiedDate() {
-        return lastModifiedDate;
-    }
-
-    public Optional<InstantFilter> optionalLastModifiedDate() {
-        return Optional.ofNullable(lastModifiedDate);
-    }
-
-    public InstantFilter lastModifiedDate() {
-        if (lastModifiedDate == null) {
-            setLastModifiedDate(new InstantFilter());
-        }
-        return lastModifiedDate;
-    }
-
-    public void setLastModifiedDate(InstantFilter lastModifiedDate) {
-        this.lastModifiedDate = lastModifiedDate;
-    }
-
-    public LongFilter getLocationEventsId() {
-        return locationEventsId;
-    }
-
-    public Optional<LongFilter> optionalLocationEventsId() {
-        return Optional.ofNullable(locationEventsId);
-    }
-
-    public LongFilter locationEventsId() {
-        if (locationEventsId == null) {
-            setLocationEventsId(new LongFilter());
-        }
-        return locationEventsId;
-    }
-
-    public void setLocationEventsId(LongFilter locationEventsId) {
-        this.locationEventsId = locationEventsId;
-    }
-
     public LongFilter getSiteId() {
         return siteId;
     }
@@ -425,11 +315,6 @@ public class GatewayCriteria implements Serializable, Criteria {
             Objects.equals(ipAddress, that.ipAddress) &&
             Objects.equals(installedAt, that.installedAt) &&
             Objects.equals(active, that.active) &&
-            Objects.equals(createdBy, that.createdBy) &&
-            Objects.equals(createdDate, that.createdDate) &&
-            Objects.equals(lastModifiedBy, that.lastModifiedBy) &&
-            Objects.equals(lastModifiedDate, that.lastModifiedDate) &&
-            Objects.equals(locationEventsId, that.locationEventsId) &&
             Objects.equals(siteId, that.siteId) &&
             Objects.equals(zoneId, that.zoneId) &&
             Objects.equals(distinct, that.distinct)
@@ -438,25 +323,7 @@ public class GatewayCriteria implements Serializable, Criteria {
 
     @Override
     public int hashCode() {
-        return Objects.hash(
-            id,
-            code,
-            name,
-            vendor,
-            model,
-            macAddress,
-            ipAddress,
-            installedAt,
-            active,
-            createdBy,
-            createdDate,
-            lastModifiedBy,
-            lastModifiedDate,
-            locationEventsId,
-            siteId,
-            zoneId,
-            distinct
-        );
+        return Objects.hash(id, code, name, vendor, model, macAddress, ipAddress, installedAt, active, siteId, zoneId, distinct);
     }
 
     // prettier-ignore
@@ -472,11 +339,6 @@ public class GatewayCriteria implements Serializable, Criteria {
             optionalIpAddress().map(f -> "ipAddress=" + f + ", ").orElse("") +
             optionalInstalledAt().map(f -> "installedAt=" + f + ", ").orElse("") +
             optionalActive().map(f -> "active=" + f + ", ").orElse("") +
-            optionalCreatedBy().map(f -> "createdBy=" + f + ", ").orElse("") +
-            optionalCreatedDate().map(f -> "createdDate=" + f + ", ").orElse("") +
-            optionalLastModifiedBy().map(f -> "lastModifiedBy=" + f + ", ").orElse("") +
-            optionalLastModifiedDate().map(f -> "lastModifiedDate=" + f + ", ").orElse("") +
-            optionalLocationEventsId().map(f -> "locationEventsId=" + f + ", ").orElse("") +
             optionalSiteId().map(f -> "siteId=" + f + ", ").orElse("") +
             optionalZoneId().map(f -> "zoneId=" + f + ", ").orElse("") +
             optionalDistinct().map(f -> "distinct=" + f + ", ").orElse("") +

@@ -1,9 +1,8 @@
 {
   "annotations": {
-    "changelogDate": "20251217002702",
-    "enableAudit": true
+    "changelogDate": "20251217002702"
   },
-  "applications": ["smartassetcore"],
+  "applications": ["SmartAssetCore"],
   "dto": "mapstruct",
   "fields": [
     {
@@ -50,54 +49,12 @@
       "fieldName": "active",
       "fieldType": "Boolean",
       "fieldValidateRules": ["required"]
-    },
-    {
-      "auditField": true,
-      "autoGenerate": true,
-      "columnType": "varchar(50)",
-      "fieldName": "createdBy",
-      "fieldType": "String",
-      "nullable": false,
-      "readonly": true
-    },
-    {
-      "auditField": true,
-      "autoGenerate": true,
-      "fieldName": "createdDate",
-      "fieldType": "Instant",
-      "nullable": false,
-      "readonly": true
-    },
-    {
-      "auditField": true,
-      "autoGenerate": true,
-      "columnType": "varchar(50)",
-      "fieldName": "lastModifiedBy",
-      "fieldType": "String",
-      "nullable": false,
-      "readonly": true
-    },
-    {
-      "auditField": true,
-      "autoGenerate": true,
-      "fieldName": "lastModifiedDate",
-      "fieldType": "Instant",
-      "nullable": false,
-      "readonly": true
     }
   ],
   "jpaMetamodelFiltering": true,
   "name": "Gateway",
   "pagination": "pagination",
   "relationships": [
-    {
-      "otherEntityField": "observedAt",
-      "otherEntityName": "locationEvent",
-      "otherEntityRelationshipName": "gateway",
-      "relationshipName": "locationEvents",
-      "relationshipSide": "left",
-      "relationshipType": "one-to-many"
-    },
     {
       "otherEntityField": "code",
       "otherEntityName": "site",

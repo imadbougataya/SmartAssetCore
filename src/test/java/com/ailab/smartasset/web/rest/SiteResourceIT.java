@@ -43,6 +43,18 @@ class SiteResourceIT {
     private static final String DEFAULT_DESCRIPTION = "AAAAAAAAAA";
     private static final String UPDATED_DESCRIPTION = "BBBBBBBBBB";
 
+    private static final Double DEFAULT_CENTER_LAT = 1D;
+    private static final Double UPDATED_CENTER_LAT = 2D;
+    private static final Double SMALLER_CENTER_LAT = 1D - 1D;
+
+    private static final Double DEFAULT_CENTER_LON = 1D;
+    private static final Double UPDATED_CENTER_LON = 2D;
+    private static final Double SMALLER_CENTER_LON = 1D - 1D;
+
+    private static final Integer DEFAULT_RADIUS_METERS = 1;
+    private static final Integer UPDATED_RADIUS_METERS = 2;
+    private static final Integer SMALLER_RADIUS_METERS = 1 - 1;
+
     private static final String ENTITY_API_URL = "/api/sites";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
 
@@ -75,7 +87,13 @@ class SiteResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Site createEntity() {
-        return new Site().code(DEFAULT_CODE).name(DEFAULT_NAME).description(DEFAULT_DESCRIPTION);
+        return new Site()
+            .code(DEFAULT_CODE)
+            .name(DEFAULT_NAME)
+            .description(DEFAULT_DESCRIPTION)
+            .centerLat(DEFAULT_CENTER_LAT)
+            .centerLon(DEFAULT_CENTER_LON)
+            .radiusMeters(DEFAULT_RADIUS_METERS);
     }
 
     /**
@@ -85,7 +103,13 @@ class SiteResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Site createUpdatedEntity() {
-        return new Site().code(UPDATED_CODE).name(UPDATED_NAME).description(UPDATED_DESCRIPTION);
+        return new Site()
+            .code(UPDATED_CODE)
+            .name(UPDATED_NAME)
+            .description(UPDATED_DESCRIPTION)
+            .centerLat(UPDATED_CENTER_LAT)
+            .centerLon(UPDATED_CENTER_LON)
+            .radiusMeters(UPDATED_RADIUS_METERS);
     }
 
     @BeforeEach
@@ -191,7 +215,10 @@ class SiteResourceIT {
             .andExpect(jsonPath("$.[*].id").value(hasItem(site.getId().intValue())))
             .andExpect(jsonPath("$.[*].code").value(hasItem(DEFAULT_CODE)))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
-            .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION)));
+            .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION)))
+            .andExpect(jsonPath("$.[*].centerLat").value(hasItem(DEFAULT_CENTER_LAT)))
+            .andExpect(jsonPath("$.[*].centerLon").value(hasItem(DEFAULT_CENTER_LON)))
+            .andExpect(jsonPath("$.[*].radiusMeters").value(hasItem(DEFAULT_RADIUS_METERS)));
     }
 
     @Test
@@ -208,7 +235,10 @@ class SiteResourceIT {
             .andExpect(jsonPath("$.id").value(site.getId().intValue()))
             .andExpect(jsonPath("$.code").value(DEFAULT_CODE))
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME))
-            .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION));
+            .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION))
+            .andExpect(jsonPath("$.centerLat").value(DEFAULT_CENTER_LAT))
+            .andExpect(jsonPath("$.centerLon").value(DEFAULT_CENTER_LON))
+            .andExpect(jsonPath("$.radiusMeters").value(DEFAULT_RADIUS_METERS));
     }
 
     @Test
@@ -376,6 +406,225 @@ class SiteResourceIT {
         defaultSiteFiltering("description.doesNotContain=" + UPDATED_DESCRIPTION, "description.doesNotContain=" + DEFAULT_DESCRIPTION);
     }
 
+    @Test
+    @Transactional
+    void getAllSitesByCenterLatIsEqualToSomething() throws Exception {
+        // Initialize the database
+        insertedSite = siteRepository.saveAndFlush(site);
+
+        // Get all the siteList where centerLat equals to
+        defaultSiteFiltering("centerLat.equals=" + DEFAULT_CENTER_LAT, "centerLat.equals=" + UPDATED_CENTER_LAT);
+    }
+
+    @Test
+    @Transactional
+    void getAllSitesByCenterLatIsInShouldWork() throws Exception {
+        // Initialize the database
+        insertedSite = siteRepository.saveAndFlush(site);
+
+        // Get all the siteList where centerLat in
+        defaultSiteFiltering("centerLat.in=" + DEFAULT_CENTER_LAT + "," + UPDATED_CENTER_LAT, "centerLat.in=" + UPDATED_CENTER_LAT);
+    }
+
+    @Test
+    @Transactional
+    void getAllSitesByCenterLatIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        insertedSite = siteRepository.saveAndFlush(site);
+
+        // Get all the siteList where centerLat is not null
+        defaultSiteFiltering("centerLat.specified=true", "centerLat.specified=false");
+    }
+
+    @Test
+    @Transactional
+    void getAllSitesByCenterLatIsGreaterThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        insertedSite = siteRepository.saveAndFlush(site);
+
+        // Get all the siteList where centerLat is greater than or equal to
+        defaultSiteFiltering("centerLat.greaterThanOrEqual=" + DEFAULT_CENTER_LAT, "centerLat.greaterThanOrEqual=" + UPDATED_CENTER_LAT);
+    }
+
+    @Test
+    @Transactional
+    void getAllSitesByCenterLatIsLessThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        insertedSite = siteRepository.saveAndFlush(site);
+
+        // Get all the siteList where centerLat is less than or equal to
+        defaultSiteFiltering("centerLat.lessThanOrEqual=" + DEFAULT_CENTER_LAT, "centerLat.lessThanOrEqual=" + SMALLER_CENTER_LAT);
+    }
+
+    @Test
+    @Transactional
+    void getAllSitesByCenterLatIsLessThanSomething() throws Exception {
+        // Initialize the database
+        insertedSite = siteRepository.saveAndFlush(site);
+
+        // Get all the siteList where centerLat is less than
+        defaultSiteFiltering("centerLat.lessThan=" + UPDATED_CENTER_LAT, "centerLat.lessThan=" + DEFAULT_CENTER_LAT);
+    }
+
+    @Test
+    @Transactional
+    void getAllSitesByCenterLatIsGreaterThanSomething() throws Exception {
+        // Initialize the database
+        insertedSite = siteRepository.saveAndFlush(site);
+
+        // Get all the siteList where centerLat is greater than
+        defaultSiteFiltering("centerLat.greaterThan=" + SMALLER_CENTER_LAT, "centerLat.greaterThan=" + DEFAULT_CENTER_LAT);
+    }
+
+    @Test
+    @Transactional
+    void getAllSitesByCenterLonIsEqualToSomething() throws Exception {
+        // Initialize the database
+        insertedSite = siteRepository.saveAndFlush(site);
+
+        // Get all the siteList where centerLon equals to
+        defaultSiteFiltering("centerLon.equals=" + DEFAULT_CENTER_LON, "centerLon.equals=" + UPDATED_CENTER_LON);
+    }
+
+    @Test
+    @Transactional
+    void getAllSitesByCenterLonIsInShouldWork() throws Exception {
+        // Initialize the database
+        insertedSite = siteRepository.saveAndFlush(site);
+
+        // Get all the siteList where centerLon in
+        defaultSiteFiltering("centerLon.in=" + DEFAULT_CENTER_LON + "," + UPDATED_CENTER_LON, "centerLon.in=" + UPDATED_CENTER_LON);
+    }
+
+    @Test
+    @Transactional
+    void getAllSitesByCenterLonIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        insertedSite = siteRepository.saveAndFlush(site);
+
+        // Get all the siteList where centerLon is not null
+        defaultSiteFiltering("centerLon.specified=true", "centerLon.specified=false");
+    }
+
+    @Test
+    @Transactional
+    void getAllSitesByCenterLonIsGreaterThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        insertedSite = siteRepository.saveAndFlush(site);
+
+        // Get all the siteList where centerLon is greater than or equal to
+        defaultSiteFiltering("centerLon.greaterThanOrEqual=" + DEFAULT_CENTER_LON, "centerLon.greaterThanOrEqual=" + UPDATED_CENTER_LON);
+    }
+
+    @Test
+    @Transactional
+    void getAllSitesByCenterLonIsLessThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        insertedSite = siteRepository.saveAndFlush(site);
+
+        // Get all the siteList where centerLon is less than or equal to
+        defaultSiteFiltering("centerLon.lessThanOrEqual=" + DEFAULT_CENTER_LON, "centerLon.lessThanOrEqual=" + SMALLER_CENTER_LON);
+    }
+
+    @Test
+    @Transactional
+    void getAllSitesByCenterLonIsLessThanSomething() throws Exception {
+        // Initialize the database
+        insertedSite = siteRepository.saveAndFlush(site);
+
+        // Get all the siteList where centerLon is less than
+        defaultSiteFiltering("centerLon.lessThan=" + UPDATED_CENTER_LON, "centerLon.lessThan=" + DEFAULT_CENTER_LON);
+    }
+
+    @Test
+    @Transactional
+    void getAllSitesByCenterLonIsGreaterThanSomething() throws Exception {
+        // Initialize the database
+        insertedSite = siteRepository.saveAndFlush(site);
+
+        // Get all the siteList where centerLon is greater than
+        defaultSiteFiltering("centerLon.greaterThan=" + SMALLER_CENTER_LON, "centerLon.greaterThan=" + DEFAULT_CENTER_LON);
+    }
+
+    @Test
+    @Transactional
+    void getAllSitesByRadiusMetersIsEqualToSomething() throws Exception {
+        // Initialize the database
+        insertedSite = siteRepository.saveAndFlush(site);
+
+        // Get all the siteList where radiusMeters equals to
+        defaultSiteFiltering("radiusMeters.equals=" + DEFAULT_RADIUS_METERS, "radiusMeters.equals=" + UPDATED_RADIUS_METERS);
+    }
+
+    @Test
+    @Transactional
+    void getAllSitesByRadiusMetersIsInShouldWork() throws Exception {
+        // Initialize the database
+        insertedSite = siteRepository.saveAndFlush(site);
+
+        // Get all the siteList where radiusMeters in
+        defaultSiteFiltering(
+            "radiusMeters.in=" + DEFAULT_RADIUS_METERS + "," + UPDATED_RADIUS_METERS,
+            "radiusMeters.in=" + UPDATED_RADIUS_METERS
+        );
+    }
+
+    @Test
+    @Transactional
+    void getAllSitesByRadiusMetersIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        insertedSite = siteRepository.saveAndFlush(site);
+
+        // Get all the siteList where radiusMeters is not null
+        defaultSiteFiltering("radiusMeters.specified=true", "radiusMeters.specified=false");
+    }
+
+    @Test
+    @Transactional
+    void getAllSitesByRadiusMetersIsGreaterThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        insertedSite = siteRepository.saveAndFlush(site);
+
+        // Get all the siteList where radiusMeters is greater than or equal to
+        defaultSiteFiltering(
+            "radiusMeters.greaterThanOrEqual=" + DEFAULT_RADIUS_METERS,
+            "radiusMeters.greaterThanOrEqual=" + UPDATED_RADIUS_METERS
+        );
+    }
+
+    @Test
+    @Transactional
+    void getAllSitesByRadiusMetersIsLessThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        insertedSite = siteRepository.saveAndFlush(site);
+
+        // Get all the siteList where radiusMeters is less than or equal to
+        defaultSiteFiltering(
+            "radiusMeters.lessThanOrEqual=" + DEFAULT_RADIUS_METERS,
+            "radiusMeters.lessThanOrEqual=" + SMALLER_RADIUS_METERS
+        );
+    }
+
+    @Test
+    @Transactional
+    void getAllSitesByRadiusMetersIsLessThanSomething() throws Exception {
+        // Initialize the database
+        insertedSite = siteRepository.saveAndFlush(site);
+
+        // Get all the siteList where radiusMeters is less than
+        defaultSiteFiltering("radiusMeters.lessThan=" + UPDATED_RADIUS_METERS, "radiusMeters.lessThan=" + DEFAULT_RADIUS_METERS);
+    }
+
+    @Test
+    @Transactional
+    void getAllSitesByRadiusMetersIsGreaterThanSomething() throws Exception {
+        // Initialize the database
+        insertedSite = siteRepository.saveAndFlush(site);
+
+        // Get all the siteList where radiusMeters is greater than
+        defaultSiteFiltering("radiusMeters.greaterThan=" + SMALLER_RADIUS_METERS, "radiusMeters.greaterThan=" + DEFAULT_RADIUS_METERS);
+    }
+
     private void defaultSiteFiltering(String shouldBeFound, String shouldNotBeFound) throws Exception {
         defaultSiteShouldBeFound(shouldBeFound);
         defaultSiteShouldNotBeFound(shouldNotBeFound);
@@ -392,7 +641,10 @@ class SiteResourceIT {
             .andExpect(jsonPath("$.[*].id").value(hasItem(site.getId().intValue())))
             .andExpect(jsonPath("$.[*].code").value(hasItem(DEFAULT_CODE)))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
-            .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION)));
+            .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION)))
+            .andExpect(jsonPath("$.[*].centerLat").value(hasItem(DEFAULT_CENTER_LAT)))
+            .andExpect(jsonPath("$.[*].centerLon").value(hasItem(DEFAULT_CENTER_LON)))
+            .andExpect(jsonPath("$.[*].radiusMeters").value(hasItem(DEFAULT_RADIUS_METERS)));
 
         // Check, that the count call also returns 1
         restSiteMockMvc
@@ -440,7 +692,13 @@ class SiteResourceIT {
         Site updatedSite = siteRepository.findById(site.getId()).orElseThrow();
         // Disconnect from session so that the updates on updatedSite are not directly saved in db
         em.detach(updatedSite);
-        updatedSite.code(UPDATED_CODE).name(UPDATED_NAME).description(UPDATED_DESCRIPTION);
+        updatedSite
+            .code(UPDATED_CODE)
+            .name(UPDATED_NAME)
+            .description(UPDATED_DESCRIPTION)
+            .centerLat(UPDATED_CENTER_LAT)
+            .centerLon(UPDATED_CENTER_LON)
+            .radiusMeters(UPDATED_RADIUS_METERS);
         SiteDTO siteDTO = siteMapper.toDto(updatedSite);
 
         restSiteMockMvc
@@ -522,7 +780,7 @@ class SiteResourceIT {
         Site partialUpdatedSite = new Site();
         partialUpdatedSite.setId(site.getId());
 
-        partialUpdatedSite.name(UPDATED_NAME);
+        partialUpdatedSite.description(UPDATED_DESCRIPTION).centerLat(UPDATED_CENTER_LAT).centerLon(UPDATED_CENTER_LON);
 
         restSiteMockMvc
             .perform(
@@ -550,7 +808,13 @@ class SiteResourceIT {
         Site partialUpdatedSite = new Site();
         partialUpdatedSite.setId(site.getId());
 
-        partialUpdatedSite.code(UPDATED_CODE).name(UPDATED_NAME).description(UPDATED_DESCRIPTION);
+        partialUpdatedSite
+            .code(UPDATED_CODE)
+            .name(UPDATED_NAME)
+            .description(UPDATED_DESCRIPTION)
+            .centerLat(UPDATED_CENTER_LAT)
+            .centerLon(UPDATED_CENTER_LON)
+            .radiusMeters(UPDATED_RADIUS_METERS);
 
         restSiteMockMvc
             .perform(

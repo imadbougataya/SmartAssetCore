@@ -37,14 +37,6 @@ public class GatewayDTO implements Serializable {
     @NotNull
     private Boolean active;
 
-    private String createdBy;
-
-    private Instant createdDate;
-
-    private String lastModifiedBy;
-
-    private Instant lastModifiedDate;
-
     private SiteDTO site;
 
     private ZoneDTO zone;
@@ -121,38 +113,6 @@ public class GatewayDTO implements Serializable {
         this.active = active;
     }
 
-    public String getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
-    }
-
-    public Instant getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(Instant createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    public String getLastModifiedBy() {
-        return lastModifiedBy;
-    }
-
-    public void setLastModifiedBy(String lastModifiedBy) {
-        this.lastModifiedBy = lastModifiedBy;
-    }
-
-    public Instant getLastModifiedDate() {
-        return lastModifiedDate;
-    }
-
-    public void setLastModifiedDate(Instant lastModifiedDate) {
-        this.lastModifiedDate = lastModifiedDate;
-    }
-
     public SiteDTO getSite() {
         return site;
     }
@@ -203,10 +163,6 @@ public class GatewayDTO implements Serializable {
             ", ipAddress='" + getIpAddress() + "'" +
             ", installedAt='" + getInstalledAt() + "'" +
             ", active='" + getActive() + "'" +
-            ", createdBy='" + getCreatedBy() + "'" +
-            ", createdDate='" + getCreatedDate() + "'" +
-            ", lastModifiedBy='" + getLastModifiedBy() + "'" +
-            ", lastModifiedDate='" + getLastModifiedDate() + "'" +
             ", site=" + getSite() +
             ", zone=" + getZone() +
             "}";

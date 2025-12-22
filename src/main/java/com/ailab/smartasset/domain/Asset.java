@@ -1,5 +1,6 @@
 package com.ailab.smartasset.domain;
 
+import com.ailab.smartasset.domain.enumeration.AssetGeofencePolicy;
 import com.ailab.smartasset.domain.enumeration.AssetStatus;
 import com.ailab.smartasset.domain.enumeration.AssetType;
 import com.ailab.smartasset.domain.enumeration.Criticality;
@@ -10,13 +11,9 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.time.Instant;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.springframework.data.domain.Persistable;
 
 /**
  * A Asset.
@@ -24,9 +21,8 @@ import org.springframework.data.domain.Persistable;
 @Entity
 @Table(name = "asset")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@JsonIgnoreProperties(value = { "new" })
 @SuppressWarnings("common-java:DuplicatedBlocks")
-public class Asset extends AbstractAuditingEntity<Long> implements Serializable, Persistable<Long> {
+public class Asset implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -62,6 +58,11 @@ public class Asset extends AbstractAuditingEntity<Long> implements Serializable,
     @Enumerated(EnumType.STRING)
     @Column(name = "criticality", nullable = false)
     private Criticality criticality;
+
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @Column(name = "geofence_policy", nullable = false)
+    private AssetGeofencePolicy geofencePolicy;
 
     @Size(max = 120)
     @Column(name = "responsible_name", length = 120)
@@ -148,44 +149,17 @@ public class Asset extends AbstractAuditingEntity<Long> implements Serializable,
     @Column(name = "maintenance_count")
     private Integer maintenanceCount;
 
-    // Inherited createdBy definition
-    // Inherited createdDate definition
-    // Inherited lastModifiedBy definition
-    // Inherited lastModifiedDate definition
-    @org.springframework.data.annotation.Transient
-    @Transient
-    private boolean isPersisted;
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "asset")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnoreProperties(value = { "measurements", "asset" }, allowSetters = true)
-    private Set<Sensor> sensors = new HashSet<>();
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "asset")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnoreProperties(value = { "asset" }, allowSetters = true)
-    private Set<MaintenanceEvent> maintenanceEvents = new HashSet<>();
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "asset")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnoreProperties(value = { "asset" }, allowSetters = true)
-    private Set<AssetMovementRequest> movementRequests = new HashSet<>();
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "asset")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnoreProperties(value = { "asset", "zone", "gateway" }, allowSetters = true)
-    private Set<LocationEvent> locationEvents = new HashSet<>();
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Site site;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JsonIgnoreProperties(value = { "site" }, allowSetters = true)
+    @ManyToOne(optional = false)
+    @NotNull
+    @JsonIgnoreProperties(value = { "zone" }, allowSetters = true)
     private ProductionLine productionLine;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JsonIgnoreProperties(value = { "locationEvents", "site" }, allowSetters = true)
-    private Zone currentZone;
+    private Site allowedSite;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnoreProperties(value = { "site" }, allowSetters = true)
+    private Zone allowedZone;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -278,6 +252,19 @@ public class Asset extends AbstractAuditingEntity<Long> implements Serializable,
 
     public void setCriticality(Criticality criticality) {
         this.criticality = criticality;
+    }
+
+    public AssetGeofencePolicy getGeofencePolicy() {
+        return this.geofencePolicy;
+    }
+
+    public Asset geofencePolicy(AssetGeofencePolicy geofencePolicy) {
+        this.setGeofencePolicy(geofencePolicy);
+        return this;
+    }
+
+    public void setGeofencePolicy(AssetGeofencePolicy geofencePolicy) {
+        this.geofencePolicy = geofencePolicy;
     }
 
     public String getResponsibleName() {
@@ -605,185 +592,6 @@ public class Asset extends AbstractAuditingEntity<Long> implements Serializable,
         this.maintenanceCount = maintenanceCount;
     }
 
-    // Inherited createdBy methods
-    public Asset createdBy(String createdBy) {
-        this.setCreatedBy(createdBy);
-        return this;
-    }
-
-    // Inherited createdDate methods
-    public Asset createdDate(Instant createdDate) {
-        this.setCreatedDate(createdDate);
-        return this;
-    }
-
-    // Inherited lastModifiedBy methods
-    public Asset lastModifiedBy(String lastModifiedBy) {
-        this.setLastModifiedBy(lastModifiedBy);
-        return this;
-    }
-
-    // Inherited lastModifiedDate methods
-    public Asset lastModifiedDate(Instant lastModifiedDate) {
-        this.setLastModifiedDate(lastModifiedDate);
-        return this;
-    }
-
-    @PostLoad
-    @PostPersist
-    public void updateEntityState() {
-        this.setIsPersisted();
-    }
-
-    @org.springframework.data.annotation.Transient
-    @Transient
-    @Override
-    public boolean isNew() {
-        return !this.isPersisted;
-    }
-
-    public Asset setIsPersisted() {
-        this.isPersisted = true;
-        return this;
-    }
-
-    public Set<Sensor> getSensors() {
-        return this.sensors;
-    }
-
-    public void setSensors(Set<Sensor> sensors) {
-        if (this.sensors != null) {
-            this.sensors.forEach(i -> i.setAsset(null));
-        }
-        if (sensors != null) {
-            sensors.forEach(i -> i.setAsset(this));
-        }
-        this.sensors = sensors;
-    }
-
-    public Asset sensors(Set<Sensor> sensors) {
-        this.setSensors(sensors);
-        return this;
-    }
-
-    public Asset addSensors(Sensor sensor) {
-        this.sensors.add(sensor);
-        sensor.setAsset(this);
-        return this;
-    }
-
-    public Asset removeSensors(Sensor sensor) {
-        this.sensors.remove(sensor);
-        sensor.setAsset(null);
-        return this;
-    }
-
-    public Set<MaintenanceEvent> getMaintenanceEvents() {
-        return this.maintenanceEvents;
-    }
-
-    public void setMaintenanceEvents(Set<MaintenanceEvent> maintenanceEvents) {
-        if (this.maintenanceEvents != null) {
-            this.maintenanceEvents.forEach(i -> i.setAsset(null));
-        }
-        if (maintenanceEvents != null) {
-            maintenanceEvents.forEach(i -> i.setAsset(this));
-        }
-        this.maintenanceEvents = maintenanceEvents;
-    }
-
-    public Asset maintenanceEvents(Set<MaintenanceEvent> maintenanceEvents) {
-        this.setMaintenanceEvents(maintenanceEvents);
-        return this;
-    }
-
-    public Asset addMaintenanceEvents(MaintenanceEvent maintenanceEvent) {
-        this.maintenanceEvents.add(maintenanceEvent);
-        maintenanceEvent.setAsset(this);
-        return this;
-    }
-
-    public Asset removeMaintenanceEvents(MaintenanceEvent maintenanceEvent) {
-        this.maintenanceEvents.remove(maintenanceEvent);
-        maintenanceEvent.setAsset(null);
-        return this;
-    }
-
-    public Set<AssetMovementRequest> getMovementRequests() {
-        return this.movementRequests;
-    }
-
-    public void setMovementRequests(Set<AssetMovementRequest> assetMovementRequests) {
-        if (this.movementRequests != null) {
-            this.movementRequests.forEach(i -> i.setAsset(null));
-        }
-        if (assetMovementRequests != null) {
-            assetMovementRequests.forEach(i -> i.setAsset(this));
-        }
-        this.movementRequests = assetMovementRequests;
-    }
-
-    public Asset movementRequests(Set<AssetMovementRequest> assetMovementRequests) {
-        this.setMovementRequests(assetMovementRequests);
-        return this;
-    }
-
-    public Asset addMovementRequests(AssetMovementRequest assetMovementRequest) {
-        this.movementRequests.add(assetMovementRequest);
-        assetMovementRequest.setAsset(this);
-        return this;
-    }
-
-    public Asset removeMovementRequests(AssetMovementRequest assetMovementRequest) {
-        this.movementRequests.remove(assetMovementRequest);
-        assetMovementRequest.setAsset(null);
-        return this;
-    }
-
-    public Set<LocationEvent> getLocationEvents() {
-        return this.locationEvents;
-    }
-
-    public void setLocationEvents(Set<LocationEvent> locationEvents) {
-        if (this.locationEvents != null) {
-            this.locationEvents.forEach(i -> i.setAsset(null));
-        }
-        if (locationEvents != null) {
-            locationEvents.forEach(i -> i.setAsset(this));
-        }
-        this.locationEvents = locationEvents;
-    }
-
-    public Asset locationEvents(Set<LocationEvent> locationEvents) {
-        this.setLocationEvents(locationEvents);
-        return this;
-    }
-
-    public Asset addLocationEvents(LocationEvent locationEvent) {
-        this.locationEvents.add(locationEvent);
-        locationEvent.setAsset(this);
-        return this;
-    }
-
-    public Asset removeLocationEvents(LocationEvent locationEvent) {
-        this.locationEvents.remove(locationEvent);
-        locationEvent.setAsset(null);
-        return this;
-    }
-
-    public Site getSite() {
-        return this.site;
-    }
-
-    public void setSite(Site site) {
-        this.site = site;
-    }
-
-    public Asset site(Site site) {
-        this.setSite(site);
-        return this;
-    }
-
     public ProductionLine getProductionLine() {
         return this.productionLine;
     }
@@ -797,16 +605,29 @@ public class Asset extends AbstractAuditingEntity<Long> implements Serializable,
         return this;
     }
 
-    public Zone getCurrentZone() {
-        return this.currentZone;
+    public Site getAllowedSite() {
+        return this.allowedSite;
     }
 
-    public void setCurrentZone(Zone zone) {
-        this.currentZone = zone;
+    public void setAllowedSite(Site site) {
+        this.allowedSite = site;
     }
 
-    public Asset currentZone(Zone zone) {
-        this.setCurrentZone(zone);
+    public Asset allowedSite(Site site) {
+        this.setAllowedSite(site);
+        return this;
+    }
+
+    public Zone getAllowedZone() {
+        return this.allowedZone;
+    }
+
+    public void setAllowedZone(Zone zone) {
+        this.allowedZone = zone;
+    }
+
+    public Asset allowedZone(Zone zone) {
+        this.setAllowedZone(zone);
         return this;
     }
 
@@ -840,6 +661,7 @@ public class Asset extends AbstractAuditingEntity<Long> implements Serializable,
             ", description='" + getDescription() + "'" +
             ", status='" + getStatus() + "'" +
             ", criticality='" + getCriticality() + "'" +
+            ", geofencePolicy='" + getGeofencePolicy() + "'" +
             ", responsibleName='" + getResponsibleName() + "'" +
             ", costCenter='" + getCostCenter() + "'" +
             ", brand='" + getBrand() + "'" +
@@ -865,10 +687,6 @@ public class Asset extends AbstractAuditingEntity<Long> implements Serializable,
             ", lastCommissioningDate='" + getLastCommissioningDate() + "'" +
             ", lastMaintenanceDate='" + getLastMaintenanceDate() + "'" +
             ", maintenanceCount=" + getMaintenanceCount() +
-            ", createdBy='" + getCreatedBy() + "'" +
-            ", createdDate='" + getCreatedDate() + "'" +
-            ", lastModifiedBy='" + getLastModifiedBy() + "'" +
-            ", lastModifiedDate='" + getLastModifiedDate() + "'" +
             "}";
     }
 }

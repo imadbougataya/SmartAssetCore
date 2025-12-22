@@ -77,17 +77,9 @@ public class ZoneQueryService extends QueryService<Zone> {
                 buildStringSpecification(criteria.getCode(), Zone_.code),
                 buildStringSpecification(criteria.getName(), Zone_.name),
                 buildStringSpecification(criteria.getDescription(), Zone_.description),
-                buildStringSpecification(criteria.getZoneType(), Zone_.zoneType),
                 buildRangeSpecification(criteria.getCenterLat(), Zone_.centerLat),
                 buildRangeSpecification(criteria.getCenterLon(), Zone_.centerLon),
                 buildRangeSpecification(criteria.getRadiusMeters(), Zone_.radiusMeters),
-                buildStringSpecification(criteria.getCreatedBy(), Zone_.createdBy),
-                buildRangeSpecification(criteria.getCreatedDate(), Zone_.createdDate),
-                buildStringSpecification(criteria.getLastModifiedBy(), Zone_.lastModifiedBy),
-                buildRangeSpecification(criteria.getLastModifiedDate(), Zone_.lastModifiedDate),
-                buildSpecification(criteria.getLocationEventsId(), root ->
-                    root.join(Zone_.locationEvents, JoinType.LEFT).get(LocationEvent_.id)
-                ),
                 buildSpecification(criteria.getSiteId(), root -> root.join(Zone_.site, JoinType.LEFT).get(Site_.id))
             );
         }

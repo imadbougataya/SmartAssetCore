@@ -1,15 +1,14 @@
 {
   "annotations": {
-    "changelogDate": "20251217002700",
-    "enableAudit": true
+    "changelogDate": "20251217002700"
   },
-  "applications": ["smartassetcore"],
+  "applications": ["SmartAssetCore"],
   "dto": "mapstruct",
   "fields": [
     {
       "fieldName": "code",
       "fieldType": "String",
-      "fieldValidateRules": ["required", "maxlength"],
+      "fieldValidateRules": ["required", "unique", "maxlength"],
       "fieldValidateRulesMaxlength": "50"
     },
     {
@@ -23,40 +22,6 @@
       "fieldType": "String",
       "fieldValidateRules": ["maxlength"],
       "fieldValidateRulesMaxlength": "500"
-    },
-    {
-      "auditField": true,
-      "autoGenerate": true,
-      "columnType": "varchar(50)",
-      "fieldName": "createdBy",
-      "fieldType": "String",
-      "nullable": false,
-      "readonly": true
-    },
-    {
-      "auditField": true,
-      "autoGenerate": true,
-      "fieldName": "createdDate",
-      "fieldType": "Instant",
-      "nullable": false,
-      "readonly": true
-    },
-    {
-      "auditField": true,
-      "autoGenerate": true,
-      "columnType": "varchar(50)",
-      "fieldName": "lastModifiedBy",
-      "fieldType": "String",
-      "nullable": false,
-      "readonly": true
-    },
-    {
-      "auditField": true,
-      "autoGenerate": true,
-      "fieldName": "lastModifiedDate",
-      "fieldType": "Instant",
-      "nullable": false,
-      "readonly": true
     }
   ],
   "jpaMetamodelFiltering": true,
@@ -65,8 +30,8 @@
   "relationships": [
     {
       "otherEntityField": "code",
-      "otherEntityName": "site",
-      "relationshipName": "site",
+      "otherEntityName": "zone",
+      "relationshipName": "zone",
       "relationshipSide": "left",
       "relationshipType": "many-to-one"
     }

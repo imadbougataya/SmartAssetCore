@@ -1,6 +1,6 @@
 package com.ailab.smartasset.service.criteria;
 
-import com.ailab.smartasset.domain.enumeration.DocumentEntityType;
+import com.ailab.smartasset.domain.enumeration.DocumentLinkEntityType;
 import java.io.Serializable;
 import java.util.Objects;
 import java.util.Optional;
@@ -22,19 +22,19 @@ import tech.jhipster.service.filter.*;
 public class DocumentLinkCriteria implements Serializable, Criteria {
 
     /**
-     * Class for filtering DocumentEntityType
+     * Class for filtering DocumentLinkEntityType
      */
-    public static class DocumentEntityTypeFilter extends Filter<DocumentEntityType> {
+    public static class DocumentLinkEntityTypeFilter extends Filter<DocumentLinkEntityType> {
 
-        public DocumentEntityTypeFilter() {}
+        public DocumentLinkEntityTypeFilter() {}
 
-        public DocumentEntityTypeFilter(DocumentEntityTypeFilter filter) {
+        public DocumentLinkEntityTypeFilter(DocumentLinkEntityTypeFilter filter) {
             super(filter);
         }
 
         @Override
-        public DocumentEntityTypeFilter copy() {
-            return new DocumentEntityTypeFilter(this);
+        public DocumentLinkEntityTypeFilter copy() {
+            return new DocumentLinkEntityTypeFilter(this);
         }
     }
 
@@ -42,7 +42,7 @@ public class DocumentLinkCriteria implements Serializable, Criteria {
 
     private LongFilter id;
 
-    private DocumentEntityTypeFilter entityType;
+    private DocumentLinkEntityTypeFilter entityType;
 
     private LongFilter entityId;
 
@@ -66,7 +66,7 @@ public class DocumentLinkCriteria implements Serializable, Criteria {
 
     public DocumentLinkCriteria(DocumentLinkCriteria other) {
         this.id = other.optionalId().map(LongFilter::copy).orElse(null);
-        this.entityType = other.optionalEntityType().map(DocumentEntityTypeFilter::copy).orElse(null);
+        this.entityType = other.optionalEntityType().map(DocumentLinkEntityTypeFilter::copy).orElse(null);
         this.entityId = other.optionalEntityId().map(LongFilter::copy).orElse(null);
         this.label = other.optionalLabel().map(StringFilter::copy).orElse(null);
         this.linkedAt = other.optionalLinkedAt().map(InstantFilter::copy).orElse(null);
@@ -102,22 +102,22 @@ public class DocumentLinkCriteria implements Serializable, Criteria {
         this.id = id;
     }
 
-    public DocumentEntityTypeFilter getEntityType() {
+    public DocumentLinkEntityTypeFilter getEntityType() {
         return entityType;
     }
 
-    public Optional<DocumentEntityTypeFilter> optionalEntityType() {
+    public Optional<DocumentLinkEntityTypeFilter> optionalEntityType() {
         return Optional.ofNullable(entityType);
     }
 
-    public DocumentEntityTypeFilter entityType() {
+    public DocumentLinkEntityTypeFilter entityType() {
         if (entityType == null) {
-            setEntityType(new DocumentEntityTypeFilter());
+            setEntityType(new DocumentLinkEntityTypeFilter());
         }
         return entityType;
     }
 
-    public void setEntityType(DocumentEntityTypeFilter entityType) {
+    public void setEntityType(DocumentLinkEntityTypeFilter entityType) {
         this.entityType = entityType;
     }
 

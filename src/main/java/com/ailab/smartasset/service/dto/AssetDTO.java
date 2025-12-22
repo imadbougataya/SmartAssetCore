@@ -1,5 +1,6 @@
 package com.ailab.smartasset.service.dto;
 
+import com.ailab.smartasset.domain.enumeration.AssetGeofencePolicy;
 import com.ailab.smartasset.domain.enumeration.AssetStatus;
 import com.ailab.smartasset.domain.enumeration.AssetType;
 import com.ailab.smartasset.domain.enumeration.Criticality;
@@ -8,7 +9,6 @@ import com.ailab.smartasset.domain.enumeration.TemperatureProbeType;
 import jakarta.validation.constraints.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Objects;
 
@@ -38,6 +38,9 @@ public class AssetDTO implements Serializable {
 
     @NotNull
     private Criticality criticality;
+
+    @NotNull
+    private AssetGeofencePolicy geofencePolicy;
 
     @Size(max = 120)
     private String responsibleName;
@@ -97,19 +100,12 @@ public class AssetDTO implements Serializable {
 
     private Integer maintenanceCount;
 
-    private String createdBy;
-
-    private Instant createdDate;
-
-    private String lastModifiedBy;
-
-    private Instant lastModifiedDate;
-
-    private SiteDTO site;
-
+    @NotNull
     private ProductionLineDTO productionLine;
 
-    private ZoneDTO currentZone;
+    private SiteDTO allowedSite;
+
+    private ZoneDTO allowedZone;
 
     public Long getId() {
         return id;
@@ -165,6 +161,14 @@ public class AssetDTO implements Serializable {
 
     public void setCriticality(Criticality criticality) {
         this.criticality = criticality;
+    }
+
+    public AssetGeofencePolicy getGeofencePolicy() {
+        return geofencePolicy;
+    }
+
+    public void setGeofencePolicy(AssetGeofencePolicy geofencePolicy) {
+        this.geofencePolicy = geofencePolicy;
     }
 
     public String getResponsibleName() {
@@ -367,46 +371,6 @@ public class AssetDTO implements Serializable {
         this.maintenanceCount = maintenanceCount;
     }
 
-    public String getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
-    }
-
-    public Instant getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(Instant createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    public String getLastModifiedBy() {
-        return lastModifiedBy;
-    }
-
-    public void setLastModifiedBy(String lastModifiedBy) {
-        this.lastModifiedBy = lastModifiedBy;
-    }
-
-    public Instant getLastModifiedDate() {
-        return lastModifiedDate;
-    }
-
-    public void setLastModifiedDate(Instant lastModifiedDate) {
-        this.lastModifiedDate = lastModifiedDate;
-    }
-
-    public SiteDTO getSite() {
-        return site;
-    }
-
-    public void setSite(SiteDTO site) {
-        this.site = site;
-    }
-
     public ProductionLineDTO getProductionLine() {
         return productionLine;
     }
@@ -415,12 +379,20 @@ public class AssetDTO implements Serializable {
         this.productionLine = productionLine;
     }
 
-    public ZoneDTO getCurrentZone() {
-        return currentZone;
+    public SiteDTO getAllowedSite() {
+        return allowedSite;
     }
 
-    public void setCurrentZone(ZoneDTO currentZone) {
-        this.currentZone = currentZone;
+    public void setAllowedSite(SiteDTO allowedSite) {
+        this.allowedSite = allowedSite;
+    }
+
+    public ZoneDTO getAllowedZone() {
+        return allowedZone;
+    }
+
+    public void setAllowedZone(ZoneDTO allowedZone) {
+        this.allowedZone = allowedZone;
     }
 
     @Override
@@ -455,6 +427,7 @@ public class AssetDTO implements Serializable {
             ", description='" + getDescription() + "'" +
             ", status='" + getStatus() + "'" +
             ", criticality='" + getCriticality() + "'" +
+            ", geofencePolicy='" + getGeofencePolicy() + "'" +
             ", responsibleName='" + getResponsibleName() + "'" +
             ", costCenter='" + getCostCenter() + "'" +
             ", brand='" + getBrand() + "'" +
@@ -480,13 +453,9 @@ public class AssetDTO implements Serializable {
             ", lastCommissioningDate='" + getLastCommissioningDate() + "'" +
             ", lastMaintenanceDate='" + getLastMaintenanceDate() + "'" +
             ", maintenanceCount=" + getMaintenanceCount() +
-            ", createdBy='" + getCreatedBy() + "'" +
-            ", createdDate='" + getCreatedDate() + "'" +
-            ", lastModifiedBy='" + getLastModifiedBy() + "'" +
-            ", lastModifiedDate='" + getLastModifiedDate() + "'" +
-            ", site=" + getSite() +
             ", productionLine=" + getProductionLine() +
-            ", currentZone=" + getCurrentZone() +
+            ", allowedSite=" + getAllowedSite() +
+            ", allowedZone=" + getAllowedZone() +
             "}";
     }
 }

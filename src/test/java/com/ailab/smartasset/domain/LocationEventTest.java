@@ -1,8 +1,9 @@
 package com.ailab.smartasset.domain;
 
 import static com.ailab.smartasset.domain.AssetTestSamples.*;
-import static com.ailab.smartasset.domain.GatewayTestSamples.*;
 import static com.ailab.smartasset.domain.LocationEventTestSamples.*;
+import static com.ailab.smartasset.domain.SensorTestSamples.*;
+import static com.ailab.smartasset.domain.SiteTestSamples.*;
 import static com.ailab.smartasset.domain.ZoneTestSamples.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -38,26 +39,38 @@ class LocationEventTest {
     }
 
     @Test
-    void zoneTest() {
+    void sensorTest() {
         LocationEvent locationEvent = getLocationEventRandomSampleGenerator();
-        Zone zoneBack = getZoneRandomSampleGenerator();
+        Sensor sensorBack = getSensorRandomSampleGenerator();
 
-        locationEvent.setZone(zoneBack);
-        assertThat(locationEvent.getZone()).isEqualTo(zoneBack);
+        locationEvent.setSensor(sensorBack);
+        assertThat(locationEvent.getSensor()).isEqualTo(sensorBack);
 
-        locationEvent.zone(null);
-        assertThat(locationEvent.getZone()).isNull();
+        locationEvent.sensor(null);
+        assertThat(locationEvent.getSensor()).isNull();
     }
 
     @Test
-    void gatewayTest() {
+    void matchedSiteTest() {
         LocationEvent locationEvent = getLocationEventRandomSampleGenerator();
-        Gateway gatewayBack = getGatewayRandomSampleGenerator();
+        Site siteBack = getSiteRandomSampleGenerator();
 
-        locationEvent.setGateway(gatewayBack);
-        assertThat(locationEvent.getGateway()).isEqualTo(gatewayBack);
+        locationEvent.setMatchedSite(siteBack);
+        assertThat(locationEvent.getMatchedSite()).isEqualTo(siteBack);
 
-        locationEvent.gateway(null);
-        assertThat(locationEvent.getGateway()).isNull();
+        locationEvent.matchedSite(null);
+        assertThat(locationEvent.getMatchedSite()).isNull();
+    }
+
+    @Test
+    void matchedZoneTest() {
+        LocationEvent locationEvent = getLocationEventRandomSampleGenerator();
+        Zone zoneBack = getZoneRandomSampleGenerator();
+
+        locationEvent.setMatchedZone(zoneBack);
+        assertThat(locationEvent.getMatchedZone()).isEqualTo(zoneBack);
+
+        locationEvent.matchedZone(null);
+        assertThat(locationEvent.getMatchedZone()).isNull();
     }
 }

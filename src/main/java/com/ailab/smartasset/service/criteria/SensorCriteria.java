@@ -44,6 +44,8 @@ public class SensorCriteria implements Serializable, Criteria {
 
     private SensorTypeFilter sensorType;
 
+    private StringFilter externalId;
+
     private StringFilter name;
 
     private StringFilter unit;
@@ -56,18 +58,6 @@ public class SensorCriteria implements Serializable, Criteria {
 
     private BooleanFilter active;
 
-    private StringFilter externalId;
-
-    private StringFilter createdBy;
-
-    private InstantFilter createdDate;
-
-    private StringFilter lastModifiedBy;
-
-    private InstantFilter lastModifiedDate;
-
-    private LongFilter measurementsId;
-
     private LongFilter assetId;
 
     private Boolean distinct;
@@ -77,18 +67,13 @@ public class SensorCriteria implements Serializable, Criteria {
     public SensorCriteria(SensorCriteria other) {
         this.id = other.optionalId().map(LongFilter::copy).orElse(null);
         this.sensorType = other.optionalSensorType().map(SensorTypeFilter::copy).orElse(null);
+        this.externalId = other.optionalExternalId().map(StringFilter::copy).orElse(null);
         this.name = other.optionalName().map(StringFilter::copy).orElse(null);
         this.unit = other.optionalUnit().map(StringFilter::copy).orElse(null);
         this.minThreshold = other.optionalMinThreshold().map(BigDecimalFilter::copy).orElse(null);
         this.maxThreshold = other.optionalMaxThreshold().map(BigDecimalFilter::copy).orElse(null);
         this.installedAt = other.optionalInstalledAt().map(InstantFilter::copy).orElse(null);
         this.active = other.optionalActive().map(BooleanFilter::copy).orElse(null);
-        this.externalId = other.optionalExternalId().map(StringFilter::copy).orElse(null);
-        this.createdBy = other.optionalCreatedBy().map(StringFilter::copy).orElse(null);
-        this.createdDate = other.optionalCreatedDate().map(InstantFilter::copy).orElse(null);
-        this.lastModifiedBy = other.optionalLastModifiedBy().map(StringFilter::copy).orElse(null);
-        this.lastModifiedDate = other.optionalLastModifiedDate().map(InstantFilter::copy).orElse(null);
-        this.measurementsId = other.optionalMeasurementsId().map(LongFilter::copy).orElse(null);
         this.assetId = other.optionalAssetId().map(LongFilter::copy).orElse(null);
         this.distinct = other.distinct;
     }
@@ -134,6 +119,25 @@ public class SensorCriteria implements Serializable, Criteria {
 
     public void setSensorType(SensorTypeFilter sensorType) {
         this.sensorType = sensorType;
+    }
+
+    public StringFilter getExternalId() {
+        return externalId;
+    }
+
+    public Optional<StringFilter> optionalExternalId() {
+        return Optional.ofNullable(externalId);
+    }
+
+    public StringFilter externalId() {
+        if (externalId == null) {
+            setExternalId(new StringFilter());
+        }
+        return externalId;
+    }
+
+    public void setExternalId(StringFilter externalId) {
+        this.externalId = externalId;
     }
 
     public StringFilter getName() {
@@ -250,120 +254,6 @@ public class SensorCriteria implements Serializable, Criteria {
         this.active = active;
     }
 
-    public StringFilter getExternalId() {
-        return externalId;
-    }
-
-    public Optional<StringFilter> optionalExternalId() {
-        return Optional.ofNullable(externalId);
-    }
-
-    public StringFilter externalId() {
-        if (externalId == null) {
-            setExternalId(new StringFilter());
-        }
-        return externalId;
-    }
-
-    public void setExternalId(StringFilter externalId) {
-        this.externalId = externalId;
-    }
-
-    public StringFilter getCreatedBy() {
-        return createdBy;
-    }
-
-    public Optional<StringFilter> optionalCreatedBy() {
-        return Optional.ofNullable(createdBy);
-    }
-
-    public StringFilter createdBy() {
-        if (createdBy == null) {
-            setCreatedBy(new StringFilter());
-        }
-        return createdBy;
-    }
-
-    public void setCreatedBy(StringFilter createdBy) {
-        this.createdBy = createdBy;
-    }
-
-    public InstantFilter getCreatedDate() {
-        return createdDate;
-    }
-
-    public Optional<InstantFilter> optionalCreatedDate() {
-        return Optional.ofNullable(createdDate);
-    }
-
-    public InstantFilter createdDate() {
-        if (createdDate == null) {
-            setCreatedDate(new InstantFilter());
-        }
-        return createdDate;
-    }
-
-    public void setCreatedDate(InstantFilter createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    public StringFilter getLastModifiedBy() {
-        return lastModifiedBy;
-    }
-
-    public Optional<StringFilter> optionalLastModifiedBy() {
-        return Optional.ofNullable(lastModifiedBy);
-    }
-
-    public StringFilter lastModifiedBy() {
-        if (lastModifiedBy == null) {
-            setLastModifiedBy(new StringFilter());
-        }
-        return lastModifiedBy;
-    }
-
-    public void setLastModifiedBy(StringFilter lastModifiedBy) {
-        this.lastModifiedBy = lastModifiedBy;
-    }
-
-    public InstantFilter getLastModifiedDate() {
-        return lastModifiedDate;
-    }
-
-    public Optional<InstantFilter> optionalLastModifiedDate() {
-        return Optional.ofNullable(lastModifiedDate);
-    }
-
-    public InstantFilter lastModifiedDate() {
-        if (lastModifiedDate == null) {
-            setLastModifiedDate(new InstantFilter());
-        }
-        return lastModifiedDate;
-    }
-
-    public void setLastModifiedDate(InstantFilter lastModifiedDate) {
-        this.lastModifiedDate = lastModifiedDate;
-    }
-
-    public LongFilter getMeasurementsId() {
-        return measurementsId;
-    }
-
-    public Optional<LongFilter> optionalMeasurementsId() {
-        return Optional.ofNullable(measurementsId);
-    }
-
-    public LongFilter measurementsId() {
-        if (measurementsId == null) {
-            setMeasurementsId(new LongFilter());
-        }
-        return measurementsId;
-    }
-
-    public void setMeasurementsId(LongFilter measurementsId) {
-        this.measurementsId = measurementsId;
-    }
-
     public LongFilter getAssetId() {
         return assetId;
     }
@@ -414,18 +304,13 @@ public class SensorCriteria implements Serializable, Criteria {
         return (
             Objects.equals(id, that.id) &&
             Objects.equals(sensorType, that.sensorType) &&
+            Objects.equals(externalId, that.externalId) &&
             Objects.equals(name, that.name) &&
             Objects.equals(unit, that.unit) &&
             Objects.equals(minThreshold, that.minThreshold) &&
             Objects.equals(maxThreshold, that.maxThreshold) &&
             Objects.equals(installedAt, that.installedAt) &&
             Objects.equals(active, that.active) &&
-            Objects.equals(externalId, that.externalId) &&
-            Objects.equals(createdBy, that.createdBy) &&
-            Objects.equals(createdDate, that.createdDate) &&
-            Objects.equals(lastModifiedBy, that.lastModifiedBy) &&
-            Objects.equals(lastModifiedDate, that.lastModifiedDate) &&
-            Objects.equals(measurementsId, that.measurementsId) &&
             Objects.equals(assetId, that.assetId) &&
             Objects.equals(distinct, that.distinct)
         );
@@ -433,24 +318,7 @@ public class SensorCriteria implements Serializable, Criteria {
 
     @Override
     public int hashCode() {
-        return Objects.hash(
-            id,
-            sensorType,
-            name,
-            unit,
-            minThreshold,
-            maxThreshold,
-            installedAt,
-            active,
-            externalId,
-            createdBy,
-            createdDate,
-            lastModifiedBy,
-            lastModifiedDate,
-            measurementsId,
-            assetId,
-            distinct
-        );
+        return Objects.hash(id, sensorType, externalId, name, unit, minThreshold, maxThreshold, installedAt, active, assetId, distinct);
     }
 
     // prettier-ignore
@@ -459,18 +327,13 @@ public class SensorCriteria implements Serializable, Criteria {
         return "SensorCriteria{" +
             optionalId().map(f -> "id=" + f + ", ").orElse("") +
             optionalSensorType().map(f -> "sensorType=" + f + ", ").orElse("") +
+            optionalExternalId().map(f -> "externalId=" + f + ", ").orElse("") +
             optionalName().map(f -> "name=" + f + ", ").orElse("") +
             optionalUnit().map(f -> "unit=" + f + ", ").orElse("") +
             optionalMinThreshold().map(f -> "minThreshold=" + f + ", ").orElse("") +
             optionalMaxThreshold().map(f -> "maxThreshold=" + f + ", ").orElse("") +
             optionalInstalledAt().map(f -> "installedAt=" + f + ", ").orElse("") +
             optionalActive().map(f -> "active=" + f + ", ").orElse("") +
-            optionalExternalId().map(f -> "externalId=" + f + ", ").orElse("") +
-            optionalCreatedBy().map(f -> "createdBy=" + f + ", ").orElse("") +
-            optionalCreatedDate().map(f -> "createdDate=" + f + ", ").orElse("") +
-            optionalLastModifiedBy().map(f -> "lastModifiedBy=" + f + ", ").orElse("") +
-            optionalLastModifiedDate().map(f -> "lastModifiedDate=" + f + ", ").orElse("") +
-            optionalMeasurementsId().map(f -> "measurementsId=" + f + ", ").orElse("") +
             optionalAssetId().map(f -> "assetId=" + f + ", ").orElse("") +
             optionalDistinct().map(f -> "distinct=" + f + ", ").orElse("") +
         "}";

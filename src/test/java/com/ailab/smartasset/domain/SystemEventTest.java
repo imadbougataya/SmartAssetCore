@@ -1,6 +1,5 @@
 package com.ailab.smartasset.domain;
 
-import static com.ailab.smartasset.domain.AssetTestSamples.*;
 import static com.ailab.smartasset.domain.SystemEventTestSamples.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -21,17 +20,5 @@ class SystemEventTest {
 
         systemEvent2 = getSystemEventSample2();
         assertThat(systemEvent1).isNotEqualTo(systemEvent2);
-    }
-
-    @Test
-    void assetTest() {
-        SystemEvent systemEvent = getSystemEventRandomSampleGenerator();
-        Asset assetBack = getAssetRandomSampleGenerator();
-
-        systemEvent.setAsset(assetBack);
-        assertThat(systemEvent.getAsset()).isEqualTo(assetBack);
-
-        systemEvent.asset(null);
-        assertThat(systemEvent.getAsset()).isNull();
     }
 }

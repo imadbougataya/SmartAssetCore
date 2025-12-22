@@ -89,10 +89,6 @@ public class AssetMovementRequestQueryService extends QueryService<AssetMovement
                 buildRangeSpecification(criteria.getExecutedAt(), AssetMovementRequest_.executedAt),
                 buildStringSpecification(criteria.getRequestedBy(), AssetMovementRequest_.requestedBy),
                 buildStringSpecification(criteria.getApprovedBy(), AssetMovementRequest_.approvedBy),
-                buildStringSpecification(criteria.getCreatedBy(), AssetMovementRequest_.createdBy),
-                buildRangeSpecification(criteria.getCreatedDate(), AssetMovementRequest_.createdDate),
-                buildStringSpecification(criteria.getLastModifiedBy(), AssetMovementRequest_.lastModifiedBy),
-                buildRangeSpecification(criteria.getLastModifiedDate(), AssetMovementRequest_.lastModifiedDate),
                 buildSpecification(criteria.getAssetId(), root -> root.join(AssetMovementRequest_.asset, JoinType.LEFT).get(Asset_.id))
             );
         }

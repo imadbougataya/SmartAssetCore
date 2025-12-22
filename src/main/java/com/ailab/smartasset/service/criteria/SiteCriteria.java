@@ -30,13 +30,11 @@ public class SiteCriteria implements Serializable, Criteria {
 
     private StringFilter description;
 
-    private StringFilter createdBy;
+    private DoubleFilter centerLat;
 
-    private InstantFilter createdDate;
+    private DoubleFilter centerLon;
 
-    private StringFilter lastModifiedBy;
-
-    private InstantFilter lastModifiedDate;
+    private IntegerFilter radiusMeters;
 
     private Boolean distinct;
 
@@ -47,10 +45,9 @@ public class SiteCriteria implements Serializable, Criteria {
         this.code = other.optionalCode().map(StringFilter::copy).orElse(null);
         this.name = other.optionalName().map(StringFilter::copy).orElse(null);
         this.description = other.optionalDescription().map(StringFilter::copy).orElse(null);
-        this.createdBy = other.optionalCreatedBy().map(StringFilter::copy).orElse(null);
-        this.createdDate = other.optionalCreatedDate().map(InstantFilter::copy).orElse(null);
-        this.lastModifiedBy = other.optionalLastModifiedBy().map(StringFilter::copy).orElse(null);
-        this.lastModifiedDate = other.optionalLastModifiedDate().map(InstantFilter::copy).orElse(null);
+        this.centerLat = other.optionalCenterLat().map(DoubleFilter::copy).orElse(null);
+        this.centerLon = other.optionalCenterLon().map(DoubleFilter::copy).orElse(null);
+        this.radiusMeters = other.optionalRadiusMeters().map(IntegerFilter::copy).orElse(null);
         this.distinct = other.distinct;
     }
 
@@ -135,80 +132,61 @@ public class SiteCriteria implements Serializable, Criteria {
         this.description = description;
     }
 
-    public StringFilter getCreatedBy() {
-        return createdBy;
+    public DoubleFilter getCenterLat() {
+        return centerLat;
     }
 
-    public Optional<StringFilter> optionalCreatedBy() {
-        return Optional.ofNullable(createdBy);
+    public Optional<DoubleFilter> optionalCenterLat() {
+        return Optional.ofNullable(centerLat);
     }
 
-    public StringFilter createdBy() {
-        if (createdBy == null) {
-            setCreatedBy(new StringFilter());
+    public DoubleFilter centerLat() {
+        if (centerLat == null) {
+            setCenterLat(new DoubleFilter());
         }
-        return createdBy;
+        return centerLat;
     }
 
-    public void setCreatedBy(StringFilter createdBy) {
-        this.createdBy = createdBy;
+    public void setCenterLat(DoubleFilter centerLat) {
+        this.centerLat = centerLat;
     }
 
-    public InstantFilter getCreatedDate() {
-        return createdDate;
+    public DoubleFilter getCenterLon() {
+        return centerLon;
     }
 
-    public Optional<InstantFilter> optionalCreatedDate() {
-        return Optional.ofNullable(createdDate);
+    public Optional<DoubleFilter> optionalCenterLon() {
+        return Optional.ofNullable(centerLon);
     }
 
-    public InstantFilter createdDate() {
-        if (createdDate == null) {
-            setCreatedDate(new InstantFilter());
+    public DoubleFilter centerLon() {
+        if (centerLon == null) {
+            setCenterLon(new DoubleFilter());
         }
-        return createdDate;
+        return centerLon;
     }
 
-    public void setCreatedDate(InstantFilter createdDate) {
-        this.createdDate = createdDate;
+    public void setCenterLon(DoubleFilter centerLon) {
+        this.centerLon = centerLon;
     }
 
-    public StringFilter getLastModifiedBy() {
-        return lastModifiedBy;
+    public IntegerFilter getRadiusMeters() {
+        return radiusMeters;
     }
 
-    public Optional<StringFilter> optionalLastModifiedBy() {
-        return Optional.ofNullable(lastModifiedBy);
+    public Optional<IntegerFilter> optionalRadiusMeters() {
+        return Optional.ofNullable(radiusMeters);
     }
 
-    public StringFilter lastModifiedBy() {
-        if (lastModifiedBy == null) {
-            setLastModifiedBy(new StringFilter());
+    public IntegerFilter radiusMeters() {
+        if (radiusMeters == null) {
+            setRadiusMeters(new IntegerFilter());
         }
-        return lastModifiedBy;
+        return radiusMeters;
     }
 
-    public void setLastModifiedBy(StringFilter lastModifiedBy) {
-        this.lastModifiedBy = lastModifiedBy;
-    }
-
-    public InstantFilter getLastModifiedDate() {
-        return lastModifiedDate;
-    }
-
-    public Optional<InstantFilter> optionalLastModifiedDate() {
-        return Optional.ofNullable(lastModifiedDate);
-    }
-
-    public InstantFilter lastModifiedDate() {
-        if (lastModifiedDate == null) {
-            setLastModifiedDate(new InstantFilter());
-        }
-        return lastModifiedDate;
-    }
-
-    public void setLastModifiedDate(InstantFilter lastModifiedDate) {
-        this.lastModifiedDate = lastModifiedDate;
+    public void setRadiusMeters(IntegerFilter radiusMeters) {
+        this.radiusMeters = radiusMeters;
     }
 
     public Boolean getDistinct() {
@@ -244,17 +222,16 @@ public class SiteCriteria implements Serializable, Criteria {
             Objects.equals(code, that.code) &&
             Objects.equals(name, that.name) &&
             Objects.equals(description, that.description) &&
-            Objects.equals(createdBy, that.createdBy) &&
-            Objects.equals(createdDate, that.createdDate) &&
-            Objects.equals(lastModifiedBy, that.lastModifiedBy) &&
-            Objects.equals(lastModifiedDate, that.lastModifiedDate) &&
+            Objects.equals(centerLat, that.centerLat) &&
+            Objects.equals(centerLon, that.centerLon) &&
+            Objects.equals(radiusMeters, that.radiusMeters) &&
             Objects.equals(distinct, that.distinct)
         );
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, code, name, description, createdBy, createdDate, lastModifiedBy, lastModifiedDate, distinct);
+        return Objects.hash(id, code, name, description, centerLat, centerLon, radiusMeters, distinct);
     }
 
     // prettier-ignore
@@ -265,10 +242,9 @@ public class SiteCriteria implements Serializable, Criteria {
             optionalCode().map(f -> "code=" + f + ", ").orElse("") +
             optionalName().map(f -> "name=" + f + ", ").orElse("") +
             optionalDescription().map(f -> "description=" + f + ", ").orElse("") +
-            optionalCreatedBy().map(f -> "createdBy=" + f + ", ").orElse("") +
-            optionalCreatedDate().map(f -> "createdDate=" + f + ", ").orElse("") +
-            optionalLastModifiedBy().map(f -> "lastModifiedBy=" + f + ", ").orElse("") +
-            optionalLastModifiedDate().map(f -> "lastModifiedDate=" + f + ", ").orElse("") +
+            optionalCenterLat().map(f -> "centerLat=" + f + ", ").orElse("") +
+            optionalCenterLon().map(f -> "centerLon=" + f + ", ").orElse("") +
+            optionalRadiusMeters().map(f -> "radiusMeters=" + f + ", ").orElse("") +
             optionalDistinct().map(f -> "distinct=" + f + ", ").orElse("") +
         "}";
     }

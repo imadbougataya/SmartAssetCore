@@ -55,7 +55,6 @@ public class AssetMovementRequestService {
     public AssetMovementRequestDTO update(AssetMovementRequestDTO assetMovementRequestDTO) {
         LOG.debug("Request to update AssetMovementRequest : {}", assetMovementRequestDTO);
         AssetMovementRequest assetMovementRequest = assetMovementRequestMapper.toEntity(assetMovementRequestDTO);
-        assetMovementRequest.setIsPersisted();
         assetMovementRequest = assetMovementRequestRepository.save(assetMovementRequest);
         return assetMovementRequestMapper.toDto(assetMovementRequest);
     }

@@ -1,0 +1,11 @@
+id;code;name;vendor;model;mac_address;ip_address;installed_at;active
+1500;GW-JL-ENG-306-A;Gateway Engrais 306 – Atelier A;Kerlink;Wirnet iStation;A4:CF:12:9B:30:01;10.50.10.11;2025-10-12;true
+1501;GW-JL-ENG-306-B;Gateway Engrais 306 – Atelier B;Kerlink;Wirnet iStation;A4:CF:12:9B:30:02;10.50.10.12;2025-10-12;true
+1502;GW-JL-ENG-307-A;Gateway Engrais 307 – Atelier A;Kerlink;Wirnet iStation;A4:CF:12:9B:30:03;10.50.11.11;2025-10-15;true
+1503;GW-JL-ENG-307-B;Gateway Engrais 307 – Atelier B;Kerlink;Wirnet iStation;A4:CF:12:9B:30:04;10.50.11.12;2025-10-15;true
+1504;GW-JL-BRY-308-A;Gateway Broyage 308 – Primaire;Milesight;UG67;58:BF:25:8A:44:01;10.50.20.21;2025-10-20;true
+1505;GW-JL-BRY-308-B;Gateway Broyage 308 – Secondaire;Milesight;UG67;58:BF:25:8A:44:02;10.50.20.22;2025-10-20;true
+1506;GW-JL-BRY-308-C;Gateway Broyage 308 – Tertiaire;Milesight;UG67;58:BF:25:8A:44:03;10.50.20.23;2025-10-20;true
+1507;GW-JL-UTIL-01;Gateway Utilités – Poste Central;Cisco;IR1101;3C:6A:A7:11:90:01;10.50.1.10;2025-09-28;true
+1508;GW-JL-MAINT-01;Gateway Maintenance Mobile;Teltonika;RUTX11;60:02:92:AA:10:01;10.50.30.50;2025-11-02;false
+1509;GW-JL-BACKUP;Gateway Secours Site Jorf Lasfar;Kerlink;Wirnet iStation;A4:CF:12:9B:30:FF;10.50.1.99;2025-09-01;true

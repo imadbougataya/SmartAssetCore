@@ -8,7 +8,6 @@ import java.io.Serializable;
 import java.time.Instant;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.springframework.data.domain.Persistable;
 
 /**
  * A AssetMovementRequest.
@@ -16,9 +15,8 @@ import org.springframework.data.domain.Persistable;
 @Entity
 @Table(name = "asset_movement_request")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@JsonIgnoreProperties(value = { "new" })
 @SuppressWarnings("common-java:DuplicatedBlocks")
-public class AssetMovementRequest extends AbstractAuditingEntity<Long> implements Serializable, Persistable<Long> {
+public class AssetMovementRequest implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -73,19 +71,8 @@ public class AssetMovementRequest extends AbstractAuditingEntity<Long> implement
     @Column(name = "approved_by", length = 120)
     private String approvedBy;
 
-    // Inherited createdBy definition
-    // Inherited createdDate definition
-    // Inherited lastModifiedBy definition
-    // Inherited lastModifiedDate definition
-    @org.springframework.data.annotation.Transient
-    @Transient
-    private boolean isPersisted;
-
     @ManyToOne(fetch = FetchType.LAZY)
-    @JsonIgnoreProperties(
-        value = { "sensors", "maintenanceEvents", "movementRequests", "locationEvents", "site", "productionLine", "currentZone" },
-        allowSetters = true
-    )
+    @JsonIgnoreProperties(value = { "productionLine", "allowedSite", "allowedZone" }, allowSetters = true)
     private Asset asset;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
@@ -259,48 +246,6 @@ public class AssetMovementRequest extends AbstractAuditingEntity<Long> implement
         this.approvedBy = approvedBy;
     }
 
-    // Inherited createdBy methods
-    public AssetMovementRequest createdBy(String createdBy) {
-        this.setCreatedBy(createdBy);
-        return this;
-    }
-
-    // Inherited createdDate methods
-    public AssetMovementRequest createdDate(Instant createdDate) {
-        this.setCreatedDate(createdDate);
-        return this;
-    }
-
-    // Inherited lastModifiedBy methods
-    public AssetMovementRequest lastModifiedBy(String lastModifiedBy) {
-        this.setLastModifiedBy(lastModifiedBy);
-        return this;
-    }
-
-    // Inherited lastModifiedDate methods
-    public AssetMovementRequest lastModifiedDate(Instant lastModifiedDate) {
-        this.setLastModifiedDate(lastModifiedDate);
-        return this;
-    }
-
-    @PostLoad
-    @PostPersist
-    public void updateEntityState() {
-        this.setIsPersisted();
-    }
-
-    @org.springframework.data.annotation.Transient
-    @Transient
-    @Override
-    public boolean isNew() {
-        return !this.isPersisted;
-    }
-
-    public AssetMovementRequest setIsPersisted() {
-        this.isPersisted = true;
-        return this;
-    }
-
     public Asset getAsset() {
         return this.asset;
     }
@@ -350,10 +295,6 @@ public class AssetMovementRequest extends AbstractAuditingEntity<Long> implement
             ", executedAt='" + getExecutedAt() + "'" +
             ", requestedBy='" + getRequestedBy() + "'" +
             ", approvedBy='" + getApprovedBy() + "'" +
-            ", createdBy='" + getCreatedBy() + "'" +
-            ", createdDate='" + getCreatedDate() + "'" +
-            ", lastModifiedBy='" + getLastModifiedBy() + "'" +
-            ", lastModifiedDate='" + getLastModifiedDate() + "'" +
             "}";
     }
 }

@@ -10,8 +10,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.ailab.smartasset.IntegrationTest;
 import com.ailab.smartasset.domain.Asset;
-import com.ailab.smartasset.domain.Gateway;
 import com.ailab.smartasset.domain.LocationEvent;
+import com.ailab.smartasset.domain.Sensor;
+import com.ailab.smartasset.domain.Site;
 import com.ailab.smartasset.domain.Zone;
 import com.ailab.smartasset.domain.enumeration.LocationSource;
 import com.ailab.smartasset.repository.LocationEventRepository;
@@ -83,6 +84,9 @@ class LocationEventResourceIT {
     private static final Double UPDATED_SPEED_KMH = 2D;
     private static final Double SMALLER_SPEED_KMH = 1D - 1D;
 
+    private static final String DEFAULT_GNSS_CONSTELLATION = "AAAAAAAAAA";
+    private static final String UPDATED_GNSS_CONSTELLATION = "BBBBBBBBBB";
+
     private static final String DEFAULT_RAW_PAYLOAD = "AAAAAAAAAA";
     private static final String UPDATED_RAW_PAYLOAD = "BBBBBBBBBB";
 
@@ -123,8 +127,8 @@ class LocationEventResourceIT {
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
-    public static LocationEvent createEntity() {
-        return new LocationEvent()
+    public static LocationEvent createEntity(EntityManager em) {
+        LocationEvent locationEvent = new LocationEvent()
             .source(DEFAULT_SOURCE)
             .observedAt(DEFAULT_OBSERVED_AT)
             .zoneConfidence(DEFAULT_ZONE_CONFIDENCE)
@@ -134,7 +138,19 @@ class LocationEventResourceIT {
             .longitude(DEFAULT_LONGITUDE)
             .accuracyMeters(DEFAULT_ACCURACY_METERS)
             .speedKmh(DEFAULT_SPEED_KMH)
+            .gnssConstellation(DEFAULT_GNSS_CONSTELLATION)
             .rawPayload(DEFAULT_RAW_PAYLOAD);
+        // Add required entity
+        Asset asset;
+        if (TestUtil.findAll(em, Asset.class).isEmpty()) {
+            asset = AssetResourceIT.createEntity(em);
+            em.persist(asset);
+            em.flush();
+        } else {
+            asset = TestUtil.findAll(em, Asset.class).get(0);
+        }
+        locationEvent.setAsset(asset);
+        return locationEvent;
     }
 
     /**
@@ -143,8 +159,8 @@ class LocationEventResourceIT {
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
-    public static LocationEvent createUpdatedEntity() {
-        return new LocationEvent()
+    public static LocationEvent createUpdatedEntity(EntityManager em) {
+        LocationEvent updatedLocationEvent = new LocationEvent()
             .source(UPDATED_SOURCE)
             .observedAt(UPDATED_OBSERVED_AT)
             .zoneConfidence(UPDATED_ZONE_CONFIDENCE)
@@ -154,12 +170,24 @@ class LocationEventResourceIT {
             .longitude(UPDATED_LONGITUDE)
             .accuracyMeters(UPDATED_ACCURACY_METERS)
             .speedKmh(UPDATED_SPEED_KMH)
+            .gnssConstellation(UPDATED_GNSS_CONSTELLATION)
             .rawPayload(UPDATED_RAW_PAYLOAD);
+        // Add required entity
+        Asset asset;
+        if (TestUtil.findAll(em, Asset.class).isEmpty()) {
+            asset = AssetResourceIT.createUpdatedEntity(em);
+            em.persist(asset);
+            em.flush();
+        } else {
+            asset = TestUtil.findAll(em, Asset.class).get(0);
+        }
+        updatedLocationEvent.setAsset(asset);
+        return updatedLocationEvent;
     }
 
     @BeforeEach
     void initTest() {
-        locationEvent = createEntity();
+        locationEvent = createEntity(em);
     }
 
     @AfterEach
@@ -248,6 +276,40 @@ class LocationEventResourceIT {
 
     @Test
     @Transactional
+    void checkLatitudeIsRequired() throws Exception {
+        long databaseSizeBeforeTest = getRepositoryCount();
+        // set the field null
+        locationEvent.setLatitude(null);
+
+        // Create the LocationEvent, which fails.
+        LocationEventDTO locationEventDTO = locationEventMapper.toDto(locationEvent);
+
+        restLocationEventMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(locationEventDTO)))
+            .andExpect(status().isBadRequest());
+
+        assertSameRepositoryCount(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
+    void checkLongitudeIsRequired() throws Exception {
+        long databaseSizeBeforeTest = getRepositoryCount();
+        // set the field null
+        locationEvent.setLongitude(null);
+
+        // Create the LocationEvent, which fails.
+        LocationEventDTO locationEventDTO = locationEventMapper.toDto(locationEvent);
+
+        restLocationEventMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(locationEventDTO)))
+            .andExpect(status().isBadRequest());
+
+        assertSameRepositoryCount(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
     void getAllLocationEvents() throws Exception {
         // Initialize the database
         insertedLocationEvent = locationEventRepository.saveAndFlush(locationEvent);
@@ -267,6 +329,7 @@ class LocationEventResourceIT {
             .andExpect(jsonPath("$.[*].longitude").value(hasItem(DEFAULT_LONGITUDE)))
             .andExpect(jsonPath("$.[*].accuracyMeters").value(hasItem(DEFAULT_ACCURACY_METERS)))
             .andExpect(jsonPath("$.[*].speedKmh").value(hasItem(DEFAULT_SPEED_KMH)))
+            .andExpect(jsonPath("$.[*].gnssConstellation").value(hasItem(DEFAULT_GNSS_CONSTELLATION)))
             .andExpect(jsonPath("$.[*].rawPayload").value(hasItem(DEFAULT_RAW_PAYLOAD)));
     }
 
@@ -308,6 +371,7 @@ class LocationEventResourceIT {
             .andExpect(jsonPath("$.longitude").value(DEFAULT_LONGITUDE))
             .andExpect(jsonPath("$.accuracyMeters").value(DEFAULT_ACCURACY_METERS))
             .andExpect(jsonPath("$.speedKmh").value(DEFAULT_SPEED_KMH))
+            .andExpect(jsonPath("$.gnssConstellation").value(DEFAULT_GNSS_CONSTELLATION))
             .andExpect(jsonPath("$.rawPayload").value(DEFAULT_RAW_PAYLOAD));
     }
 
@@ -923,6 +987,68 @@ class LocationEventResourceIT {
 
     @Test
     @Transactional
+    void getAllLocationEventsByGnssConstellationIsEqualToSomething() throws Exception {
+        // Initialize the database
+        insertedLocationEvent = locationEventRepository.saveAndFlush(locationEvent);
+
+        // Get all the locationEventList where gnssConstellation equals to
+        defaultLocationEventFiltering(
+            "gnssConstellation.equals=" + DEFAULT_GNSS_CONSTELLATION,
+            "gnssConstellation.equals=" + UPDATED_GNSS_CONSTELLATION
+        );
+    }
+
+    @Test
+    @Transactional
+    void getAllLocationEventsByGnssConstellationIsInShouldWork() throws Exception {
+        // Initialize the database
+        insertedLocationEvent = locationEventRepository.saveAndFlush(locationEvent);
+
+        // Get all the locationEventList where gnssConstellation in
+        defaultLocationEventFiltering(
+            "gnssConstellation.in=" + DEFAULT_GNSS_CONSTELLATION + "," + UPDATED_GNSS_CONSTELLATION,
+            "gnssConstellation.in=" + UPDATED_GNSS_CONSTELLATION
+        );
+    }
+
+    @Test
+    @Transactional
+    void getAllLocationEventsByGnssConstellationIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        insertedLocationEvent = locationEventRepository.saveAndFlush(locationEvent);
+
+        // Get all the locationEventList where gnssConstellation is not null
+        defaultLocationEventFiltering("gnssConstellation.specified=true", "gnssConstellation.specified=false");
+    }
+
+    @Test
+    @Transactional
+    void getAllLocationEventsByGnssConstellationContainsSomething() throws Exception {
+        // Initialize the database
+        insertedLocationEvent = locationEventRepository.saveAndFlush(locationEvent);
+
+        // Get all the locationEventList where gnssConstellation contains
+        defaultLocationEventFiltering(
+            "gnssConstellation.contains=" + DEFAULT_GNSS_CONSTELLATION,
+            "gnssConstellation.contains=" + UPDATED_GNSS_CONSTELLATION
+        );
+    }
+
+    @Test
+    @Transactional
+    void getAllLocationEventsByGnssConstellationNotContainsSomething() throws Exception {
+        // Initialize the database
+        insertedLocationEvent = locationEventRepository.saveAndFlush(locationEvent);
+
+        // Get all the locationEventList where gnssConstellation does not contain
+        defaultLocationEventFiltering(
+            "gnssConstellation.doesNotContain=" + UPDATED_GNSS_CONSTELLATION,
+            "gnssConstellation.doesNotContain=" + DEFAULT_GNSS_CONSTELLATION
+        );
+    }
+
+    @Test
+    @Transactional
     void getAllLocationEventsByRawPayloadIsEqualToSomething() throws Exception {
         // Initialize the database
         insertedLocationEvent = locationEventRepository.saveAndFlush(locationEvent);
@@ -983,7 +1109,7 @@ class LocationEventResourceIT {
         Asset asset;
         if (TestUtil.findAll(em, Asset.class).isEmpty()) {
             locationEventRepository.saveAndFlush(locationEvent);
-            asset = AssetResourceIT.createEntity();
+            asset = AssetResourceIT.createEntity(em);
         } else {
             asset = TestUtil.findAll(em, Asset.class).get(0);
         }
@@ -1001,46 +1127,68 @@ class LocationEventResourceIT {
 
     @Test
     @Transactional
-    void getAllLocationEventsByZoneIsEqualToSomething() throws Exception {
-        Zone zone;
-        if (TestUtil.findAll(em, Zone.class).isEmpty()) {
+    void getAllLocationEventsBySensorIsEqualToSomething() throws Exception {
+        Sensor sensor;
+        if (TestUtil.findAll(em, Sensor.class).isEmpty()) {
             locationEventRepository.saveAndFlush(locationEvent);
-            zone = ZoneResourceIT.createEntity();
+            sensor = SensorResourceIT.createEntity();
         } else {
-            zone = TestUtil.findAll(em, Zone.class).get(0);
+            sensor = TestUtil.findAll(em, Sensor.class).get(0);
         }
-        em.persist(zone);
+        em.persist(sensor);
         em.flush();
-        locationEvent.setZone(zone);
+        locationEvent.setSensor(sensor);
         locationEventRepository.saveAndFlush(locationEvent);
-        Long zoneId = zone.getId();
-        // Get all the locationEventList where zone equals to zoneId
-        defaultLocationEventShouldBeFound("zoneId.equals=" + zoneId);
+        Long sensorId = sensor.getId();
+        // Get all the locationEventList where sensor equals to sensorId
+        defaultLocationEventShouldBeFound("sensorId.equals=" + sensorId);
 
-        // Get all the locationEventList where zone equals to (zoneId + 1)
-        defaultLocationEventShouldNotBeFound("zoneId.equals=" + (zoneId + 1));
+        // Get all the locationEventList where sensor equals to (sensorId + 1)
+        defaultLocationEventShouldNotBeFound("sensorId.equals=" + (sensorId + 1));
     }
 
     @Test
     @Transactional
-    void getAllLocationEventsByGatewayIsEqualToSomething() throws Exception {
-        Gateway gateway;
-        if (TestUtil.findAll(em, Gateway.class).isEmpty()) {
+    void getAllLocationEventsByMatchedSiteIsEqualToSomething() throws Exception {
+        Site matchedSite;
+        if (TestUtil.findAll(em, Site.class).isEmpty()) {
             locationEventRepository.saveAndFlush(locationEvent);
-            gateway = GatewayResourceIT.createEntity();
+            matchedSite = SiteResourceIT.createEntity();
         } else {
-            gateway = TestUtil.findAll(em, Gateway.class).get(0);
+            matchedSite = TestUtil.findAll(em, Site.class).get(0);
         }
-        em.persist(gateway);
+        em.persist(matchedSite);
         em.flush();
-        locationEvent.setGateway(gateway);
+        locationEvent.setMatchedSite(matchedSite);
         locationEventRepository.saveAndFlush(locationEvent);
-        Long gatewayId = gateway.getId();
-        // Get all the locationEventList where gateway equals to gatewayId
-        defaultLocationEventShouldBeFound("gatewayId.equals=" + gatewayId);
+        Long matchedSiteId = matchedSite.getId();
+        // Get all the locationEventList where matchedSite equals to matchedSiteId
+        defaultLocationEventShouldBeFound("matchedSiteId.equals=" + matchedSiteId);
 
-        // Get all the locationEventList where gateway equals to (gatewayId + 1)
-        defaultLocationEventShouldNotBeFound("gatewayId.equals=" + (gatewayId + 1));
+        // Get all the locationEventList where matchedSite equals to (matchedSiteId + 1)
+        defaultLocationEventShouldNotBeFound("matchedSiteId.equals=" + (matchedSiteId + 1));
+    }
+
+    @Test
+    @Transactional
+    void getAllLocationEventsByMatchedZoneIsEqualToSomething() throws Exception {
+        Zone matchedZone;
+        if (TestUtil.findAll(em, Zone.class).isEmpty()) {
+            locationEventRepository.saveAndFlush(locationEvent);
+            matchedZone = ZoneResourceIT.createEntity();
+        } else {
+            matchedZone = TestUtil.findAll(em, Zone.class).get(0);
+        }
+        em.persist(matchedZone);
+        em.flush();
+        locationEvent.setMatchedZone(matchedZone);
+        locationEventRepository.saveAndFlush(locationEvent);
+        Long matchedZoneId = matchedZone.getId();
+        // Get all the locationEventList where matchedZone equals to matchedZoneId
+        defaultLocationEventShouldBeFound("matchedZoneId.equals=" + matchedZoneId);
+
+        // Get all the locationEventList where matchedZone equals to (matchedZoneId + 1)
+        defaultLocationEventShouldNotBeFound("matchedZoneId.equals=" + (matchedZoneId + 1));
     }
 
     private void defaultLocationEventFiltering(String shouldBeFound, String shouldNotBeFound) throws Exception {
@@ -1066,6 +1214,7 @@ class LocationEventResourceIT {
             .andExpect(jsonPath("$.[*].longitude").value(hasItem(DEFAULT_LONGITUDE)))
             .andExpect(jsonPath("$.[*].accuracyMeters").value(hasItem(DEFAULT_ACCURACY_METERS)))
             .andExpect(jsonPath("$.[*].speedKmh").value(hasItem(DEFAULT_SPEED_KMH)))
+            .andExpect(jsonPath("$.[*].gnssConstellation").value(hasItem(DEFAULT_GNSS_CONSTELLATION)))
             .andExpect(jsonPath("$.[*].rawPayload").value(hasItem(DEFAULT_RAW_PAYLOAD)));
 
         // Check, that the count call also returns 1
@@ -1124,6 +1273,7 @@ class LocationEventResourceIT {
             .longitude(UPDATED_LONGITUDE)
             .accuracyMeters(UPDATED_ACCURACY_METERS)
             .speedKmh(UPDATED_SPEED_KMH)
+            .gnssConstellation(UPDATED_GNSS_CONSTELLATION)
             .rawPayload(UPDATED_RAW_PAYLOAD);
         LocationEventDTO locationEventDTO = locationEventMapper.toDto(updatedLocationEvent);
 
@@ -1215,9 +1365,11 @@ class LocationEventResourceIT {
         partialUpdatedLocationEvent.setId(locationEvent.getId());
 
         partialUpdatedLocationEvent
+            .source(UPDATED_SOURCE)
+            .zoneConfidence(UPDATED_ZONE_CONFIDENCE)
             .rssi(UPDATED_RSSI)
-            .latitude(UPDATED_LATITUDE)
             .longitude(UPDATED_LONGITUDE)
+            .gnssConstellation(UPDATED_GNSS_CONSTELLATION)
             .rawPayload(UPDATED_RAW_PAYLOAD);
 
         restLocationEventMockMvc
@@ -1259,6 +1411,7 @@ class LocationEventResourceIT {
             .longitude(UPDATED_LONGITUDE)
             .accuracyMeters(UPDATED_ACCURACY_METERS)
             .speedKmh(UPDATED_SPEED_KMH)
+            .gnssConstellation(UPDATED_GNSS_CONSTELLATION)
             .rawPayload(UPDATED_RAW_PAYLOAD);
 
         restLocationEventMockMvc

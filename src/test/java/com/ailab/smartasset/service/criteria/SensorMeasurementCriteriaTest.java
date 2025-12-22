@@ -80,10 +80,6 @@ class SensorMeasurementCriteriaTest {
         sensorMeasurementCriteria.value();
         sensorMeasurementCriteria.quality();
         sensorMeasurementCriteria.source();
-        sensorMeasurementCriteria.createdBy();
-        sensorMeasurementCriteria.createdDate();
-        sensorMeasurementCriteria.lastModifiedBy();
-        sensorMeasurementCriteria.lastModifiedDate();
         sensorMeasurementCriteria.sensorId();
         sensorMeasurementCriteria.distinct();
     }
@@ -96,10 +92,6 @@ class SensorMeasurementCriteriaTest {
                 condition.apply(criteria.getValue()) &&
                 condition.apply(criteria.getQuality()) &&
                 condition.apply(criteria.getSource()) &&
-                condition.apply(criteria.getCreatedBy()) &&
-                condition.apply(criteria.getCreatedDate()) &&
-                condition.apply(criteria.getLastModifiedBy()) &&
-                condition.apply(criteria.getLastModifiedDate()) &&
                 condition.apply(criteria.getSensorId()) &&
                 condition.apply(criteria.getDistinct()),
             "every filter matches"
@@ -117,10 +109,6 @@ class SensorMeasurementCriteriaTest {
                 condition.apply(criteria.getValue(), copy.getValue()) &&
                 condition.apply(criteria.getQuality(), copy.getQuality()) &&
                 condition.apply(criteria.getSource(), copy.getSource()) &&
-                condition.apply(criteria.getCreatedBy(), copy.getCreatedBy()) &&
-                condition.apply(criteria.getCreatedDate(), copy.getCreatedDate()) &&
-                condition.apply(criteria.getLastModifiedBy(), copy.getLastModifiedBy()) &&
-                condition.apply(criteria.getLastModifiedDate(), copy.getLastModifiedDate()) &&
                 condition.apply(criteria.getSensorId(), copy.getSensorId()) &&
                 condition.apply(criteria.getDistinct(), copy.getDistinct()),
             "every filter matches"

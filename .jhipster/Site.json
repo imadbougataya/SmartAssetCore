@@ -1,9 +1,8 @@
 {
   "annotations": {
-    "changelogDate": "20251217002659",
-    "enableAudit": true
+    "changelogDate": "20251217002659"
   },
-  "applications": ["smartassetcore"],
+  "applications": ["SmartAssetCore"],
   "dto": "mapstruct",
   "fields": [
     {
@@ -25,38 +24,18 @@
       "fieldValidateRulesMaxlength": "500"
     },
     {
-      "auditField": true,
-      "autoGenerate": true,
-      "columnType": "varchar(50)",
-      "fieldName": "createdBy",
-      "fieldType": "String",
-      "nullable": false,
-      "readonly": true
+      "fieldName": "centerLat",
+      "fieldType": "Double"
     },
     {
-      "auditField": true,
-      "autoGenerate": true,
-      "fieldName": "createdDate",
-      "fieldType": "Instant",
-      "nullable": false,
-      "readonly": true
+      "fieldName": "centerLon",
+      "fieldType": "Double"
     },
     {
-      "auditField": true,
-      "autoGenerate": true,
-      "columnType": "varchar(50)",
-      "fieldName": "lastModifiedBy",
-      "fieldType": "String",
-      "nullable": false,
-      "readonly": true
-    },
-    {
-      "auditField": true,
-      "autoGenerate": true,
-      "fieldName": "lastModifiedDate",
-      "fieldType": "Instant",
-      "nullable": false,
-      "readonly": true
+      "fieldName": "radiusMeters",
+      "fieldType": "Integer",
+      "fieldValidateRules": ["min"],
+      "fieldValidateRulesMin": "1"
     }
   ],
   "jpaMetamodelFiltering": true,

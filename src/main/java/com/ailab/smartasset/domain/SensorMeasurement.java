@@ -8,7 +8,6 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.springframework.data.domain.Persistable;
 
 /**
  * A SensorMeasurement.
@@ -16,9 +15,8 @@ import org.springframework.data.domain.Persistable;
 @Entity
 @Table(name = "sensor_measurement")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@JsonIgnoreProperties(value = { "new" })
 @SuppressWarnings("common-java:DuplicatedBlocks")
-public class SensorMeasurement implements Serializable, Persistable<Long> {
+public class SensorMeasurement implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -43,16 +41,8 @@ public class SensorMeasurement implements Serializable, Persistable<Long> {
     @Column(name = "source", length = 80)
     private String source;
 
-    // Inherited createdBy definition
-    // Inherited createdDate definition
-    // Inherited lastModifiedBy definition
-    // Inherited lastModifiedDate definition
-    @org.springframework.data.annotation.Transient
-    @Transient
-    private boolean isPersisted;
-
     @ManyToOne(fetch = FetchType.LAZY)
-    @JsonIgnoreProperties(value = { "measurements", "asset" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "asset" }, allowSetters = true)
     private Sensor sensor;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
@@ -122,24 +112,6 @@ public class SensorMeasurement implements Serializable, Persistable<Long> {
         this.source = source;
     }
 
-    @PostLoad
-    @PostPersist
-    public void updateEntityState() {
-        this.setIsPersisted();
-    }
-
-    @org.springframework.data.annotation.Transient
-    @Transient
-    @Override
-    public boolean isNew() {
-        return !this.isPersisted;
-    }
-
-    public SensorMeasurement setIsPersisted() {
-        this.isPersisted = true;
-        return this;
-    }
-
     public Sensor getSensor() {
         return this.sensor;
     }
@@ -153,8 +125,7 @@ public class SensorMeasurement implements Serializable, Persistable<Long> {
         return this;
     }
 
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and
-    // setters here
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
     public boolean equals(Object o) {
@@ -169,8 +140,7 @@ public class SensorMeasurement implements Serializable, Persistable<Long> {
 
     @Override
     public int hashCode() {
-        // see
-        // https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
         return getClass().hashCode();
     }
 
@@ -178,11 +148,11 @@ public class SensorMeasurement implements Serializable, Persistable<Long> {
     @Override
     public String toString() {
         return "SensorMeasurement{" +
-                "id=" + getId() +
-                ", measuredAt='" + getMeasuredAt() + "'" +
-                ", value=" + getValue() +
-                ", quality='" + getQuality() + "'" +
-                ", source='" + getSource() + "'" +
-                "}";
+            "id=" + getId() +
+            ", measuredAt='" + getMeasuredAt() + "'" +
+            ", value=" + getValue() +
+            ", quality='" + getQuality() + "'" +
+            ", source='" + getSource() + "'" +
+            "}";
     }
 }

@@ -5,11 +5,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import java.io.Serializable;
 import java.time.Instant;
-import java.util.HashSet;
-import java.util.Set;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.springframework.data.domain.Persistable;
 
 /**
  * A Gateway.
@@ -17,9 +14,8 @@ import org.springframework.data.domain.Persistable;
 @Entity
 @Table(name = "gateway")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@JsonIgnoreProperties(value = { "new" })
 @SuppressWarnings("common-java:DuplicatedBlocks")
-public class Gateway extends AbstractAuditingEntity<Long> implements Serializable, Persistable<Long> {
+public class Gateway implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -60,24 +56,11 @@ public class Gateway extends AbstractAuditingEntity<Long> implements Serializabl
     @Column(name = "active", nullable = false)
     private Boolean active;
 
-    // Inherited createdBy definition
-    // Inherited createdDate definition
-    // Inherited lastModifiedBy definition
-    // Inherited lastModifiedDate definition
-    @org.springframework.data.annotation.Transient
-    @Transient
-    private boolean isPersisted;
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "gateway")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnoreProperties(value = { "asset", "zone", "gateway" }, allowSetters = true)
-    private Set<LocationEvent> locationEvents = new HashSet<>();
-
     @ManyToOne(fetch = FetchType.LAZY)
     private Site site;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JsonIgnoreProperties(value = { "locationEvents", "site" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "site" }, allowSetters = true)
     private Zone zone;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
@@ -199,79 +182,6 @@ public class Gateway extends AbstractAuditingEntity<Long> implements Serializabl
         this.active = active;
     }
 
-    // Inherited createdBy methods
-    public Gateway createdBy(String createdBy) {
-        this.setCreatedBy(createdBy);
-        return this;
-    }
-
-    // Inherited createdDate methods
-    public Gateway createdDate(Instant createdDate) {
-        this.setCreatedDate(createdDate);
-        return this;
-    }
-
-    // Inherited lastModifiedBy methods
-    public Gateway lastModifiedBy(String lastModifiedBy) {
-        this.setLastModifiedBy(lastModifiedBy);
-        return this;
-    }
-
-    // Inherited lastModifiedDate methods
-    public Gateway lastModifiedDate(Instant lastModifiedDate) {
-        this.setLastModifiedDate(lastModifiedDate);
-        return this;
-    }
-
-    @PostLoad
-    @PostPersist
-    public void updateEntityState() {
-        this.setIsPersisted();
-    }
-
-    @org.springframework.data.annotation.Transient
-    @Transient
-    @Override
-    public boolean isNew() {
-        return !this.isPersisted;
-    }
-
-    public Gateway setIsPersisted() {
-        this.isPersisted = true;
-        return this;
-    }
-
-    public Set<LocationEvent> getLocationEvents() {
-        return this.locationEvents;
-    }
-
-    public void setLocationEvents(Set<LocationEvent> locationEvents) {
-        if (this.locationEvents != null) {
-            this.locationEvents.forEach(i -> i.setGateway(null));
-        }
-        if (locationEvents != null) {
-            locationEvents.forEach(i -> i.setGateway(this));
-        }
-        this.locationEvents = locationEvents;
-    }
-
-    public Gateway locationEvents(Set<LocationEvent> locationEvents) {
-        this.setLocationEvents(locationEvents);
-        return this;
-    }
-
-    public Gateway addLocationEvents(LocationEvent locationEvent) {
-        this.locationEvents.add(locationEvent);
-        locationEvent.setGateway(this);
-        return this;
-    }
-
-    public Gateway removeLocationEvents(LocationEvent locationEvent) {
-        this.locationEvents.remove(locationEvent);
-        locationEvent.setGateway(null);
-        return this;
-    }
-
     public Site getSite() {
         return this.site;
     }
@@ -330,10 +240,6 @@ public class Gateway extends AbstractAuditingEntity<Long> implements Serializabl
             ", ipAddress='" + getIpAddress() + "'" +
             ", installedAt='" + getInstalledAt() + "'" +
             ", active='" + getActive() + "'" +
-            ", createdBy='" + getCreatedBy() + "'" +
-            ", createdDate='" + getCreatedDate() + "'" +
-            ", lastModifiedBy='" + getLastModifiedBy() + "'" +
-            ", lastModifiedDate='" + getLastModifiedDate() + "'" +
             "}";
     }
 }

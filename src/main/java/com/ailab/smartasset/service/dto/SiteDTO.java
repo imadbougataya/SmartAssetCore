@@ -2,7 +2,6 @@ package com.ailab.smartasset.service.dto;
 
 import jakarta.validation.constraints.*;
 import java.io.Serializable;
-import java.time.Instant;
 import java.util.Objects;
 
 /**
@@ -24,13 +23,12 @@ public class SiteDTO implements Serializable {
     @Size(max = 500)
     private String description;
 
-    private String createdBy;
+    private Double centerLat;
 
-    private Instant createdDate;
+    private Double centerLon;
 
-    private String lastModifiedBy;
-
-    private Instant lastModifiedDate;
+    @Min(value = 1)
+    private Integer radiusMeters;
 
     public Long getId() {
         return id;
@@ -64,36 +62,28 @@ public class SiteDTO implements Serializable {
         this.description = description;
     }
 
-    public String getCreatedBy() {
-        return createdBy;
+    public Double getCenterLat() {
+        return centerLat;
     }
 
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
+    public void setCenterLat(Double centerLat) {
+        this.centerLat = centerLat;
     }
 
-    public Instant getCreatedDate() {
-        return createdDate;
+    public Double getCenterLon() {
+        return centerLon;
     }
 
-    public void setCreatedDate(Instant createdDate) {
-        this.createdDate = createdDate;
+    public void setCenterLon(Double centerLon) {
+        this.centerLon = centerLon;
     }
 
-    public String getLastModifiedBy() {
-        return lastModifiedBy;
+    public Integer getRadiusMeters() {
+        return radiusMeters;
     }
 
-    public void setLastModifiedBy(String lastModifiedBy) {
-        this.lastModifiedBy = lastModifiedBy;
-    }
-
-    public Instant getLastModifiedDate() {
-        return lastModifiedDate;
-    }
-
-    public void setLastModifiedDate(Instant lastModifiedDate) {
-        this.lastModifiedDate = lastModifiedDate;
+    public void setRadiusMeters(Integer radiusMeters) {
+        this.radiusMeters = radiusMeters;
     }
 
     @Override
@@ -125,10 +115,9 @@ public class SiteDTO implements Serializable {
             ", code='" + getCode() + "'" +
             ", name='" + getName() + "'" +
             ", description='" + getDescription() + "'" +
-            ", createdBy='" + getCreatedBy() + "'" +
-            ", createdDate='" + getCreatedDate() + "'" +
-            ", lastModifiedBy='" + getLastModifiedBy() + "'" +
-            ", lastModifiedDate='" + getLastModifiedDate() + "'" +
+            ", centerLat=" + getCenterLat() +
+            ", centerLon=" + getCenterLon() +
+            ", radiusMeters=" + getRadiusMeters() +
             "}";
     }
 }

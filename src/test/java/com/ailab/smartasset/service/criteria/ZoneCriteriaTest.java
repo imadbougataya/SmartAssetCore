@@ -79,15 +79,9 @@ class ZoneCriteriaTest {
         zoneCriteria.code();
         zoneCriteria.name();
         zoneCriteria.description();
-        zoneCriteria.zoneType();
         zoneCriteria.centerLat();
         zoneCriteria.centerLon();
         zoneCriteria.radiusMeters();
-        zoneCriteria.createdBy();
-        zoneCriteria.createdDate();
-        zoneCriteria.lastModifiedBy();
-        zoneCriteria.lastModifiedDate();
-        zoneCriteria.locationEventsId();
         zoneCriteria.siteId();
         zoneCriteria.distinct();
     }
@@ -99,15 +93,9 @@ class ZoneCriteriaTest {
                 condition.apply(criteria.getCode()) &&
                 condition.apply(criteria.getName()) &&
                 condition.apply(criteria.getDescription()) &&
-                condition.apply(criteria.getZoneType()) &&
                 condition.apply(criteria.getCenterLat()) &&
                 condition.apply(criteria.getCenterLon()) &&
                 condition.apply(criteria.getRadiusMeters()) &&
-                condition.apply(criteria.getCreatedBy()) &&
-                condition.apply(criteria.getCreatedDate()) &&
-                condition.apply(criteria.getLastModifiedBy()) &&
-                condition.apply(criteria.getLastModifiedDate()) &&
-                condition.apply(criteria.getLocationEventsId()) &&
                 condition.apply(criteria.getSiteId()) &&
                 condition.apply(criteria.getDistinct()),
             "every filter matches"
@@ -121,15 +109,9 @@ class ZoneCriteriaTest {
                 condition.apply(criteria.getCode(), copy.getCode()) &&
                 condition.apply(criteria.getName(), copy.getName()) &&
                 condition.apply(criteria.getDescription(), copy.getDescription()) &&
-                condition.apply(criteria.getZoneType(), copy.getZoneType()) &&
                 condition.apply(criteria.getCenterLat(), copy.getCenterLat()) &&
                 condition.apply(criteria.getCenterLon(), copy.getCenterLon()) &&
                 condition.apply(criteria.getRadiusMeters(), copy.getRadiusMeters()) &&
-                condition.apply(criteria.getCreatedBy(), copy.getCreatedBy()) &&
-                condition.apply(criteria.getCreatedDate(), copy.getCreatedDate()) &&
-                condition.apply(criteria.getLastModifiedBy(), copy.getLastModifiedBy()) &&
-                condition.apply(criteria.getLastModifiedDate(), copy.getLastModifiedDate()) &&
-                condition.apply(criteria.getLocationEventsId(), copy.getLocationEventsId()) &&
                 condition.apply(criteria.getSiteId(), copy.getSiteId()) &&
                 condition.apply(criteria.getDistinct(), copy.getDistinct()),
             "every filter matches"

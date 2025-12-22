@@ -10,7 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.ailab.smartasset.IntegrationTest;
 import com.ailab.smartasset.domain.ProductionLine;
-import com.ailab.smartasset.domain.Site;
+import com.ailab.smartasset.domain.Zone;
 import com.ailab.smartasset.repository.ProductionLineRepository;
 import com.ailab.smartasset.service.ProductionLineService;
 import com.ailab.smartasset.service.dto.ProductionLineDTO;
@@ -417,24 +417,24 @@ class ProductionLineResourceIT {
 
     @Test
     @Transactional
-    void getAllProductionLinesBySiteIsEqualToSomething() throws Exception {
-        Site site;
-        if (TestUtil.findAll(em, Site.class).isEmpty()) {
+    void getAllProductionLinesByZoneIsEqualToSomething() throws Exception {
+        Zone zone;
+        if (TestUtil.findAll(em, Zone.class).isEmpty()) {
             productionLineRepository.saveAndFlush(productionLine);
-            site = SiteResourceIT.createEntity();
+            zone = ZoneResourceIT.createEntity();
         } else {
-            site = TestUtil.findAll(em, Site.class).get(0);
+            zone = TestUtil.findAll(em, Zone.class).get(0);
         }
-        em.persist(site);
+        em.persist(zone);
         em.flush();
-        productionLine.setSite(site);
+        productionLine.setZone(zone);
         productionLineRepository.saveAndFlush(productionLine);
-        Long siteId = site.getId();
-        // Get all the productionLineList where site equals to siteId
-        defaultProductionLineShouldBeFound("siteId.equals=" + siteId);
+        Long zoneId = zone.getId();
+        // Get all the productionLineList where zone equals to zoneId
+        defaultProductionLineShouldBeFound("zoneId.equals=" + zoneId);
 
-        // Get all the productionLineList where site equals to (siteId + 1)
-        defaultProductionLineShouldNotBeFound("siteId.equals=" + (siteId + 1));
+        // Get all the productionLineList where zone equals to (zoneId + 1)
+        defaultProductionLineShouldNotBeFound("zoneId.equals=" + (zoneId + 1));
     }
 
     private void defaultProductionLineFiltering(String shouldBeFound, String shouldNotBeFound) throws Exception {
@@ -591,7 +591,7 @@ class ProductionLineResourceIT {
         ProductionLine partialUpdatedProductionLine = new ProductionLine();
         partialUpdatedProductionLine.setId(productionLine.getId());
 
-        partialUpdatedProductionLine.name(UPDATED_NAME);
+        partialUpdatedProductionLine.code(UPDATED_CODE);
 
         restProductionLineMockMvc
             .perform(

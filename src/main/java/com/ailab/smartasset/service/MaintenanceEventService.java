@@ -52,7 +52,6 @@ public class MaintenanceEventService {
     public MaintenanceEventDTO update(MaintenanceEventDTO maintenanceEventDTO) {
         LOG.debug("Request to update MaintenanceEvent : {}", maintenanceEventDTO);
         MaintenanceEvent maintenanceEvent = maintenanceEventMapper.toEntity(maintenanceEventDTO);
-        maintenanceEvent.setIsPersisted();
         maintenanceEvent = maintenanceEventRepository.save(maintenanceEvent);
         return maintenanceEventMapper.toDto(maintenanceEvent);
     }

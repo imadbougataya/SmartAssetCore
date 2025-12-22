@@ -77,18 +77,12 @@ class SystemEventCriteriaTest {
     private static void setAllFilters(SystemEventCriteria systemEventCriteria) {
         systemEventCriteria.id();
         systemEventCriteria.eventType();
-        systemEventCriteria.entityType();
-        systemEventCriteria.entityId();
         systemEventCriteria.severity();
         systemEventCriteria.source();
         systemEventCriteria.message();
         systemEventCriteria.createdAt();
         systemEventCriteria.createdBy();
         systemEventCriteria.correlationId();
-        systemEventCriteria.createdDate();
-        systemEventCriteria.lastModifiedBy();
-        systemEventCriteria.lastModifiedDate();
-        systemEventCriteria.assetId();
         systemEventCriteria.distinct();
     }
 
@@ -97,18 +91,12 @@ class SystemEventCriteriaTest {
             criteria ->
                 condition.apply(criteria.getId()) &&
                 condition.apply(criteria.getEventType()) &&
-                condition.apply(criteria.getEntityType()) &&
-                condition.apply(criteria.getEntityId()) &&
                 condition.apply(criteria.getSeverity()) &&
                 condition.apply(criteria.getSource()) &&
                 condition.apply(criteria.getMessage()) &&
                 condition.apply(criteria.getCreatedAt()) &&
                 condition.apply(criteria.getCreatedBy()) &&
                 condition.apply(criteria.getCorrelationId()) &&
-                condition.apply(criteria.getCreatedDate()) &&
-                condition.apply(criteria.getLastModifiedBy()) &&
-                condition.apply(criteria.getLastModifiedDate()) &&
-                condition.apply(criteria.getAssetId()) &&
                 condition.apply(criteria.getDistinct()),
             "every filter matches"
         );
@@ -119,18 +107,12 @@ class SystemEventCriteriaTest {
             criteria ->
                 condition.apply(criteria.getId(), copy.getId()) &&
                 condition.apply(criteria.getEventType(), copy.getEventType()) &&
-                condition.apply(criteria.getEntityType(), copy.getEntityType()) &&
-                condition.apply(criteria.getEntityId(), copy.getEntityId()) &&
                 condition.apply(criteria.getSeverity(), copy.getSeverity()) &&
                 condition.apply(criteria.getSource(), copy.getSource()) &&
                 condition.apply(criteria.getMessage(), copy.getMessage()) &&
                 condition.apply(criteria.getCreatedAt(), copy.getCreatedAt()) &&
                 condition.apply(criteria.getCreatedBy(), copy.getCreatedBy()) &&
                 condition.apply(criteria.getCorrelationId(), copy.getCorrelationId()) &&
-                condition.apply(criteria.getCreatedDate(), copy.getCreatedDate()) &&
-                condition.apply(criteria.getLastModifiedBy(), copy.getLastModifiedBy()) &&
-                condition.apply(criteria.getLastModifiedDate(), copy.getLastModifiedDate()) &&
-                condition.apply(criteria.getAssetId(), copy.getAssetId()) &&
                 condition.apply(criteria.getDistinct(), copy.getDistinct()),
             "every filter matches"
         );

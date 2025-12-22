@@ -8,7 +8,6 @@ import java.io.Serializable;
 import java.time.Instant;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.springframework.data.domain.Persistable;
 
 /**
  * A LocationEvent.
@@ -16,9 +15,8 @@ import org.springframework.data.domain.Persistable;
 @Entity
 @Table(name = "location_event")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@JsonIgnoreProperties(value = { "new" })
 @SuppressWarnings("common-java:DuplicatedBlocks")
-public class LocationEvent implements Serializable, Persistable<Long> {
+public class LocationEvent implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -45,10 +43,12 @@ public class LocationEvent implements Serializable, Persistable<Long> {
     @Column(name = "tx_power")
     private Integer txPower;
 
-    @Column(name = "latitude")
+    @NotNull
+    @Column(name = "latitude", nullable = false)
     private Double latitude;
 
-    @Column(name = "longitude")
+    @NotNull
+    @Column(name = "longitude", nullable = false)
     private Double longitude;
 
     @Column(name = "accuracy_meters")
@@ -57,32 +57,29 @@ public class LocationEvent implements Serializable, Persistable<Long> {
     @Column(name = "speed_kmh")
     private Double speedKmh;
 
+    @Size(max = 50)
+    @Column(name = "gnss_constellation", length = 50)
+    private String gnssConstellation;
+
     @Size(max = 4000)
     @Column(name = "raw_payload", length = 4000)
     private String rawPayload;
 
-    // Inherited createdBy definition
-    // Inherited createdDate definition
-    // Inherited lastModifiedBy definition
-    // Inherited lastModifiedDate definition
-    @org.springframework.data.annotation.Transient
-    @Transient
-    private boolean isPersisted;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JsonIgnoreProperties(
-        value = { "sensors", "maintenanceEvents", "movementRequests", "locationEvents", "site", "productionLine", "currentZone" },
-        allowSetters = true
-    )
+    @ManyToOne(optional = false)
+    @NotNull
+    @JsonIgnoreProperties(value = { "productionLine", "allowedSite", "allowedZone" }, allowSetters = true)
     private Asset asset;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JsonIgnoreProperties(value = { "locationEvents", "site" }, allowSetters = true)
-    private Zone zone;
+    @JsonIgnoreProperties(value = { "asset" }, allowSetters = true)
+    private Sensor sensor;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JsonIgnoreProperties(value = { "locationEvents", "site", "zone" }, allowSetters = true)
-    private Gateway gateway;
+    private Site matchedSite;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnoreProperties(value = { "site" }, allowSetters = true)
+    private Zone matchedZone;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -216,6 +213,19 @@ public class LocationEvent implements Serializable, Persistable<Long> {
         this.speedKmh = speedKmh;
     }
 
+    public String getGnssConstellation() {
+        return this.gnssConstellation;
+    }
+
+    public LocationEvent gnssConstellation(String gnssConstellation) {
+        this.setGnssConstellation(gnssConstellation);
+        return this;
+    }
+
+    public void setGnssConstellation(String gnssConstellation) {
+        this.gnssConstellation = gnssConstellation;
+    }
+
     public String getRawPayload() {
         return this.rawPayload;
     }
@@ -227,24 +237,6 @@ public class LocationEvent implements Serializable, Persistable<Long> {
 
     public void setRawPayload(String rawPayload) {
         this.rawPayload = rawPayload;
-    }
-
-    @PostLoad
-    @PostPersist
-    public void updateEntityState() {
-        this.setIsPersisted();
-    }
-
-    @org.springframework.data.annotation.Transient
-    @Transient
-    @Override
-    public boolean isNew() {
-        return !this.isPersisted;
-    }
-
-    public LocationEvent setIsPersisted() {
-        this.isPersisted = true;
-        return this;
     }
 
     public Asset getAsset() {
@@ -260,34 +252,46 @@ public class LocationEvent implements Serializable, Persistable<Long> {
         return this;
     }
 
-    public Zone getZone() {
-        return this.zone;
+    public Sensor getSensor() {
+        return this.sensor;
     }
 
-    public void setZone(Zone zone) {
-        this.zone = zone;
+    public void setSensor(Sensor sensor) {
+        this.sensor = sensor;
     }
 
-    public LocationEvent zone(Zone zone) {
-        this.setZone(zone);
+    public LocationEvent sensor(Sensor sensor) {
+        this.setSensor(sensor);
         return this;
     }
 
-    public Gateway getGateway() {
-        return this.gateway;
+    public Site getMatchedSite() {
+        return this.matchedSite;
     }
 
-    public void setGateway(Gateway gateway) {
-        this.gateway = gateway;
+    public void setMatchedSite(Site site) {
+        this.matchedSite = site;
     }
 
-    public LocationEvent gateway(Gateway gateway) {
-        this.setGateway(gateway);
+    public LocationEvent matchedSite(Site site) {
+        this.setMatchedSite(site);
         return this;
     }
 
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and
-    // setters here
+    public Zone getMatchedZone() {
+        return this.matchedZone;
+    }
+
+    public void setMatchedZone(Zone zone) {
+        this.matchedZone = zone;
+    }
+
+    public LocationEvent matchedZone(Zone zone) {
+        this.setMatchedZone(zone);
+        return this;
+    }
+
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
     public boolean equals(Object o) {
@@ -302,8 +306,7 @@ public class LocationEvent implements Serializable, Persistable<Long> {
 
     @Override
     public int hashCode() {
-        // see
-        // https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
         return getClass().hashCode();
     }
 
@@ -311,17 +314,18 @@ public class LocationEvent implements Serializable, Persistable<Long> {
     @Override
     public String toString() {
         return "LocationEvent{" +
-                "id=" + getId() +
-                ", source='" + getSource() + "'" +
-                ", observedAt='" + getObservedAt() + "'" +
-                ", zoneConfidence=" + getZoneConfidence() +
-                ", rssi=" + getRssi() +
-                ", txPower=" + getTxPower() +
-                ", latitude=" + getLatitude() +
-                ", longitude=" + getLongitude() +
-                ", accuracyMeters=" + getAccuracyMeters() +
-                ", speedKmh=" + getSpeedKmh() +
-                ", rawPayload='" + getRawPayload() + "'" +
-                "}";
+            "id=" + getId() +
+            ", source='" + getSource() + "'" +
+            ", observedAt='" + getObservedAt() + "'" +
+            ", zoneConfidence=" + getZoneConfidence() +
+            ", rssi=" + getRssi() +
+            ", txPower=" + getTxPower() +
+            ", latitude=" + getLatitude() +
+            ", longitude=" + getLongitude() +
+            ", accuracyMeters=" + getAccuracyMeters() +
+            ", speedKmh=" + getSpeedKmh() +
+            ", gnssConstellation='" + getGnssConstellation() + "'" +
+            ", rawPayload='" + getRawPayload() + "'" +
+            "}";
     }
 }

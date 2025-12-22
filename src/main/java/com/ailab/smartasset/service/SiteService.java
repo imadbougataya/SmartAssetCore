@@ -50,7 +50,6 @@ public class SiteService {
     public SiteDTO update(SiteDTO siteDTO) {
         LOG.debug("Request to update Site : {}", siteDTO);
         Site site = siteMapper.toEntity(siteDTO);
-        site.setIsPersisted();
         site = siteRepository.save(site);
         return siteMapper.toDto(site);
     }

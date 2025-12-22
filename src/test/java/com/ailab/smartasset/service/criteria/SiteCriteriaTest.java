@@ -79,10 +79,9 @@ class SiteCriteriaTest {
         siteCriteria.code();
         siteCriteria.name();
         siteCriteria.description();
-        siteCriteria.createdBy();
-        siteCriteria.createdDate();
-        siteCriteria.lastModifiedBy();
-        siteCriteria.lastModifiedDate();
+        siteCriteria.centerLat();
+        siteCriteria.centerLon();
+        siteCriteria.radiusMeters();
         siteCriteria.distinct();
     }
 
@@ -93,10 +92,9 @@ class SiteCriteriaTest {
                 condition.apply(criteria.getCode()) &&
                 condition.apply(criteria.getName()) &&
                 condition.apply(criteria.getDescription()) &&
-                condition.apply(criteria.getCreatedBy()) &&
-                condition.apply(criteria.getCreatedDate()) &&
-                condition.apply(criteria.getLastModifiedBy()) &&
-                condition.apply(criteria.getLastModifiedDate()) &&
+                condition.apply(criteria.getCenterLat()) &&
+                condition.apply(criteria.getCenterLon()) &&
+                condition.apply(criteria.getRadiusMeters()) &&
                 condition.apply(criteria.getDistinct()),
             "every filter matches"
         );
@@ -109,10 +107,9 @@ class SiteCriteriaTest {
                 condition.apply(criteria.getCode(), copy.getCode()) &&
                 condition.apply(criteria.getName(), copy.getName()) &&
                 condition.apply(criteria.getDescription(), copy.getDescription()) &&
-                condition.apply(criteria.getCreatedBy(), copy.getCreatedBy()) &&
-                condition.apply(criteria.getCreatedDate(), copy.getCreatedDate()) &&
-                condition.apply(criteria.getLastModifiedBy(), copy.getLastModifiedBy()) &&
-                condition.apply(criteria.getLastModifiedDate(), copy.getLastModifiedDate()) &&
+                condition.apply(criteria.getCenterLat(), copy.getCenterLat()) &&
+                condition.apply(criteria.getCenterLon(), copy.getCenterLon()) &&
+                condition.apply(criteria.getRadiusMeters(), copy.getRadiusMeters()) &&
                 condition.apply(criteria.getDistinct(), copy.getDistinct()),
             "every filter matches"
         );

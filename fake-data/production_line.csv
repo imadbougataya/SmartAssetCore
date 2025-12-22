@@ -1,0 +1,11 @@
+id;code;name;description
+1500;ENG-306-A;Ligne Engrais 306 – Atelier A;Ligne de production engrais – Atelier A du site OCP Jorf Lasfar
+1501;ENG-306-B;Ligne Engrais 306 – Atelier B;Ligne de production engrais – Atelier B du site OCP Jorf Lasfar
+1502;ENG-306-C;Ligne Engrais 306 – Atelier C;Ligne de production engrais – Atelier C du site OCP Jorf Lasfar
+1503;ENG-307-A;Ligne Engrais 307 – Atelier A;Ligne de production engrais – Atelier A du site OCP Jorf Lasfar
+1504;ENG-307-B;Ligne Engrais 307 – Atelier B;Ligne de production engrais – Atelier B du site OCP Jorf Lasfar
+1505;ENG-307-C;Ligne Engrais 307 – Atelier C;Ligne de production engrais – Atelier C du site OCP Jorf Lasfar
+1506;BRY-308-A;Ligne Broyage 308 – Primaire;Ligne de broyage primaire – Site OCP Jorf Lasfar
+1507;BRY-308-B;Ligne Broyage 308 – Secondaire;Ligne de broyage secondaire – Site OCP Jorf Lasfar
+1508;BRY-308-C;Ligne Broyage 308 – Tertiaire;Ligne de broyage tertiaire – Site OCP Jorf Lasfar
+1509;UTIL-COMMON;Ligne Utilités & Services;Équipements communs, utilités et auxiliaires du site OCP Jorf Lasfar

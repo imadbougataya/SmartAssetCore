@@ -1,14 +1,13 @@
 {
   "annotations": {
-    "changelogDate": "20251217002708",
-    "enableAudit": true
+    "changelogDate": "20251217002708"
   },
-  "applications": ["smartassetcore"],
+  "applications": ["SmartAssetCore"],
   "dto": "mapstruct",
   "fields": [
     {
       "fieldName": "entityType",
-      "fieldType": "DocumentEntityType",
+      "fieldType": "DocumentLinkEntityType",
       "fieldValidateRules": ["required"],
       "fieldValues": "ASSET,MAINTENANCE_EVENT,MOVEMENT_REQUEST"
     },
@@ -21,7 +20,7 @@
       "fieldName": "label",
       "fieldType": "String",
       "fieldValidateRules": ["maxlength"],
-      "fieldValidateRulesMaxlength": "150"
+      "fieldValidateRulesMaxlength": "200"
     },
     {
       "fieldName": "linkedAt",
@@ -29,50 +28,37 @@
       "fieldValidateRules": ["required"]
     },
     {
-      "auditField": true,
-      "autoGenerate": true,
-      "columnType": "varchar(50)",
       "fieldName": "createdBy",
       "fieldType": "String",
-      "nullable": false,
-      "readonly": true
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "120"
     },
     {
-      "auditField": true,
-      "autoGenerate": true,
       "fieldName": "createdDate",
-      "fieldType": "Instant",
-      "nullable": false,
-      "readonly": true
+      "fieldType": "Instant"
     },
     {
-      "auditField": true,
-      "autoGenerate": true,
-      "columnType": "varchar(50)",
       "fieldName": "lastModifiedBy",
       "fieldType": "String",
-      "nullable": false,
-      "readonly": true
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "120"
     },
     {
-      "auditField": true,
-      "autoGenerate": true,
       "fieldName": "lastModifiedDate",
-      "fieldType": "Instant",
-      "nullable": false,
-      "readonly": true
+      "fieldType": "Instant"
     }
   ],
   "jpaMetamodelFiltering": true,
   "name": "DocumentLink",
+  "pagination": "pagination",
   "relationships": [
     {
       "otherEntityField": "fileName",
       "otherEntityName": "document",
-      "otherEntityRelationshipName": "links",
       "relationshipName": "document",
-      "relationshipSide": "right",
-      "relationshipType": "many-to-one"
+      "relationshipSide": "left",
+      "relationshipType": "many-to-one",
+      "relationshipValidateRules": "required"
     }
   ],
   "searchEngine": "no",

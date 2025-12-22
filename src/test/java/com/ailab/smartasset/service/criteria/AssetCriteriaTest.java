@@ -82,6 +82,7 @@ class AssetCriteriaTest {
         assetCriteria.description();
         assetCriteria.status();
         assetCriteria.criticality();
+        assetCriteria.geofencePolicy();
         assetCriteria.responsibleName();
         assetCriteria.costCenter();
         assetCriteria.brand();
@@ -107,17 +108,9 @@ class AssetCriteriaTest {
         assetCriteria.lastCommissioningDate();
         assetCriteria.lastMaintenanceDate();
         assetCriteria.maintenanceCount();
-        assetCriteria.createdBy();
-        assetCriteria.createdDate();
-        assetCriteria.lastModifiedBy();
-        assetCriteria.lastModifiedDate();
-        assetCriteria.sensorsId();
-        assetCriteria.maintenanceEventsId();
-        assetCriteria.movementRequestsId();
-        assetCriteria.locationEventsId();
-        assetCriteria.siteId();
         assetCriteria.productionLineId();
-        assetCriteria.currentZoneId();
+        assetCriteria.allowedSiteId();
+        assetCriteria.allowedZoneId();
         assetCriteria.distinct();
     }
 
@@ -131,6 +124,7 @@ class AssetCriteriaTest {
                 condition.apply(criteria.getDescription()) &&
                 condition.apply(criteria.getStatus()) &&
                 condition.apply(criteria.getCriticality()) &&
+                condition.apply(criteria.getGeofencePolicy()) &&
                 condition.apply(criteria.getResponsibleName()) &&
                 condition.apply(criteria.getCostCenter()) &&
                 condition.apply(criteria.getBrand()) &&
@@ -156,17 +150,9 @@ class AssetCriteriaTest {
                 condition.apply(criteria.getLastCommissioningDate()) &&
                 condition.apply(criteria.getLastMaintenanceDate()) &&
                 condition.apply(criteria.getMaintenanceCount()) &&
-                condition.apply(criteria.getCreatedBy()) &&
-                condition.apply(criteria.getCreatedDate()) &&
-                condition.apply(criteria.getLastModifiedBy()) &&
-                condition.apply(criteria.getLastModifiedDate()) &&
-                condition.apply(criteria.getSensorsId()) &&
-                condition.apply(criteria.getMaintenanceEventsId()) &&
-                condition.apply(criteria.getMovementRequestsId()) &&
-                condition.apply(criteria.getLocationEventsId()) &&
-                condition.apply(criteria.getSiteId()) &&
                 condition.apply(criteria.getProductionLineId()) &&
-                condition.apply(criteria.getCurrentZoneId()) &&
+                condition.apply(criteria.getAllowedSiteId()) &&
+                condition.apply(criteria.getAllowedZoneId()) &&
                 condition.apply(criteria.getDistinct()),
             "every filter matches"
         );
@@ -182,6 +168,7 @@ class AssetCriteriaTest {
                 condition.apply(criteria.getDescription(), copy.getDescription()) &&
                 condition.apply(criteria.getStatus(), copy.getStatus()) &&
                 condition.apply(criteria.getCriticality(), copy.getCriticality()) &&
+                condition.apply(criteria.getGeofencePolicy(), copy.getGeofencePolicy()) &&
                 condition.apply(criteria.getResponsibleName(), copy.getResponsibleName()) &&
                 condition.apply(criteria.getCostCenter(), copy.getCostCenter()) &&
                 condition.apply(criteria.getBrand(), copy.getBrand()) &&
@@ -207,17 +194,9 @@ class AssetCriteriaTest {
                 condition.apply(criteria.getLastCommissioningDate(), copy.getLastCommissioningDate()) &&
                 condition.apply(criteria.getLastMaintenanceDate(), copy.getLastMaintenanceDate()) &&
                 condition.apply(criteria.getMaintenanceCount(), copy.getMaintenanceCount()) &&
-                condition.apply(criteria.getCreatedBy(), copy.getCreatedBy()) &&
-                condition.apply(criteria.getCreatedDate(), copy.getCreatedDate()) &&
-                condition.apply(criteria.getLastModifiedBy(), copy.getLastModifiedBy()) &&
-                condition.apply(criteria.getLastModifiedDate(), copy.getLastModifiedDate()) &&
-                condition.apply(criteria.getSensorsId(), copy.getSensorsId()) &&
-                condition.apply(criteria.getMaintenanceEventsId(), copy.getMaintenanceEventsId()) &&
-                condition.apply(criteria.getMovementRequestsId(), copy.getMovementRequestsId()) &&
-                condition.apply(criteria.getLocationEventsId(), copy.getLocationEventsId()) &&
-                condition.apply(criteria.getSiteId(), copy.getSiteId()) &&
                 condition.apply(criteria.getProductionLineId(), copy.getProductionLineId()) &&
-                condition.apply(criteria.getCurrentZoneId(), copy.getCurrentZoneId()) &&
+                condition.apply(criteria.getAllowedSiteId(), copy.getAllowedSiteId()) &&
+                condition.apply(criteria.getAllowedZoneId(), copy.getAllowedZoneId()) &&
                 condition.apply(criteria.getDistinct(), copy.getDistinct()),
             "every filter matches"
         );

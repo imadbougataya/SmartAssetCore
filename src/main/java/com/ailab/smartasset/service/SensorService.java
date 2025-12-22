@@ -52,7 +52,6 @@ public class SensorService {
     public SensorDTO update(SensorDTO sensorDTO) {
         LOG.debug("Request to update Sensor : {}", sensorDTO);
         Sensor sensor = sensorMapper.toEntity(sensorDTO);
-        sensor.setIsPersisted();
         sensor = sensorRepository.save(sensor);
         return sensorMapper.toDto(sensor);
     }

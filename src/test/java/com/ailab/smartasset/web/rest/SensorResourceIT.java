@@ -52,6 +52,9 @@ class SensorResourceIT {
     private static final SensorType DEFAULT_SENSOR_TYPE = SensorType.TEMPERATURE;
     private static final SensorType UPDATED_SENSOR_TYPE = SensorType.VIBRATION;
 
+    private static final String DEFAULT_EXTERNAL_ID = "AAAAAAAAAA";
+    private static final String UPDATED_EXTERNAL_ID = "BBBBBBBBBB";
+
     private static final String DEFAULT_NAME = "AAAAAAAAAA";
     private static final String UPDATED_NAME = "BBBBBBBBBB";
 
@@ -71,9 +74,6 @@ class SensorResourceIT {
 
     private static final Boolean DEFAULT_ACTIVE = false;
     private static final Boolean UPDATED_ACTIVE = true;
-
-    private static final String DEFAULT_EXTERNAL_ID = "AAAAAAAAAA";
-    private static final String UPDATED_EXTERNAL_ID = "BBBBBBBBBB";
 
     private static final String ENTITY_API_URL = "/api/sensors";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
@@ -115,13 +115,13 @@ class SensorResourceIT {
     public static Sensor createEntity() {
         return new Sensor()
             .sensorType(DEFAULT_SENSOR_TYPE)
+            .externalId(DEFAULT_EXTERNAL_ID)
             .name(DEFAULT_NAME)
             .unit(DEFAULT_UNIT)
             .minThreshold(DEFAULT_MIN_THRESHOLD)
             .maxThreshold(DEFAULT_MAX_THRESHOLD)
             .installedAt(DEFAULT_INSTALLED_AT)
-            .active(DEFAULT_ACTIVE)
-            .externalId(DEFAULT_EXTERNAL_ID);
+            .active(DEFAULT_ACTIVE);
     }
 
     /**
@@ -133,13 +133,13 @@ class SensorResourceIT {
     public static Sensor createUpdatedEntity() {
         return new Sensor()
             .sensorType(UPDATED_SENSOR_TYPE)
+            .externalId(UPDATED_EXTERNAL_ID)
             .name(UPDATED_NAME)
             .unit(UPDATED_UNIT)
             .minThreshold(UPDATED_MIN_THRESHOLD)
             .maxThreshold(UPDATED_MAX_THRESHOLD)
             .installedAt(UPDATED_INSTALLED_AT)
-            .active(UPDATED_ACTIVE)
-            .externalId(UPDATED_EXTERNAL_ID);
+            .active(UPDATED_ACTIVE);
     }
 
     @BeforeEach
@@ -216,6 +216,23 @@ class SensorResourceIT {
 
     @Test
     @Transactional
+    void checkExternalIdIsRequired() throws Exception {
+        long databaseSizeBeforeTest = getRepositoryCount();
+        // set the field null
+        sensor.setExternalId(null);
+
+        // Create the Sensor, which fails.
+        SensorDTO sensorDTO = sensorMapper.toDto(sensor);
+
+        restSensorMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(sensorDTO)))
+            .andExpect(status().isBadRequest());
+
+        assertSameRepositoryCount(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
     void checkActiveIsRequired() throws Exception {
         long databaseSizeBeforeTest = getRepositoryCount();
         // set the field null
@@ -244,13 +261,13 @@ class SensorResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(sensor.getId().intValue())))
             .andExpect(jsonPath("$.[*].sensorType").value(hasItem(DEFAULT_SENSOR_TYPE.toString())))
+            .andExpect(jsonPath("$.[*].externalId").value(hasItem(DEFAULT_EXTERNAL_ID)))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
             .andExpect(jsonPath("$.[*].unit").value(hasItem(DEFAULT_UNIT)))
             .andExpect(jsonPath("$.[*].minThreshold").value(hasItem(sameNumber(DEFAULT_MIN_THRESHOLD))))
             .andExpect(jsonPath("$.[*].maxThreshold").value(hasItem(sameNumber(DEFAULT_MAX_THRESHOLD))))
             .andExpect(jsonPath("$.[*].installedAt").value(hasItem(DEFAULT_INSTALLED_AT.toString())))
-            .andExpect(jsonPath("$.[*].active").value(hasItem(DEFAULT_ACTIVE)))
-            .andExpect(jsonPath("$.[*].externalId").value(hasItem(DEFAULT_EXTERNAL_ID)));
+            .andExpect(jsonPath("$.[*].active").value(hasItem(DEFAULT_ACTIVE)));
     }
 
     @SuppressWarnings({ "unchecked" })
@@ -283,13 +300,13 @@ class SensorResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(sensor.getId().intValue()))
             .andExpect(jsonPath("$.sensorType").value(DEFAULT_SENSOR_TYPE.toString()))
+            .andExpect(jsonPath("$.externalId").value(DEFAULT_EXTERNAL_ID))
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME))
             .andExpect(jsonPath("$.unit").value(DEFAULT_UNIT))
             .andExpect(jsonPath("$.minThreshold").value(sameNumber(DEFAULT_MIN_THRESHOLD)))
             .andExpect(jsonPath("$.maxThreshold").value(sameNumber(DEFAULT_MAX_THRESHOLD)))
             .andExpect(jsonPath("$.installedAt").value(DEFAULT_INSTALLED_AT.toString()))
-            .andExpect(jsonPath("$.active").value(DEFAULT_ACTIVE))
-            .andExpect(jsonPath("$.externalId").value(DEFAULT_EXTERNAL_ID));
+            .andExpect(jsonPath("$.active").value(DEFAULT_ACTIVE));
     }
 
     @Test
@@ -335,6 +352,56 @@ class SensorResourceIT {
 
         // Get all the sensorList where sensorType is not null
         defaultSensorFiltering("sensorType.specified=true", "sensorType.specified=false");
+    }
+
+    @Test
+    @Transactional
+    void getAllSensorsByExternalIdIsEqualToSomething() throws Exception {
+        // Initialize the database
+        insertedSensor = sensorRepository.saveAndFlush(sensor);
+
+        // Get all the sensorList where externalId equals to
+        defaultSensorFiltering("externalId.equals=" + DEFAULT_EXTERNAL_ID, "externalId.equals=" + UPDATED_EXTERNAL_ID);
+    }
+
+    @Test
+    @Transactional
+    void getAllSensorsByExternalIdIsInShouldWork() throws Exception {
+        // Initialize the database
+        insertedSensor = sensorRepository.saveAndFlush(sensor);
+
+        // Get all the sensorList where externalId in
+        defaultSensorFiltering("externalId.in=" + DEFAULT_EXTERNAL_ID + "," + UPDATED_EXTERNAL_ID, "externalId.in=" + UPDATED_EXTERNAL_ID);
+    }
+
+    @Test
+    @Transactional
+    void getAllSensorsByExternalIdIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        insertedSensor = sensorRepository.saveAndFlush(sensor);
+
+        // Get all the sensorList where externalId is not null
+        defaultSensorFiltering("externalId.specified=true", "externalId.specified=false");
+    }
+
+    @Test
+    @Transactional
+    void getAllSensorsByExternalIdContainsSomething() throws Exception {
+        // Initialize the database
+        insertedSensor = sensorRepository.saveAndFlush(sensor);
+
+        // Get all the sensorList where externalId contains
+        defaultSensorFiltering("externalId.contains=" + DEFAULT_EXTERNAL_ID, "externalId.contains=" + UPDATED_EXTERNAL_ID);
+    }
+
+    @Test
+    @Transactional
+    void getAllSensorsByExternalIdNotContainsSomething() throws Exception {
+        // Initialize the database
+        insertedSensor = sensorRepository.saveAndFlush(sensor);
+
+        // Get all the sensorList where externalId does not contain
+        defaultSensorFiltering("externalId.doesNotContain=" + UPDATED_EXTERNAL_ID, "externalId.doesNotContain=" + DEFAULT_EXTERNAL_ID);
     }
 
     @Test
@@ -660,61 +727,11 @@ class SensorResourceIT {
 
     @Test
     @Transactional
-    void getAllSensorsByExternalIdIsEqualToSomething() throws Exception {
-        // Initialize the database
-        insertedSensor = sensorRepository.saveAndFlush(sensor);
-
-        // Get all the sensorList where externalId equals to
-        defaultSensorFiltering("externalId.equals=" + DEFAULT_EXTERNAL_ID, "externalId.equals=" + UPDATED_EXTERNAL_ID);
-    }
-
-    @Test
-    @Transactional
-    void getAllSensorsByExternalIdIsInShouldWork() throws Exception {
-        // Initialize the database
-        insertedSensor = sensorRepository.saveAndFlush(sensor);
-
-        // Get all the sensorList where externalId in
-        defaultSensorFiltering("externalId.in=" + DEFAULT_EXTERNAL_ID + "," + UPDATED_EXTERNAL_ID, "externalId.in=" + UPDATED_EXTERNAL_ID);
-    }
-
-    @Test
-    @Transactional
-    void getAllSensorsByExternalIdIsNullOrNotNull() throws Exception {
-        // Initialize the database
-        insertedSensor = sensorRepository.saveAndFlush(sensor);
-
-        // Get all the sensorList where externalId is not null
-        defaultSensorFiltering("externalId.specified=true", "externalId.specified=false");
-    }
-
-    @Test
-    @Transactional
-    void getAllSensorsByExternalIdContainsSomething() throws Exception {
-        // Initialize the database
-        insertedSensor = sensorRepository.saveAndFlush(sensor);
-
-        // Get all the sensorList where externalId contains
-        defaultSensorFiltering("externalId.contains=" + DEFAULT_EXTERNAL_ID, "externalId.contains=" + UPDATED_EXTERNAL_ID);
-    }
-
-    @Test
-    @Transactional
-    void getAllSensorsByExternalIdNotContainsSomething() throws Exception {
-        // Initialize the database
-        insertedSensor = sensorRepository.saveAndFlush(sensor);
-
-        // Get all the sensorList where externalId does not contain
-        defaultSensorFiltering("externalId.doesNotContain=" + UPDATED_EXTERNAL_ID, "externalId.doesNotContain=" + DEFAULT_EXTERNAL_ID);
-    }
-
-    @Test
-    @Transactional
     void getAllSensorsByAssetIsEqualToSomething() throws Exception {
         Asset asset;
         if (TestUtil.findAll(em, Asset.class).isEmpty()) {
             sensorRepository.saveAndFlush(sensor);
-            asset = AssetResourceIT.createEntity();
+            asset = AssetResourceIT.createEntity(em);
         } else {
             asset = TestUtil.findAll(em, Asset.class).get(0);
         }
@@ -745,13 +762,13 @@ class SensorResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(sensor.getId().intValue())))
             .andExpect(jsonPath("$.[*].sensorType").value(hasItem(DEFAULT_SENSOR_TYPE.toString())))
+            .andExpect(jsonPath("$.[*].externalId").value(hasItem(DEFAULT_EXTERNAL_ID)))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
             .andExpect(jsonPath("$.[*].unit").value(hasItem(DEFAULT_UNIT)))
             .andExpect(jsonPath("$.[*].minThreshold").value(hasItem(sameNumber(DEFAULT_MIN_THRESHOLD))))
             .andExpect(jsonPath("$.[*].maxThreshold").value(hasItem(sameNumber(DEFAULT_MAX_THRESHOLD))))
             .andExpect(jsonPath("$.[*].installedAt").value(hasItem(DEFAULT_INSTALLED_AT.toString())))
-            .andExpect(jsonPath("$.[*].active").value(hasItem(DEFAULT_ACTIVE)))
-            .andExpect(jsonPath("$.[*].externalId").value(hasItem(DEFAULT_EXTERNAL_ID)));
+            .andExpect(jsonPath("$.[*].active").value(hasItem(DEFAULT_ACTIVE)));
 
         // Check, that the count call also returns 1
         restSensorMockMvc
@@ -801,13 +818,13 @@ class SensorResourceIT {
         em.detach(updatedSensor);
         updatedSensor
             .sensorType(UPDATED_SENSOR_TYPE)
+            .externalId(UPDATED_EXTERNAL_ID)
             .name(UPDATED_NAME)
             .unit(UPDATED_UNIT)
             .minThreshold(UPDATED_MIN_THRESHOLD)
             .maxThreshold(UPDATED_MAX_THRESHOLD)
             .installedAt(UPDATED_INSTALLED_AT)
-            .active(UPDATED_ACTIVE)
-            .externalId(UPDATED_EXTERNAL_ID);
+            .active(UPDATED_ACTIVE);
         SensorDTO sensorDTO = sensorMapper.toDto(updatedSensor);
 
         restSensorMockMvc
@@ -893,7 +910,11 @@ class SensorResourceIT {
         Sensor partialUpdatedSensor = new Sensor();
         partialUpdatedSensor.setId(sensor.getId());
 
-        partialUpdatedSensor.maxThreshold(UPDATED_MAX_THRESHOLD).installedAt(UPDATED_INSTALLED_AT);
+        partialUpdatedSensor
+            .unit(UPDATED_UNIT)
+            .minThreshold(UPDATED_MIN_THRESHOLD)
+            .installedAt(UPDATED_INSTALLED_AT)
+            .active(UPDATED_ACTIVE);
 
         restSensorMockMvc
             .perform(
@@ -923,13 +944,13 @@ class SensorResourceIT {
 
         partialUpdatedSensor
             .sensorType(UPDATED_SENSOR_TYPE)
+            .externalId(UPDATED_EXTERNAL_ID)
             .name(UPDATED_NAME)
             .unit(UPDATED_UNIT)
             .minThreshold(UPDATED_MIN_THRESHOLD)
             .maxThreshold(UPDATED_MAX_THRESHOLD)
             .installedAt(UPDATED_INSTALLED_AT)
-            .active(UPDATED_ACTIVE)
-            .externalId(UPDATED_EXTERNAL_ID);
+            .active(UPDATED_ACTIVE);
 
         restSensorMockMvc
             .perform(

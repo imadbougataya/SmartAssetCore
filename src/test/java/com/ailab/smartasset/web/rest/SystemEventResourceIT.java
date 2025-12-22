@@ -4,37 +4,27 @@ import static com.ailab.smartasset.domain.SystemEventAsserts.*;
 import static com.ailab.smartasset.web.rest.TestUtil.createUpdateProxyForBean;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
-import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.ailab.smartasset.IntegrationTest;
-import com.ailab.smartasset.domain.Asset;
 import com.ailab.smartasset.domain.SystemEvent;
-import com.ailab.smartasset.domain.enumeration.SystemEntityType;
 import com.ailab.smartasset.domain.enumeration.SystemEventSeverity;
 import com.ailab.smartasset.domain.enumeration.SystemEventSource;
 import com.ailab.smartasset.repository.SystemEventRepository;
-import com.ailab.smartasset.service.SystemEventService;
 import com.ailab.smartasset.service.dto.SystemEventDTO;
 import com.ailab.smartasset.service.mapper.SystemEventMapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityManager;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -44,20 +34,12 @@ import org.springframework.transaction.annotation.Transactional;
  * Integration tests for the {@link SystemEventResource} REST controller.
  */
 @IntegrationTest
-@ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
 @WithMockUser
 class SystemEventResourceIT {
 
     private static final String DEFAULT_EVENT_TYPE = "AAAAAAAAAA";
     private static final String UPDATED_EVENT_TYPE = "BBBBBBBBBB";
-
-    private static final SystemEntityType DEFAULT_ENTITY_TYPE = SystemEntityType.ASSET;
-    private static final SystemEntityType UPDATED_ENTITY_TYPE = SystemEntityType.LOCATION_EVENT;
-
-    private static final Long DEFAULT_ENTITY_ID = 1L;
-    private static final Long UPDATED_ENTITY_ID = 2L;
-    private static final Long SMALLER_ENTITY_ID = 1L - 1L;
 
     private static final SystemEventSeverity DEFAULT_SEVERITY = SystemEventSeverity.INFO;
     private static final SystemEventSeverity UPDATED_SEVERITY = SystemEventSeverity.WARNING;
@@ -92,14 +74,8 @@ class SystemEventResourceIT {
     @Autowired
     private SystemEventRepository systemEventRepository;
 
-    @Mock
-    private SystemEventRepository systemEventRepositoryMock;
-
     @Autowired
     private SystemEventMapper systemEventMapper;
-
-    @Mock
-    private SystemEventService systemEventServiceMock;
 
     @Autowired
     private EntityManager em;
@@ -120,8 +96,6 @@ class SystemEventResourceIT {
     public static SystemEvent createEntity() {
         return new SystemEvent()
             .eventType(DEFAULT_EVENT_TYPE)
-            .entityType(DEFAULT_ENTITY_TYPE)
-            .entityId(DEFAULT_ENTITY_ID)
             .severity(DEFAULT_SEVERITY)
             .source(DEFAULT_SOURCE)
             .message(DEFAULT_MESSAGE)
@@ -140,8 +114,6 @@ class SystemEventResourceIT {
     public static SystemEvent createUpdatedEntity() {
         return new SystemEvent()
             .eventType(UPDATED_EVENT_TYPE)
-            .entityType(UPDATED_ENTITY_TYPE)
-            .entityId(UPDATED_ENTITY_ID)
             .severity(UPDATED_SEVERITY)
             .source(UPDATED_SOURCE)
             .message(UPDATED_MESSAGE)
@@ -225,23 +197,6 @@ class SystemEventResourceIT {
 
     @Test
     @Transactional
-    void checkEntityTypeIsRequired() throws Exception {
-        long databaseSizeBeforeTest = getRepositoryCount();
-        // set the field null
-        systemEvent.setEntityType(null);
-
-        // Create the SystemEvent, which fails.
-        SystemEventDTO systemEventDTO = systemEventMapper.toDto(systemEvent);
-
-        restSystemEventMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(systemEventDTO)))
-            .andExpect(status().isBadRequest());
-
-        assertSameRepositoryCount(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
     void checkSeverityIsRequired() throws Exception {
         long databaseSizeBeforeTest = getRepositoryCount();
         // set the field null
@@ -304,8 +259,6 @@ class SystemEventResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(systemEvent.getId().intValue())))
             .andExpect(jsonPath("$.[*].eventType").value(hasItem(DEFAULT_EVENT_TYPE)))
-            .andExpect(jsonPath("$.[*].entityType").value(hasItem(DEFAULT_ENTITY_TYPE.toString())))
-            .andExpect(jsonPath("$.[*].entityId").value(hasItem(DEFAULT_ENTITY_ID.intValue())))
             .andExpect(jsonPath("$.[*].severity").value(hasItem(DEFAULT_SEVERITY.toString())))
             .andExpect(jsonPath("$.[*].source").value(hasItem(DEFAULT_SOURCE.toString())))
             .andExpect(jsonPath("$.[*].message").value(hasItem(DEFAULT_MESSAGE)))
@@ -313,23 +266,6 @@ class SystemEventResourceIT {
             .andExpect(jsonPath("$.[*].createdBy").value(hasItem(DEFAULT_CREATED_BY)))
             .andExpect(jsonPath("$.[*].correlationId").value(hasItem(DEFAULT_CORRELATION_ID)))
             .andExpect(jsonPath("$.[*].payload").value(hasItem(DEFAULT_PAYLOAD)));
-    }
-
-    @SuppressWarnings({ "unchecked" })
-    void getAllSystemEventsWithEagerRelationshipsIsEnabled() throws Exception {
-        when(systemEventServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
-
-        restSystemEventMockMvc.perform(get(ENTITY_API_URL + "?eagerload=true")).andExpect(status().isOk());
-
-        verify(systemEventServiceMock, times(1)).findAllWithEagerRelationships(any());
-    }
-
-    @SuppressWarnings({ "unchecked" })
-    void getAllSystemEventsWithEagerRelationshipsIsNotEnabled() throws Exception {
-        when(systemEventServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
-
-        restSystemEventMockMvc.perform(get(ENTITY_API_URL + "?eagerload=false")).andExpect(status().isOk());
-        verify(systemEventRepositoryMock, times(1)).findAll(any(Pageable.class));
     }
 
     @Test
@@ -345,8 +281,6 @@ class SystemEventResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(systemEvent.getId().intValue()))
             .andExpect(jsonPath("$.eventType").value(DEFAULT_EVENT_TYPE))
-            .andExpect(jsonPath("$.entityType").value(DEFAULT_ENTITY_TYPE.toString()))
-            .andExpect(jsonPath("$.entityId").value(DEFAULT_ENTITY_ID.intValue()))
             .andExpect(jsonPath("$.severity").value(DEFAULT_SEVERITY.toString()))
             .andExpect(jsonPath("$.source").value(DEFAULT_SOURCE.toString()))
             .andExpect(jsonPath("$.message").value(DEFAULT_MESSAGE))
@@ -419,109 +353,6 @@ class SystemEventResourceIT {
 
         // Get all the systemEventList where eventType does not contain
         defaultSystemEventFiltering("eventType.doesNotContain=" + UPDATED_EVENT_TYPE, "eventType.doesNotContain=" + DEFAULT_EVENT_TYPE);
-    }
-
-    @Test
-    @Transactional
-    void getAllSystemEventsByEntityTypeIsEqualToSomething() throws Exception {
-        // Initialize the database
-        insertedSystemEvent = systemEventRepository.saveAndFlush(systemEvent);
-
-        // Get all the systemEventList where entityType equals to
-        defaultSystemEventFiltering("entityType.equals=" + DEFAULT_ENTITY_TYPE, "entityType.equals=" + UPDATED_ENTITY_TYPE);
-    }
-
-    @Test
-    @Transactional
-    void getAllSystemEventsByEntityTypeIsInShouldWork() throws Exception {
-        // Initialize the database
-        insertedSystemEvent = systemEventRepository.saveAndFlush(systemEvent);
-
-        // Get all the systemEventList where entityType in
-        defaultSystemEventFiltering(
-            "entityType.in=" + DEFAULT_ENTITY_TYPE + "," + UPDATED_ENTITY_TYPE,
-            "entityType.in=" + UPDATED_ENTITY_TYPE
-        );
-    }
-
-    @Test
-    @Transactional
-    void getAllSystemEventsByEntityTypeIsNullOrNotNull() throws Exception {
-        // Initialize the database
-        insertedSystemEvent = systemEventRepository.saveAndFlush(systemEvent);
-
-        // Get all the systemEventList where entityType is not null
-        defaultSystemEventFiltering("entityType.specified=true", "entityType.specified=false");
-    }
-
-    @Test
-    @Transactional
-    void getAllSystemEventsByEntityIdIsEqualToSomething() throws Exception {
-        // Initialize the database
-        insertedSystemEvent = systemEventRepository.saveAndFlush(systemEvent);
-
-        // Get all the systemEventList where entityId equals to
-        defaultSystemEventFiltering("entityId.equals=" + DEFAULT_ENTITY_ID, "entityId.equals=" + UPDATED_ENTITY_ID);
-    }
-
-    @Test
-    @Transactional
-    void getAllSystemEventsByEntityIdIsInShouldWork() throws Exception {
-        // Initialize the database
-        insertedSystemEvent = systemEventRepository.saveAndFlush(systemEvent);
-
-        // Get all the systemEventList where entityId in
-        defaultSystemEventFiltering("entityId.in=" + DEFAULT_ENTITY_ID + "," + UPDATED_ENTITY_ID, "entityId.in=" + UPDATED_ENTITY_ID);
-    }
-
-    @Test
-    @Transactional
-    void getAllSystemEventsByEntityIdIsNullOrNotNull() throws Exception {
-        // Initialize the database
-        insertedSystemEvent = systemEventRepository.saveAndFlush(systemEvent);
-
-        // Get all the systemEventList where entityId is not null
-        defaultSystemEventFiltering("entityId.specified=true", "entityId.specified=false");
-    }
-
-    @Test
-    @Transactional
-    void getAllSystemEventsByEntityIdIsGreaterThanOrEqualToSomething() throws Exception {
-        // Initialize the database
-        insertedSystemEvent = systemEventRepository.saveAndFlush(systemEvent);
-
-        // Get all the systemEventList where entityId is greater than or equal to
-        defaultSystemEventFiltering("entityId.greaterThanOrEqual=" + DEFAULT_ENTITY_ID, "entityId.greaterThanOrEqual=" + UPDATED_ENTITY_ID);
-    }
-
-    @Test
-    @Transactional
-    void getAllSystemEventsByEntityIdIsLessThanOrEqualToSomething() throws Exception {
-        // Initialize the database
-        insertedSystemEvent = systemEventRepository.saveAndFlush(systemEvent);
-
-        // Get all the systemEventList where entityId is less than or equal to
-        defaultSystemEventFiltering("entityId.lessThanOrEqual=" + DEFAULT_ENTITY_ID, "entityId.lessThanOrEqual=" + SMALLER_ENTITY_ID);
-    }
-
-    @Test
-    @Transactional
-    void getAllSystemEventsByEntityIdIsLessThanSomething() throws Exception {
-        // Initialize the database
-        insertedSystemEvent = systemEventRepository.saveAndFlush(systemEvent);
-
-        // Get all the systemEventList where entityId is less than
-        defaultSystemEventFiltering("entityId.lessThan=" + UPDATED_ENTITY_ID, "entityId.lessThan=" + DEFAULT_ENTITY_ID);
-    }
-
-    @Test
-    @Transactional
-    void getAllSystemEventsByEntityIdIsGreaterThanSomething() throws Exception {
-        // Initialize the database
-        insertedSystemEvent = systemEventRepository.saveAndFlush(systemEvent);
-
-        // Get all the systemEventList where entityId is greater than
-        defaultSystemEventFiltering("entityId.greaterThan=" + SMALLER_ENTITY_ID, "entityId.greaterThan=" + DEFAULT_ENTITY_ID);
     }
 
     @Test
@@ -770,28 +601,6 @@ class SystemEventResourceIT {
         );
     }
 
-    @Test
-    @Transactional
-    void getAllSystemEventsByAssetIsEqualToSomething() throws Exception {
-        Asset asset;
-        if (TestUtil.findAll(em, Asset.class).isEmpty()) {
-            systemEventRepository.saveAndFlush(systemEvent);
-            asset = AssetResourceIT.createEntity();
-        } else {
-            asset = TestUtil.findAll(em, Asset.class).get(0);
-        }
-        em.persist(asset);
-        em.flush();
-        systemEvent.setAsset(asset);
-        systemEventRepository.saveAndFlush(systemEvent);
-        Long assetId = asset.getId();
-        // Get all the systemEventList where asset equals to assetId
-        defaultSystemEventShouldBeFound("assetId.equals=" + assetId);
-
-        // Get all the systemEventList where asset equals to (assetId + 1)
-        defaultSystemEventShouldNotBeFound("assetId.equals=" + (assetId + 1));
-    }
-
     private void defaultSystemEventFiltering(String shouldBeFound, String shouldNotBeFound) throws Exception {
         defaultSystemEventShouldBeFound(shouldBeFound);
         defaultSystemEventShouldNotBeFound(shouldNotBeFound);
@@ -807,8 +616,6 @@ class SystemEventResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(systemEvent.getId().intValue())))
             .andExpect(jsonPath("$.[*].eventType").value(hasItem(DEFAULT_EVENT_TYPE)))
-            .andExpect(jsonPath("$.[*].entityType").value(hasItem(DEFAULT_ENTITY_TYPE.toString())))
-            .andExpect(jsonPath("$.[*].entityId").value(hasItem(DEFAULT_ENTITY_ID.intValue())))
             .andExpect(jsonPath("$.[*].severity").value(hasItem(DEFAULT_SEVERITY.toString())))
             .andExpect(jsonPath("$.[*].source").value(hasItem(DEFAULT_SOURCE.toString())))
             .andExpect(jsonPath("$.[*].message").value(hasItem(DEFAULT_MESSAGE)))
@@ -865,8 +672,6 @@ class SystemEventResourceIT {
         em.detach(updatedSystemEvent);
         updatedSystemEvent
             .eventType(UPDATED_EVENT_TYPE)
-            .entityType(UPDATED_ENTITY_TYPE)
-            .entityId(UPDATED_ENTITY_ID)
             .severity(UPDATED_SEVERITY)
             .source(UPDATED_SOURCE)
             .message(UPDATED_MESSAGE)
@@ -964,9 +769,10 @@ class SystemEventResourceIT {
         partialUpdatedSystemEvent.setId(systemEvent.getId());
 
         partialUpdatedSystemEvent
-            .entityType(UPDATED_ENTITY_TYPE)
+            .severity(UPDATED_SEVERITY)
             .message(UPDATED_MESSAGE)
-            .createdBy(UPDATED_CREATED_BY)
+            .createdAt(UPDATED_CREATED_AT)
+            .correlationId(UPDATED_CORRELATION_ID)
             .payload(UPDATED_PAYLOAD);
 
         restSystemEventMockMvc
@@ -1000,8 +806,6 @@ class SystemEventResourceIT {
 
         partialUpdatedSystemEvent
             .eventType(UPDATED_EVENT_TYPE)
-            .entityType(UPDATED_ENTITY_TYPE)
-            .entityId(UPDATED_ENTITY_ID)
             .severity(UPDATED_SEVERITY)
             .source(UPDATED_SOURCE)
             .message(UPDATED_MESSAGE)

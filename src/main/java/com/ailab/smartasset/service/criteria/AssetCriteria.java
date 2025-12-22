@@ -1,5 +1,6 @@
 package com.ailab.smartasset.service.criteria;
 
+import com.ailab.smartasset.domain.enumeration.AssetGeofencePolicy;
 import com.ailab.smartasset.domain.enumeration.AssetStatus;
 import com.ailab.smartasset.domain.enumeration.AssetType;
 import com.ailab.smartasset.domain.enumeration.Criticality;
@@ -77,6 +78,23 @@ public class AssetCriteria implements Serializable, Criteria {
     }
 
     /**
+     * Class for filtering AssetGeofencePolicy
+     */
+    public static class AssetGeofencePolicyFilter extends Filter<AssetGeofencePolicy> {
+
+        public AssetGeofencePolicyFilter() {}
+
+        public AssetGeofencePolicyFilter(AssetGeofencePolicyFilter filter) {
+            super(filter);
+        }
+
+        @Override
+        public AssetGeofencePolicyFilter copy() {
+            return new AssetGeofencePolicyFilter(this);
+        }
+    }
+
+    /**
      * Class for filtering MountingType
      */
     public static class MountingTypeFilter extends Filter<MountingType> {
@@ -125,6 +143,8 @@ public class AssetCriteria implements Serializable, Criteria {
     private AssetStatusFilter status;
 
     private CriticalityFilter criticality;
+
+    private AssetGeofencePolicyFilter geofencePolicy;
 
     private StringFilter responsibleName;
 
@@ -176,27 +196,11 @@ public class AssetCriteria implements Serializable, Criteria {
 
     private IntegerFilter maintenanceCount;
 
-    private StringFilter createdBy;
-
-    private InstantFilter createdDate;
-
-    private StringFilter lastModifiedBy;
-
-    private InstantFilter lastModifiedDate;
-
-    private LongFilter sensorsId;
-
-    private LongFilter maintenanceEventsId;
-
-    private LongFilter movementRequestsId;
-
-    private LongFilter locationEventsId;
-
-    private LongFilter siteId;
-
     private LongFilter productionLineId;
 
-    private LongFilter currentZoneId;
+    private LongFilter allowedSiteId;
+
+    private LongFilter allowedZoneId;
 
     private Boolean distinct;
 
@@ -210,6 +214,7 @@ public class AssetCriteria implements Serializable, Criteria {
         this.description = other.optionalDescription().map(StringFilter::copy).orElse(null);
         this.status = other.optionalStatus().map(AssetStatusFilter::copy).orElse(null);
         this.criticality = other.optionalCriticality().map(CriticalityFilter::copy).orElse(null);
+        this.geofencePolicy = other.optionalGeofencePolicy().map(AssetGeofencePolicyFilter::copy).orElse(null);
         this.responsibleName = other.optionalResponsibleName().map(StringFilter::copy).orElse(null);
         this.costCenter = other.optionalCostCenter().map(StringFilter::copy).orElse(null);
         this.brand = other.optionalBrand().map(StringFilter::copy).orElse(null);
@@ -235,17 +240,9 @@ public class AssetCriteria implements Serializable, Criteria {
         this.lastCommissioningDate = other.optionalLastCommissioningDate().map(LocalDateFilter::copy).orElse(null);
         this.lastMaintenanceDate = other.optionalLastMaintenanceDate().map(LocalDateFilter::copy).orElse(null);
         this.maintenanceCount = other.optionalMaintenanceCount().map(IntegerFilter::copy).orElse(null);
-        this.createdBy = other.optionalCreatedBy().map(StringFilter::copy).orElse(null);
-        this.createdDate = other.optionalCreatedDate().map(InstantFilter::copy).orElse(null);
-        this.lastModifiedBy = other.optionalLastModifiedBy().map(StringFilter::copy).orElse(null);
-        this.lastModifiedDate = other.optionalLastModifiedDate().map(InstantFilter::copy).orElse(null);
-        this.sensorsId = other.optionalSensorsId().map(LongFilter::copy).orElse(null);
-        this.maintenanceEventsId = other.optionalMaintenanceEventsId().map(LongFilter::copy).orElse(null);
-        this.movementRequestsId = other.optionalMovementRequestsId().map(LongFilter::copy).orElse(null);
-        this.locationEventsId = other.optionalLocationEventsId().map(LongFilter::copy).orElse(null);
-        this.siteId = other.optionalSiteId().map(LongFilter::copy).orElse(null);
         this.productionLineId = other.optionalProductionLineId().map(LongFilter::copy).orElse(null);
-        this.currentZoneId = other.optionalCurrentZoneId().map(LongFilter::copy).orElse(null);
+        this.allowedSiteId = other.optionalAllowedSiteId().map(LongFilter::copy).orElse(null);
+        this.allowedZoneId = other.optionalAllowedZoneId().map(LongFilter::copy).orElse(null);
         this.distinct = other.distinct;
     }
 
@@ -385,6 +382,25 @@ public class AssetCriteria implements Serializable, Criteria {
 
     public void setCriticality(CriticalityFilter criticality) {
         this.criticality = criticality;
+    }
+
+    public AssetGeofencePolicyFilter getGeofencePolicy() {
+        return geofencePolicy;
+    }
+
+    public Optional<AssetGeofencePolicyFilter> optionalGeofencePolicy() {
+        return Optional.ofNullable(geofencePolicy);
+    }
+
+    public AssetGeofencePolicyFilter geofencePolicy() {
+        if (geofencePolicy == null) {
+            setGeofencePolicy(new AssetGeofencePolicyFilter());
+        }
+        return geofencePolicy;
+    }
+
+    public void setGeofencePolicy(AssetGeofencePolicyFilter geofencePolicy) {
+        this.geofencePolicy = geofencePolicy;
     }
 
     public StringFilter getResponsibleName() {
@@ -862,177 +878,6 @@ public class AssetCriteria implements Serializable, Criteria {
         this.maintenanceCount = maintenanceCount;
     }
 
-    public StringFilter getCreatedBy() {
-        return createdBy;
-    }
-
-    public Optional<StringFilter> optionalCreatedBy() {
-        return Optional.ofNullable(createdBy);
-    }
-
-    public StringFilter createdBy() {
-        if (createdBy == null) {
-            setCreatedBy(new StringFilter());
-        }
-        return createdBy;
-    }
-
-    public void setCreatedBy(StringFilter createdBy) {
-        this.createdBy = createdBy;
-    }
-
-    public InstantFilter getCreatedDate() {
-        return createdDate;
-    }
-
-    public Optional<InstantFilter> optionalCreatedDate() {
-        return Optional.ofNullable(createdDate);
-    }
-
-    public InstantFilter createdDate() {
-        if (createdDate == null) {
-            setCreatedDate(new InstantFilter());
-        }
-        return createdDate;
-    }
-
-    public void setCreatedDate(InstantFilter createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    public StringFilter getLastModifiedBy() {
-        return lastModifiedBy;
-    }
-
-    public Optional<StringFilter> optionalLastModifiedBy() {
-        return Optional.ofNullable(lastModifiedBy);
-    }
-
-    public StringFilter lastModifiedBy() {
-        if (lastModifiedBy == null) {
-            setLastModifiedBy(new StringFilter());
-        }
-        return lastModifiedBy;
-    }
-
-    public void setLastModifiedBy(StringFilter lastModifiedBy) {
-        this.lastModifiedBy = lastModifiedBy;
-    }
-
-    public InstantFilter getLastModifiedDate() {
-        return lastModifiedDate;
-    }
-
-    public Optional<InstantFilter> optionalLastModifiedDate() {
-        return Optional.ofNullable(lastModifiedDate);
-    }
-
-    public InstantFilter lastModifiedDate() {
-        if (lastModifiedDate == null) {
-            setLastModifiedDate(new InstantFilter());
-        }
-        return lastModifiedDate;
-    }
-
-    public void setLastModifiedDate(InstantFilter lastModifiedDate) {
-        this.lastModifiedDate = lastModifiedDate;
-    }
-
-    public LongFilter getSensorsId() {
-        return sensorsId;
-    }
-
-    public Optional<LongFilter> optionalSensorsId() {
-        return Optional.ofNullable(sensorsId);
-    }
-
-    public LongFilter sensorsId() {
-        if (sensorsId == null) {
-            setSensorsId(new LongFilter());
-        }
-        return sensorsId;
-    }
-
-    public void setSensorsId(LongFilter sensorsId) {
-        this.sensorsId = sensorsId;
-    }
-
-    public LongFilter getMaintenanceEventsId() {
-        return maintenanceEventsId;
-    }
-
-    public Optional<LongFilter> optionalMaintenanceEventsId() {
-        return Optional.ofNullable(maintenanceEventsId);
-    }
-
-    public LongFilter maintenanceEventsId() {
-        if (maintenanceEventsId == null) {
-            setMaintenanceEventsId(new LongFilter());
-        }
-        return maintenanceEventsId;
-    }
-
-    public void setMaintenanceEventsId(LongFilter maintenanceEventsId) {
-        this.maintenanceEventsId = maintenanceEventsId;
-    }
-
-    public LongFilter getMovementRequestsId() {
-        return movementRequestsId;
-    }
-
-    public Optional<LongFilter> optionalMovementRequestsId() {
-        return Optional.ofNullable(movementRequestsId);
-    }
-
-    public LongFilter movementRequestsId() {
-        if (movementRequestsId == null) {
-            setMovementRequestsId(new LongFilter());
-        }
-        return movementRequestsId;
-    }
-
-    public void setMovementRequestsId(LongFilter movementRequestsId) {
-        this.movementRequestsId = movementRequestsId;
-    }
-
-    public LongFilter getLocationEventsId() {
-        return locationEventsId;
-    }
-
-    public Optional<LongFilter> optionalLocationEventsId() {
-        return Optional.ofNullable(locationEventsId);
-    }
-
-    public LongFilter locationEventsId() {
-        if (locationEventsId == null) {
-            setLocationEventsId(new LongFilter());
-        }
-        return locationEventsId;
-    }
-
-    public void setLocationEventsId(LongFilter locationEventsId) {
-        this.locationEventsId = locationEventsId;
-    }
-
-    public LongFilter getSiteId() {
-        return siteId;
-    }
-
-    public Optional<LongFilter> optionalSiteId() {
-        return Optional.ofNullable(siteId);
-    }
-
-    public LongFilter siteId() {
-        if (siteId == null) {
-            setSiteId(new LongFilter());
-        }
-        return siteId;
-    }
-
-    public void setSiteId(LongFilter siteId) {
-        this.siteId = siteId;
-    }
-
     public LongFilter getProductionLineId() {
         return productionLineId;
     }
@@ -1052,23 +897,42 @@ public class AssetCriteria implements Serializable, Criteria {
         this.productionLineId = productionLineId;
     }
 
-    public LongFilter getCurrentZoneId() {
-        return currentZoneId;
+    public LongFilter getAllowedSiteId() {
+        return allowedSiteId;
     }
 
-    public Optional<LongFilter> optionalCurrentZoneId() {
-        return Optional.ofNullable(currentZoneId);
+    public Optional<LongFilter> optionalAllowedSiteId() {
+        return Optional.ofNullable(allowedSiteId);
     }
 
-    public LongFilter currentZoneId() {
-        if (currentZoneId == null) {
-            setCurrentZoneId(new LongFilter());
+    public LongFilter allowedSiteId() {
+        if (allowedSiteId == null) {
+            setAllowedSiteId(new LongFilter());
         }
-        return currentZoneId;
+        return allowedSiteId;
     }
 
-    public void setCurrentZoneId(LongFilter currentZoneId) {
-        this.currentZoneId = currentZoneId;
+    public void setAllowedSiteId(LongFilter allowedSiteId) {
+        this.allowedSiteId = allowedSiteId;
+    }
+
+    public LongFilter getAllowedZoneId() {
+        return allowedZoneId;
+    }
+
+    public Optional<LongFilter> optionalAllowedZoneId() {
+        return Optional.ofNullable(allowedZoneId);
+    }
+
+    public LongFilter allowedZoneId() {
+        if (allowedZoneId == null) {
+            setAllowedZoneId(new LongFilter());
+        }
+        return allowedZoneId;
+    }
+
+    public void setAllowedZoneId(LongFilter allowedZoneId) {
+        this.allowedZoneId = allowedZoneId;
     }
 
     public Boolean getDistinct() {
@@ -1107,6 +971,7 @@ public class AssetCriteria implements Serializable, Criteria {
             Objects.equals(description, that.description) &&
             Objects.equals(status, that.status) &&
             Objects.equals(criticality, that.criticality) &&
+            Objects.equals(geofencePolicy, that.geofencePolicy) &&
             Objects.equals(responsibleName, that.responsibleName) &&
             Objects.equals(costCenter, that.costCenter) &&
             Objects.equals(brand, that.brand) &&
@@ -1132,17 +997,9 @@ public class AssetCriteria implements Serializable, Criteria {
             Objects.equals(lastCommissioningDate, that.lastCommissioningDate) &&
             Objects.equals(lastMaintenanceDate, that.lastMaintenanceDate) &&
             Objects.equals(maintenanceCount, that.maintenanceCount) &&
-            Objects.equals(createdBy, that.createdBy) &&
-            Objects.equals(createdDate, that.createdDate) &&
-            Objects.equals(lastModifiedBy, that.lastModifiedBy) &&
-            Objects.equals(lastModifiedDate, that.lastModifiedDate) &&
-            Objects.equals(sensorsId, that.sensorsId) &&
-            Objects.equals(maintenanceEventsId, that.maintenanceEventsId) &&
-            Objects.equals(movementRequestsId, that.movementRequestsId) &&
-            Objects.equals(locationEventsId, that.locationEventsId) &&
-            Objects.equals(siteId, that.siteId) &&
             Objects.equals(productionLineId, that.productionLineId) &&
-            Objects.equals(currentZoneId, that.currentZoneId) &&
+            Objects.equals(allowedSiteId, that.allowedSiteId) &&
+            Objects.equals(allowedZoneId, that.allowedZoneId) &&
             Objects.equals(distinct, that.distinct)
         );
     }
@@ -1157,6 +1014,7 @@ public class AssetCriteria implements Serializable, Criteria {
             description,
             status,
             criticality,
+            geofencePolicy,
             responsibleName,
             costCenter,
             brand,
@@ -1182,17 +1040,9 @@ public class AssetCriteria implements Serializable, Criteria {
             lastCommissioningDate,
             lastMaintenanceDate,
             maintenanceCount,
-            createdBy,
-            createdDate,
-            lastModifiedBy,
-            lastModifiedDate,
-            sensorsId,
-            maintenanceEventsId,
-            movementRequestsId,
-            locationEventsId,
-            siteId,
             productionLineId,
-            currentZoneId,
+            allowedSiteId,
+            allowedZoneId,
             distinct
         );
     }
@@ -1208,6 +1058,7 @@ public class AssetCriteria implements Serializable, Criteria {
             optionalDescription().map(f -> "description=" + f + ", ").orElse("") +
             optionalStatus().map(f -> "status=" + f + ", ").orElse("") +
             optionalCriticality().map(f -> "criticality=" + f + ", ").orElse("") +
+            optionalGeofencePolicy().map(f -> "geofencePolicy=" + f + ", ").orElse("") +
             optionalResponsibleName().map(f -> "responsibleName=" + f + ", ").orElse("") +
             optionalCostCenter().map(f -> "costCenter=" + f + ", ").orElse("") +
             optionalBrand().map(f -> "brand=" + f + ", ").orElse("") +
@@ -1233,17 +1084,9 @@ public class AssetCriteria implements Serializable, Criteria {
             optionalLastCommissioningDate().map(f -> "lastCommissioningDate=" + f + ", ").orElse("") +
             optionalLastMaintenanceDate().map(f -> "lastMaintenanceDate=" + f + ", ").orElse("") +
             optionalMaintenanceCount().map(f -> "maintenanceCount=" + f + ", ").orElse("") +
-            optionalCreatedBy().map(f -> "createdBy=" + f + ", ").orElse("") +
-            optionalCreatedDate().map(f -> "createdDate=" + f + ", ").orElse("") +
-            optionalLastModifiedBy().map(f -> "lastModifiedBy=" + f + ", ").orElse("") +
-            optionalLastModifiedDate().map(f -> "lastModifiedDate=" + f + ", ").orElse("") +
-            optionalSensorsId().map(f -> "sensorsId=" + f + ", ").orElse("") +
-            optionalMaintenanceEventsId().map(f -> "maintenanceEventsId=" + f + ", ").orElse("") +
-            optionalMovementRequestsId().map(f -> "movementRequestsId=" + f + ", ").orElse("") +
-            optionalLocationEventsId().map(f -> "locationEventsId=" + f + ", ").orElse("") +
-            optionalSiteId().map(f -> "siteId=" + f + ", ").orElse("") +
             optionalProductionLineId().map(f -> "productionLineId=" + f + ", ").orElse("") +
-            optionalCurrentZoneId().map(f -> "currentZoneId=" + f + ", ").orElse("") +
+            optionalAllowedSiteId().map(f -> "allowedSiteId=" + f + ", ").orElse("") +
+            optionalAllowedZoneId().map(f -> "allowedZoneId=" + f + ", ").orElse("") +
             optionalDistinct().map(f -> "distinct=" + f + ", ").orElse("") +
         "}";
     }

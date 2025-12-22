@@ -5,11 +5,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import java.io.Serializable;
 import java.time.Instant;
-import java.util.HashSet;
-import java.util.Set;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.springframework.data.domain.Persistable;
 
 /**
  * A Document.
@@ -17,9 +14,8 @@ import org.springframework.data.domain.Persistable;
 @Entity
 @Table(name = "document")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@JsonIgnoreProperties(value = { "new" })
 @SuppressWarnings("common-java:DuplicatedBlocks")
-public class Document extends AbstractAuditingEntity<Long> implements Serializable, Persistable<Long> {
+public class Document implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -58,18 +54,10 @@ public class Document extends AbstractAuditingEntity<Long> implements Serializab
     @Column(name = "uploaded_by", length = 120)
     private String uploadedBy;
 
-    // Inherited createdBy definition
-    // Inherited createdDate definition
-    // Inherited lastModifiedBy definition
-    // Inherited lastModifiedDate definition
-    @org.springframework.data.annotation.Transient
-    @Transient
-    private boolean isPersisted;
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "document")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnoreProperties(value = { "document" }, allowSetters = true)
-    private Set<DocumentLink> links = new HashSet<>();
+    @ManyToOne(optional = false)
+    @NotNull
+    @JsonIgnoreProperties(value = { "productionLine", "allowedSite", "allowedZone" }, allowSetters = true)
+    private Asset asset;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -177,76 +165,16 @@ public class Document extends AbstractAuditingEntity<Long> implements Serializab
         this.uploadedBy = uploadedBy;
     }
 
-    // Inherited createdBy methods
-    public Document createdBy(String createdBy) {
-        this.setCreatedBy(createdBy);
-        return this;
+    public Asset getAsset() {
+        return this.asset;
     }
 
-    // Inherited createdDate methods
-    public Document createdDate(Instant createdDate) {
-        this.setCreatedDate(createdDate);
-        return this;
+    public void setAsset(Asset asset) {
+        this.asset = asset;
     }
 
-    // Inherited lastModifiedBy methods
-    public Document lastModifiedBy(String lastModifiedBy) {
-        this.setLastModifiedBy(lastModifiedBy);
-        return this;
-    }
-
-    // Inherited lastModifiedDate methods
-    public Document lastModifiedDate(Instant lastModifiedDate) {
-        this.setLastModifiedDate(lastModifiedDate);
-        return this;
-    }
-
-    @PostLoad
-    @PostPersist
-    public void updateEntityState() {
-        this.setIsPersisted();
-    }
-
-    @org.springframework.data.annotation.Transient
-    @Transient
-    @Override
-    public boolean isNew() {
-        return !this.isPersisted;
-    }
-
-    public Document setIsPersisted() {
-        this.isPersisted = true;
-        return this;
-    }
-
-    public Set<DocumentLink> getLinks() {
-        return this.links;
-    }
-
-    public void setLinks(Set<DocumentLink> documentLinks) {
-        if (this.links != null) {
-            this.links.forEach(i -> i.setDocument(null));
-        }
-        if (documentLinks != null) {
-            documentLinks.forEach(i -> i.setDocument(this));
-        }
-        this.links = documentLinks;
-    }
-
-    public Document links(Set<DocumentLink> documentLinks) {
-        this.setLinks(documentLinks);
-        return this;
-    }
-
-    public Document addLinks(DocumentLink documentLink) {
-        this.links.add(documentLink);
-        documentLink.setDocument(this);
-        return this;
-    }
-
-    public Document removeLinks(DocumentLink documentLink) {
-        this.links.remove(documentLink);
-        documentLink.setDocument(null);
+    public Document asset(Asset asset) {
+        this.setAsset(asset);
         return this;
     }
 
@@ -281,10 +209,6 @@ public class Document extends AbstractAuditingEntity<Long> implements Serializab
             ", checksumSha256='" + getChecksumSha256() + "'" +
             ", uploadedAt='" + getUploadedAt() + "'" +
             ", uploadedBy='" + getUploadedBy() + "'" +
-            ", createdBy='" + getCreatedBy() + "'" +
-            ", createdDate='" + getCreatedDate() + "'" +
-            ", lastModifiedBy='" + getLastModifiedBy() + "'" +
-            ", lastModifiedDate='" + getLastModifiedDate() + "'" +
             "}";
     }
 }

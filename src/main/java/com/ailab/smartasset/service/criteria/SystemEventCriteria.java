@@ -1,6 +1,5 @@
 package com.ailab.smartasset.service.criteria;
 
-import com.ailab.smartasset.domain.enumeration.SystemEntityType;
 import com.ailab.smartasset.domain.enumeration.SystemEventSeverity;
 import com.ailab.smartasset.domain.enumeration.SystemEventSource;
 import java.io.Serializable;
@@ -22,23 +21,6 @@ import tech.jhipster.service.filter.*;
 @ParameterObject
 @SuppressWarnings("common-java:DuplicatedBlocks")
 public class SystemEventCriteria implements Serializable, Criteria {
-
-    /**
-     * Class for filtering SystemEntityType
-     */
-    public static class SystemEntityTypeFilter extends Filter<SystemEntityType> {
-
-        public SystemEntityTypeFilter() {}
-
-        public SystemEntityTypeFilter(SystemEntityTypeFilter filter) {
-            super(filter);
-        }
-
-        @Override
-        public SystemEntityTypeFilter copy() {
-            return new SystemEntityTypeFilter(this);
-        }
-    }
 
     /**
      * Class for filtering SystemEventSeverity
@@ -80,10 +62,6 @@ public class SystemEventCriteria implements Serializable, Criteria {
 
     private StringFilter eventType;
 
-    private SystemEntityTypeFilter entityType;
-
-    private LongFilter entityId;
-
     private SystemEventSeverityFilter severity;
 
     private SystemEventSourceFilter source;
@@ -96,14 +74,6 @@ public class SystemEventCriteria implements Serializable, Criteria {
 
     private StringFilter correlationId;
 
-    private InstantFilter createdDate;
-
-    private StringFilter lastModifiedBy;
-
-    private InstantFilter lastModifiedDate;
-
-    private LongFilter assetId;
-
     private Boolean distinct;
 
     public SystemEventCriteria() {}
@@ -111,18 +81,12 @@ public class SystemEventCriteria implements Serializable, Criteria {
     public SystemEventCriteria(SystemEventCriteria other) {
         this.id = other.optionalId().map(LongFilter::copy).orElse(null);
         this.eventType = other.optionalEventType().map(StringFilter::copy).orElse(null);
-        this.entityType = other.optionalEntityType().map(SystemEntityTypeFilter::copy).orElse(null);
-        this.entityId = other.optionalEntityId().map(LongFilter::copy).orElse(null);
         this.severity = other.optionalSeverity().map(SystemEventSeverityFilter::copy).orElse(null);
         this.source = other.optionalSource().map(SystemEventSourceFilter::copy).orElse(null);
         this.message = other.optionalMessage().map(StringFilter::copy).orElse(null);
         this.createdAt = other.optionalCreatedAt().map(InstantFilter::copy).orElse(null);
         this.createdBy = other.optionalCreatedBy().map(StringFilter::copy).orElse(null);
         this.correlationId = other.optionalCorrelationId().map(StringFilter::copy).orElse(null);
-        this.createdDate = other.optionalCreatedDate().map(InstantFilter::copy).orElse(null);
-        this.lastModifiedBy = other.optionalLastModifiedBy().map(StringFilter::copy).orElse(null);
-        this.lastModifiedDate = other.optionalLastModifiedDate().map(InstantFilter::copy).orElse(null);
-        this.assetId = other.optionalAssetId().map(LongFilter::copy).orElse(null);
         this.distinct = other.distinct;
     }
 
@@ -167,44 +131,6 @@ public class SystemEventCriteria implements Serializable, Criteria {
 
     public void setEventType(StringFilter eventType) {
         this.eventType = eventType;
-    }
-
-    public SystemEntityTypeFilter getEntityType() {
-        return entityType;
-    }
-
-    public Optional<SystemEntityTypeFilter> optionalEntityType() {
-        return Optional.ofNullable(entityType);
-    }
-
-    public SystemEntityTypeFilter entityType() {
-        if (entityType == null) {
-            setEntityType(new SystemEntityTypeFilter());
-        }
-        return entityType;
-    }
-
-    public void setEntityType(SystemEntityTypeFilter entityType) {
-        this.entityType = entityType;
-    }
-
-    public LongFilter getEntityId() {
-        return entityId;
-    }
-
-    public Optional<LongFilter> optionalEntityId() {
-        return Optional.ofNullable(entityId);
-    }
-
-    public LongFilter entityId() {
-        if (entityId == null) {
-            setEntityId(new LongFilter());
-        }
-        return entityId;
-    }
-
-    public void setEntityId(LongFilter entityId) {
-        this.entityId = entityId;
     }
 
     public SystemEventSeverityFilter getSeverity() {
@@ -321,82 +247,6 @@ public class SystemEventCriteria implements Serializable, Criteria {
         this.correlationId = correlationId;
     }
 
-    public InstantFilter getCreatedDate() {
-        return createdDate;
-    }
-
-    public Optional<InstantFilter> optionalCreatedDate() {
-        return Optional.ofNullable(createdDate);
-    }
-
-    public InstantFilter createdDate() {
-        if (createdDate == null) {
-            setCreatedDate(new InstantFilter());
-        }
-        return createdDate;
-    }
-
-    public void setCreatedDate(InstantFilter createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    public StringFilter getLastModifiedBy() {
-        return lastModifiedBy;
-    }
-
-    public Optional<StringFilter> optionalLastModifiedBy() {
-        return Optional.ofNullable(lastModifiedBy);
-    }
-
-    public StringFilter lastModifiedBy() {
-        if (lastModifiedBy == null) {
-            setLastModifiedBy(new StringFilter());
-        }
-        return lastModifiedBy;
-    }
-
-    public void setLastModifiedBy(StringFilter lastModifiedBy) {
-        this.lastModifiedBy = lastModifiedBy;
-    }
-
-    public InstantFilter getLastModifiedDate() {
-        return lastModifiedDate;
-    }
-
-    public Optional<InstantFilter> optionalLastModifiedDate() {
-        return Optional.ofNullable(lastModifiedDate);
-    }
-
-    public InstantFilter lastModifiedDate() {
-        if (lastModifiedDate == null) {
-            setLastModifiedDate(new InstantFilter());
-        }
-        return lastModifiedDate;
-    }
-
-    public void setLastModifiedDate(InstantFilter lastModifiedDate) {
-        this.lastModifiedDate = lastModifiedDate;
-    }
-
-    public LongFilter getAssetId() {
-        return assetId;
-    }
-
-    public Optional<LongFilter> optionalAssetId() {
-        return Optional.ofNullable(assetId);
-    }
-
-    public LongFilter assetId() {
-        if (assetId == null) {
-            setAssetId(new LongFilter());
-        }
-        return assetId;
-    }
-
-    public void setAssetId(LongFilter assetId) {
-        this.assetId = assetId;
-    }
-
     public Boolean getDistinct() {
         return distinct;
     }
@@ -428,41 +278,19 @@ public class SystemEventCriteria implements Serializable, Criteria {
         return (
             Objects.equals(id, that.id) &&
             Objects.equals(eventType, that.eventType) &&
-            Objects.equals(entityType, that.entityType) &&
-            Objects.equals(entityId, that.entityId) &&
             Objects.equals(severity, that.severity) &&
             Objects.equals(source, that.source) &&
             Objects.equals(message, that.message) &&
             Objects.equals(createdAt, that.createdAt) &&
             Objects.equals(createdBy, that.createdBy) &&
             Objects.equals(correlationId, that.correlationId) &&
-            Objects.equals(createdDate, that.createdDate) &&
-            Objects.equals(lastModifiedBy, that.lastModifiedBy) &&
-            Objects.equals(lastModifiedDate, that.lastModifiedDate) &&
-            Objects.equals(assetId, that.assetId) &&
             Objects.equals(distinct, that.distinct)
         );
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(
-            id,
-            eventType,
-            entityType,
-            entityId,
-            severity,
-            source,
-            message,
-            createdAt,
-            createdBy,
-            correlationId,
-            createdDate,
-            lastModifiedBy,
-            lastModifiedDate,
-            assetId,
-            distinct
-        );
+        return Objects.hash(id, eventType, severity, source, message, createdAt, createdBy, correlationId, distinct);
     }
 
     // prettier-ignore
@@ -471,18 +299,12 @@ public class SystemEventCriteria implements Serializable, Criteria {
         return "SystemEventCriteria{" +
             optionalId().map(f -> "id=" + f + ", ").orElse("") +
             optionalEventType().map(f -> "eventType=" + f + ", ").orElse("") +
-            optionalEntityType().map(f -> "entityType=" + f + ", ").orElse("") +
-            optionalEntityId().map(f -> "entityId=" + f + ", ").orElse("") +
             optionalSeverity().map(f -> "severity=" + f + ", ").orElse("") +
             optionalSource().map(f -> "source=" + f + ", ").orElse("") +
             optionalMessage().map(f -> "message=" + f + ", ").orElse("") +
             optionalCreatedAt().map(f -> "createdAt=" + f + ", ").orElse("") +
             optionalCreatedBy().map(f -> "createdBy=" + f + ", ").orElse("") +
             optionalCorrelationId().map(f -> "correlationId=" + f + ", ").orElse("") +
-            optionalCreatedDate().map(f -> "createdDate=" + f + ", ").orElse("") +
-            optionalLastModifiedBy().map(f -> "lastModifiedBy=" + f + ", ").orElse("") +
-            optionalLastModifiedDate().map(f -> "lastModifiedDate=" + f + ", ").orElse("") +
-            optionalAssetId().map(f -> "assetId=" + f + ", ").orElse("") +
             optionalDistinct().map(f -> "distinct=" + f + ", ").orElse("") +
         "}";
     }

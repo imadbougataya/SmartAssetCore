@@ -1,9 +1,8 @@
 {
   "annotations": {
-    "changelogDate": "20251217002701",
-    "enableAudit": true
+    "changelogDate": "20251217002701"
   },
-  "applications": ["smartassetcore"],
+  "applications": ["SmartAssetCore"],
   "dto": "mapstruct",
   "fields": [
     {
@@ -25,12 +24,6 @@
       "fieldValidateRulesMaxlength": "500"
     },
     {
-      "fieldName": "zoneType",
-      "fieldType": "String",
-      "fieldValidateRules": ["maxlength"],
-      "fieldValidateRulesMaxlength": "80"
-    },
-    {
       "fieldName": "centerLat",
       "fieldType": "Double"
     },
@@ -40,55 +33,15 @@
     },
     {
       "fieldName": "radiusMeters",
-      "fieldType": "Double"
-    },
-    {
-      "auditField": true,
-      "autoGenerate": true,
-      "columnType": "varchar(50)",
-      "fieldName": "createdBy",
-      "fieldType": "String",
-      "nullable": false,
-      "readonly": true
-    },
-    {
-      "auditField": true,
-      "autoGenerate": true,
-      "fieldName": "createdDate",
-      "fieldType": "Instant",
-      "nullable": false,
-      "readonly": true
-    },
-    {
-      "auditField": true,
-      "autoGenerate": true,
-      "columnType": "varchar(50)",
-      "fieldName": "lastModifiedBy",
-      "fieldType": "String",
-      "nullable": false,
-      "readonly": true
-    },
-    {
-      "auditField": true,
-      "autoGenerate": true,
-      "fieldName": "lastModifiedDate",
-      "fieldType": "Instant",
-      "nullable": false,
-      "readonly": true
+      "fieldType": "Integer",
+      "fieldValidateRules": ["min"],
+      "fieldValidateRulesMin": "1"
     }
   ],
   "jpaMetamodelFiltering": true,
   "name": "Zone",
   "pagination": "pagination",
   "relationships": [
-    {
-      "otherEntityField": "observedAt",
-      "otherEntityName": "locationEvent",
-      "otherEntityRelationshipName": "zone",
-      "relationshipName": "locationEvents",
-      "relationshipSide": "left",
-      "relationshipType": "one-to-many"
-    },
     {
       "otherEntityField": "code",
       "otherEntityName": "site",

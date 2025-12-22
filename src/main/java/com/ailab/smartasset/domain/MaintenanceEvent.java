@@ -10,7 +10,6 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.springframework.data.domain.Persistable;
 
 /**
  * A MaintenanceEvent.
@@ -18,9 +17,8 @@ import org.springframework.data.domain.Persistable;
 @Entity
 @Table(name = "maintenance_event")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@JsonIgnoreProperties(value = { "new" })
 @SuppressWarnings("common-java:DuplicatedBlocks")
-public class MaintenanceEvent extends AbstractAuditingEntity<Long> implements Serializable, Persistable<Long> {
+public class MaintenanceEvent implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -74,19 +72,8 @@ public class MaintenanceEvent extends AbstractAuditingEntity<Long> implements Se
     @Column(name = "notes", length = 2000)
     private String notes;
 
-    // Inherited createdBy definition
-    // Inherited createdDate definition
-    // Inherited lastModifiedBy definition
-    // Inherited lastModifiedDate definition
-    @org.springframework.data.annotation.Transient
-    @Transient
-    private boolean isPersisted;
-
     @ManyToOne(fetch = FetchType.LAZY)
-    @JsonIgnoreProperties(
-        value = { "sensors", "maintenanceEvents", "movementRequests", "locationEvents", "site", "productionLine", "currentZone" },
-        allowSetters = true
-    )
+    @JsonIgnoreProperties(value = { "productionLine", "allowedSite", "allowedZone" }, allowSetters = true)
     private Asset asset;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
@@ -260,48 +247,6 @@ public class MaintenanceEvent extends AbstractAuditingEntity<Long> implements Se
         this.notes = notes;
     }
 
-    // Inherited createdBy methods
-    public MaintenanceEvent createdBy(String createdBy) {
-        this.setCreatedBy(createdBy);
-        return this;
-    }
-
-    // Inherited createdDate methods
-    public MaintenanceEvent createdDate(Instant createdDate) {
-        this.setCreatedDate(createdDate);
-        return this;
-    }
-
-    // Inherited lastModifiedBy methods
-    public MaintenanceEvent lastModifiedBy(String lastModifiedBy) {
-        this.setLastModifiedBy(lastModifiedBy);
-        return this;
-    }
-
-    // Inherited lastModifiedDate methods
-    public MaintenanceEvent lastModifiedDate(Instant lastModifiedDate) {
-        this.setLastModifiedDate(lastModifiedDate);
-        return this;
-    }
-
-    @PostLoad
-    @PostPersist
-    public void updateEntityState() {
-        this.setIsPersisted();
-    }
-
-    @org.springframework.data.annotation.Transient
-    @Transient
-    @Override
-    public boolean isNew() {
-        return !this.isPersisted;
-    }
-
-    public MaintenanceEvent setIsPersisted() {
-        this.isPersisted = true;
-        return this;
-    }
-
     public Asset getAsset() {
         return this.asset;
     }
@@ -351,10 +296,6 @@ public class MaintenanceEvent extends AbstractAuditingEntity<Long> implements Se
             ", downtimeMinutes=" + getDowntimeMinutes() +
             ", costAmount=" + getCostAmount() +
             ", notes='" + getNotes() + "'" +
-            ", createdBy='" + getCreatedBy() + "'" +
-            ", createdDate='" + getCreatedDate() + "'" +
-            ", lastModifiedBy='" + getLastModifiedBy() + "'" +
-            ", lastModifiedDate='" + getLastModifiedDate() + "'" +
             "}";
     }
 }

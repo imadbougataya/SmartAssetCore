@@ -84,11 +84,6 @@ class GatewayCriteriaTest {
         gatewayCriteria.ipAddress();
         gatewayCriteria.installedAt();
         gatewayCriteria.active();
-        gatewayCriteria.createdBy();
-        gatewayCriteria.createdDate();
-        gatewayCriteria.lastModifiedBy();
-        gatewayCriteria.lastModifiedDate();
-        gatewayCriteria.locationEventsId();
         gatewayCriteria.siteId();
         gatewayCriteria.zoneId();
         gatewayCriteria.distinct();
@@ -106,11 +101,6 @@ class GatewayCriteriaTest {
                 condition.apply(criteria.getIpAddress()) &&
                 condition.apply(criteria.getInstalledAt()) &&
                 condition.apply(criteria.getActive()) &&
-                condition.apply(criteria.getCreatedBy()) &&
-                condition.apply(criteria.getCreatedDate()) &&
-                condition.apply(criteria.getLastModifiedBy()) &&
-                condition.apply(criteria.getLastModifiedDate()) &&
-                condition.apply(criteria.getLocationEventsId()) &&
                 condition.apply(criteria.getSiteId()) &&
                 condition.apply(criteria.getZoneId()) &&
                 condition.apply(criteria.getDistinct()),
@@ -130,11 +120,6 @@ class GatewayCriteriaTest {
                 condition.apply(criteria.getIpAddress(), copy.getIpAddress()) &&
                 condition.apply(criteria.getInstalledAt(), copy.getInstalledAt()) &&
                 condition.apply(criteria.getActive(), copy.getActive()) &&
-                condition.apply(criteria.getCreatedBy(), copy.getCreatedBy()) &&
-                condition.apply(criteria.getCreatedDate(), copy.getCreatedDate()) &&
-                condition.apply(criteria.getLastModifiedBy(), copy.getLastModifiedBy()) &&
-                condition.apply(criteria.getLastModifiedDate(), copy.getLastModifiedDate()) &&
-                condition.apply(criteria.getLocationEventsId(), copy.getLocationEventsId()) &&
                 condition.apply(criteria.getSiteId(), copy.getSiteId()) &&
                 condition.apply(criteria.getZoneId(), copy.getZoneId()) &&
                 condition.apply(criteria.getDistinct(), copy.getDistinct()),

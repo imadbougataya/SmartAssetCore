@@ -7,8 +7,6 @@ import com.ailab.smartasset.service.mapper.SystemEventMapper;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -52,7 +50,6 @@ public class SystemEventService {
     public SystemEventDTO update(SystemEventDTO systemEventDTO) {
         LOG.debug("Request to update SystemEvent : {}", systemEventDTO);
         SystemEvent systemEvent = systemEventMapper.toEntity(systemEventDTO);
-        systemEvent.setIsPersisted();
         systemEvent = systemEventRepository.save(systemEvent);
         return systemEventMapper.toDto(systemEvent);
     }
@@ -78,15 +75,6 @@ public class SystemEventService {
     }
 
     /**
-     * Get all the systemEvents with eager load of many-to-many relationships.
-     *
-     * @return the list of entities.
-     */
-    public Page<SystemEventDTO> findAllWithEagerRelationships(Pageable pageable) {
-        return systemEventRepository.findAllWithEagerRelationships(pageable).map(systemEventMapper::toDto);
-    }
-
-    /**
      * Get one systemEvent by id.
      *
      * @param id the id of the entity.
@@ -95,7 +83,7 @@ public class SystemEventService {
     @Transactional(readOnly = true)
     public Optional<SystemEventDTO> findOne(Long id) {
         LOG.debug("Request to get SystemEvent : {}", id);
-        return systemEventRepository.findOneWithEagerRelationships(id).map(systemEventMapper::toDto);
+        return systemEventRepository.findById(id).map(systemEventMapper::toDto);
     }
 
     /**

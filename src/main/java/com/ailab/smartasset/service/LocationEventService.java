@@ -52,7 +52,6 @@ public class LocationEventService {
     public LocationEventDTO update(LocationEventDTO locationEventDTO) {
         LOG.debug("Request to update LocationEvent : {}", locationEventDTO);
         LocationEvent locationEvent = locationEventMapper.toEntity(locationEventDTO);
-        locationEvent.setIsPersisted();
         locationEvent = locationEventRepository.save(locationEvent);
         return locationEventMapper.toDto(locationEvent);
     }

@@ -4,10 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import java.io.Serializable;
-import java.time.Instant;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.springframework.data.domain.Persistable;
 
 /**
  * A ProductionLine.
@@ -15,9 +13,8 @@ import org.springframework.data.domain.Persistable;
 @Entity
 @Table(name = "production_line")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@JsonIgnoreProperties(value = { "new" })
 @SuppressWarnings("common-java:DuplicatedBlocks")
-public class ProductionLine extends AbstractAuditingEntity<Long> implements Serializable, Persistable<Long> {
+public class ProductionLine implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -28,7 +25,7 @@ public class ProductionLine extends AbstractAuditingEntity<Long> implements Seri
 
     @NotNull
     @Size(max = 50)
-    @Column(name = "code", length = 50, nullable = false)
+    @Column(name = "code", length = 50, nullable = false, unique = true)
     private String code;
 
     @NotNull
@@ -40,16 +37,9 @@ public class ProductionLine extends AbstractAuditingEntity<Long> implements Seri
     @Column(name = "description", length = 500)
     private String description;
 
-    // Inherited createdBy definition
-    // Inherited createdDate definition
-    // Inherited lastModifiedBy definition
-    // Inherited lastModifiedDate definition
-    @org.springframework.data.annotation.Transient
-    @Transient
-    private boolean isPersisted;
-
     @ManyToOne(fetch = FetchType.LAZY)
-    private Site site;
+    @JsonIgnoreProperties(value = { "site" }, allowSetters = true)
+    private Zone zone;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -105,58 +95,16 @@ public class ProductionLine extends AbstractAuditingEntity<Long> implements Seri
         this.description = description;
     }
 
-    // Inherited createdBy methods
-    public ProductionLine createdBy(String createdBy) {
-        this.setCreatedBy(createdBy);
-        return this;
+    public Zone getZone() {
+        return this.zone;
     }
 
-    // Inherited createdDate methods
-    public ProductionLine createdDate(Instant createdDate) {
-        this.setCreatedDate(createdDate);
-        return this;
+    public void setZone(Zone zone) {
+        this.zone = zone;
     }
 
-    // Inherited lastModifiedBy methods
-    public ProductionLine lastModifiedBy(String lastModifiedBy) {
-        this.setLastModifiedBy(lastModifiedBy);
-        return this;
-    }
-
-    // Inherited lastModifiedDate methods
-    public ProductionLine lastModifiedDate(Instant lastModifiedDate) {
-        this.setLastModifiedDate(lastModifiedDate);
-        return this;
-    }
-
-    @PostLoad
-    @PostPersist
-    public void updateEntityState() {
-        this.setIsPersisted();
-    }
-
-    @org.springframework.data.annotation.Transient
-    @Transient
-    @Override
-    public boolean isNew() {
-        return !this.isPersisted;
-    }
-
-    public ProductionLine setIsPersisted() {
-        this.isPersisted = true;
-        return this;
-    }
-
-    public Site getSite() {
-        return this.site;
-    }
-
-    public void setSite(Site site) {
-        this.site = site;
-    }
-
-    public ProductionLine site(Site site) {
-        this.setSite(site);
+    public ProductionLine zone(Zone zone) {
+        this.setZone(zone);
         return this;
     }
 
@@ -187,10 +135,6 @@ public class ProductionLine extends AbstractAuditingEntity<Long> implements Seri
             ", code='" + getCode() + "'" +
             ", name='" + getName() + "'" +
             ", description='" + getDescription() + "'" +
-            ", createdBy='" + getCreatedBy() + "'" +
-            ", createdDate='" + getCreatedDate() + "'" +
-            ", lastModifiedBy='" + getLastModifiedBy() + "'" +
-            ", lastModifiedDate='" + getLastModifiedDate() + "'" +
             "}";
     }
 }

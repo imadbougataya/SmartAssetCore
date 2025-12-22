@@ -1,7 +1,7 @@
 package com.ailab.smartasset.domain;
 
 import static com.ailab.smartasset.domain.ProductionLineTestSamples.*;
-import static com.ailab.smartasset.domain.SiteTestSamples.*;
+import static com.ailab.smartasset.domain.ZoneTestSamples.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ailab.smartasset.web.rest.TestUtil;
@@ -24,14 +24,14 @@ class ProductionLineTest {
     }
 
     @Test
-    void siteTest() {
+    void zoneTest() {
         ProductionLine productionLine = getProductionLineRandomSampleGenerator();
-        Site siteBack = getSiteRandomSampleGenerator();
+        Zone zoneBack = getZoneRandomSampleGenerator();
 
-        productionLine.setSite(siteBack);
-        assertThat(productionLine.getSite()).isEqualTo(siteBack);
+        productionLine.setZone(zoneBack);
+        assertThat(productionLine.getZone()).isEqualTo(zoneBack);
 
-        productionLine.site(null);
-        assertThat(productionLine.getSite()).isNull();
+        productionLine.zone(null);
+        assertThat(productionLine.getZone()).isNull();
     }
 }

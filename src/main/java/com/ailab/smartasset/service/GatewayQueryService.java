@@ -82,13 +82,6 @@ public class GatewayQueryService extends QueryService<Gateway> {
                 buildStringSpecification(criteria.getIpAddress(), Gateway_.ipAddress),
                 buildRangeSpecification(criteria.getInstalledAt(), Gateway_.installedAt),
                 buildSpecification(criteria.getActive(), Gateway_.active),
-                buildStringSpecification(criteria.getCreatedBy(), Gateway_.createdBy),
-                buildRangeSpecification(criteria.getCreatedDate(), Gateway_.createdDate),
-                buildStringSpecification(criteria.getLastModifiedBy(), Gateway_.lastModifiedBy),
-                buildRangeSpecification(criteria.getLastModifiedDate(), Gateway_.lastModifiedDate),
-                buildSpecification(criteria.getLocationEventsId(), root ->
-                    root.join(Gateway_.locationEvents, JoinType.LEFT).get(LocationEvent_.id)
-                ),
                 buildSpecification(criteria.getSiteId(), root -> root.join(Gateway_.site, JoinType.LEFT).get(Site_.id)),
                 buildSpecification(criteria.getZoneId(), root -> root.join(Gateway_.zone, JoinType.LEFT).get(Zone_.id))
             );

@@ -1,9 +1,8 @@
 {
   "annotations": {
-    "changelogDate": "20251217002703",
-    "enableAudit": true
+    "changelogDate": "20251217002703"
   },
-  "applications": ["smartassetcore"],
+  "applications": ["SmartAssetCore"],
   "dto": "mapstruct",
   "fields": [
     {
@@ -41,6 +40,12 @@
       "fieldType": "Criticality",
       "fieldValidateRules": ["required"],
       "fieldValues": "LOW,MEDIUM,HIGH,CRITICAL"
+    },
+    {
+      "fieldName": "geofencePolicy",
+      "fieldType": "AssetGeofencePolicy",
+      "fieldValidateRules": ["required"],
+      "fieldValues": "NONE,ZONE_ONLY,SITE_ONLY"
     },
     {
       "fieldName": "responsibleName",
@@ -159,40 +164,6 @@
     {
       "fieldName": "maintenanceCount",
       "fieldType": "Integer"
-    },
-    {
-      "auditField": true,
-      "autoGenerate": true,
-      "columnType": "varchar(50)",
-      "fieldName": "createdBy",
-      "fieldType": "String",
-      "nullable": false,
-      "readonly": true
-    },
-    {
-      "auditField": true,
-      "autoGenerate": true,
-      "fieldName": "createdDate",
-      "fieldType": "Instant",
-      "nullable": false,
-      "readonly": true
-    },
-    {
-      "auditField": true,
-      "autoGenerate": true,
-      "columnType": "varchar(50)",
-      "fieldName": "lastModifiedBy",
-      "fieldType": "String",
-      "nullable": false,
-      "readonly": true
-    },
-    {
-      "auditField": true,
-      "autoGenerate": true,
-      "fieldName": "lastModifiedDate",
-      "fieldType": "Instant",
-      "nullable": false,
-      "readonly": true
     }
   ],
   "jpaMetamodelFiltering": true,
@@ -200,55 +171,24 @@
   "pagination": "pagination",
   "relationships": [
     {
-      "otherEntityField": "name",
-      "otherEntityName": "sensor",
-      "otherEntityRelationshipName": "asset",
-      "relationshipName": "sensors",
+      "otherEntityField": "code",
+      "otherEntityName": "productionLine",
+      "relationshipName": "productionLine",
       "relationshipSide": "left",
-      "relationshipType": "one-to-many"
-    },
-    {
-      "otherEntityField": "requestedAt",
-      "otherEntityName": "maintenanceEvent",
-      "otherEntityRelationshipName": "asset",
-      "relationshipName": "maintenanceEvents",
-      "relationshipSide": "left",
-      "relationshipType": "one-to-many"
-    },
-    {
-      "otherEntityField": "requestedAt",
-      "otherEntityName": "assetMovementRequest",
-      "otherEntityRelationshipName": "asset",
-      "relationshipName": "movementRequests",
-      "relationshipSide": "left",
-      "relationshipType": "one-to-many"
-    },
-    {
-      "otherEntityField": "observedAt",
-      "otherEntityName": "locationEvent",
-      "otherEntityRelationshipName": "asset",
-      "relationshipName": "locationEvents",
-      "relationshipSide": "left",
-      "relationshipType": "one-to-many"
+      "relationshipType": "many-to-one",
+      "relationshipValidateRules": "required"
     },
     {
       "otherEntityField": "code",
       "otherEntityName": "site",
-      "relationshipName": "site",
-      "relationshipSide": "left",
-      "relationshipType": "many-to-one"
-    },
-    {
-      "otherEntityField": "code",
-      "otherEntityName": "productionLine",
-      "relationshipName": "productionLine",
+      "relationshipName": "allowedSite",
       "relationshipSide": "left",
       "relationshipType": "many-to-one"
     },
     {
       "otherEntityField": "code",
       "otherEntityName": "zone",
-      "relationshipName": "currentZone",
+      "relationshipName": "allowedZone",
       "relationshipSide": "left",
       "relationshipType": "many-to-one"
     }

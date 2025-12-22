@@ -32,6 +32,9 @@
             <column name="criticality" type="varchar(255)">
                 <constraints nullable="false" />
             </column>
+            <column name="geofence_policy" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
             <column name="responsible_name" type="varchar(120)">
                 <constraints nullable="true" />
             </column>
@@ -107,31 +110,17 @@
             <column name="maintenance_count" type="integer">
                 <constraints nullable="true" />
             </column>
-            <column name="created_by" type="varchar(50)">
-                <constraints nullable="false" />
-            </column>
-            <column name="created_date" type="${datetimeType}">
-                <constraints nullable="false" />
-            </column>
-            <column name="last_modified_by" type="varchar(50)">
-                <constraints nullable="false" />
-            </column>
-            <column name="last_modified_date" type="${datetimeType}">
-                <constraints nullable="false" />
-            </column>
-            <column name="site_id" type="bigint">
-                <constraints nullable="true" />
-            </column>
             <column name="production_line_id" type="bigint">
+                <constraints nullable="false" />
+            </column>
+            <column name="allowed_site_id" type="bigint">
                 <constraints nullable="true" />
             </column>
-            <column name="current_zone_id" type="bigint">
+            <column name="allowed_zone_id" type="bigint">
                 <constraints nullable="true" />
             </column>
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here -->
         </createTable>
-        <dropDefaultValue tableName="asset" columnName="created_date" columnDataType="${datetimeType}"/>
-        <dropDefaultValue tableName="asset" columnName="last_modified_date" columnDataType="${datetimeType}"/>
     </changeSet>
 
     <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here -->
@@ -157,6 +146,7 @@
             <column name="description" type="string"/>
             <column name="status" type="string"/>
             <column name="criticality" type="string"/>
+            <column name="geofence_policy" type="string"/>
             <column name="responsible_name" type="string"/>
             <column name="cost_center" type="string"/>
             <column name="brand" type="string"/>
@@ -182,10 +172,7 @@
             <column name="last_commissioning_date" type="date"/>
             <column name="last_maintenance_date" type="date"/>
             <column name="maintenance_count" type="numeric"/>
-            <column name="created_by" type="string"/>
-            <column name="created_date" type="date"/>
-            <column name="last_modified_by" type="string"/>
-            <column name="last_modified_date" type="date"/>
+            <column name="production_line_id" type="numeric"/>
             <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here -->
         </loadData>
     </changeSet>

@@ -2,7 +2,7 @@
   "generator-jhipster": {
     "applicationType": "monolith",
     "authenticationType": "jwt",
-    "baseName": "smartassetcore",
+    "baseName": "SmartAssetCore",
     "blueprints": [
       {
         "name": "generator-jhipster-entity-audit",

@@ -80,6 +80,7 @@ public class AssetQueryService extends QueryService<Asset> {
                 buildStringSpecification(criteria.getDescription(), Asset_.description),
                 buildSpecification(criteria.getStatus(), Asset_.status),
                 buildSpecification(criteria.getCriticality(), Asset_.criticality),
+                buildSpecification(criteria.getGeofencePolicy(), Asset_.geofencePolicy),
                 buildStringSpecification(criteria.getResponsibleName(), Asset_.responsibleName),
                 buildStringSpecification(criteria.getCostCenter(), Asset_.costCenter),
                 buildStringSpecification(criteria.getBrand(), Asset_.brand),
@@ -105,25 +106,11 @@ public class AssetQueryService extends QueryService<Asset> {
                 buildRangeSpecification(criteria.getLastCommissioningDate(), Asset_.lastCommissioningDate),
                 buildRangeSpecification(criteria.getLastMaintenanceDate(), Asset_.lastMaintenanceDate),
                 buildRangeSpecification(criteria.getMaintenanceCount(), Asset_.maintenanceCount),
-                buildStringSpecification(criteria.getCreatedBy(), Asset_.createdBy),
-                buildRangeSpecification(criteria.getCreatedDate(), Asset_.createdDate),
-                buildStringSpecification(criteria.getLastModifiedBy(), Asset_.lastModifiedBy),
-                buildRangeSpecification(criteria.getLastModifiedDate(), Asset_.lastModifiedDate),
-                buildSpecification(criteria.getSensorsId(), root -> root.join(Asset_.sensors, JoinType.LEFT).get(Sensor_.id)),
-                buildSpecification(criteria.getMaintenanceEventsId(), root ->
-                    root.join(Asset_.maintenanceEvents, JoinType.LEFT).get(MaintenanceEvent_.id)
-                ),
-                buildSpecification(criteria.getMovementRequestsId(), root ->
-                    root.join(Asset_.movementRequests, JoinType.LEFT).get(AssetMovementRequest_.id)
-                ),
-                buildSpecification(criteria.getLocationEventsId(), root ->
-                    root.join(Asset_.locationEvents, JoinType.LEFT).get(LocationEvent_.id)
-                ),
-                buildSpecification(criteria.getSiteId(), root -> root.join(Asset_.site, JoinType.LEFT).get(Site_.id)),
                 buildSpecification(criteria.getProductionLineId(), root ->
                     root.join(Asset_.productionLine, JoinType.LEFT).get(ProductionLine_.id)
                 ),
-                buildSpecification(criteria.getCurrentZoneId(), root -> root.join(Asset_.currentZone, JoinType.LEFT).get(Zone_.id))
+                buildSpecification(criteria.getAllowedSiteId(), root -> root.join(Asset_.allowedSite, JoinType.LEFT).get(Site_.id)),
+                buildSpecification(criteria.getAllowedZoneId(), root -> root.join(Asset_.allowedZone, JoinType.LEFT).get(Zone_.id))
             );
         }
         return specification;

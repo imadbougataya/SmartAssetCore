@@ -10,13 +10,6 @@
     -->
     <changeSet id="20251217002703-2" author="jhipster">
 
-        <addForeignKeyConstraint baseColumnNames="site_id"
-                                 baseTableName="asset"
-                                 constraintName="fk_asset__site_id"
-                                 referencedColumnNames="id"
-                                 referencedTableName="site"
-                                 />
-
         <addForeignKeyConstraint baseColumnNames="production_line_id"
                                  baseTableName="asset"
                                  constraintName="fk_asset__production_line_id"
@@ -24,9 +17,16 @@
                                  referencedTableName="production_line"
                                  />
 
-        <addForeignKeyConstraint baseColumnNames="current_zone_id"
+        <addForeignKeyConstraint baseColumnNames="allowed_site_id"
                                  baseTableName="asset"
-                                 constraintName="fk_asset__current_zone_id"
+                                 constraintName="fk_asset__allowed_site_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="site"
+                                 />
+
+        <addForeignKeyConstraint baseColumnNames="allowed_zone_id"
+                                 baseTableName="asset"
+                                 constraintName="fk_asset__allowed_zone_id"
                                  referencedColumnNames="id"
                                  referencedTableName="zone"
                                  />

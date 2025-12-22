@@ -18,6 +18,10 @@ public class SensorDTO implements Serializable {
     @NotNull
     private SensorType sensorType;
 
+    @NotNull
+    @Size(max = 120)
+    private String externalId;
+
     @Size(max = 150)
     private String name;
 
@@ -32,17 +36,6 @@ public class SensorDTO implements Serializable {
 
     @NotNull
     private Boolean active;
-
-    @Size(max = 120)
-    private String externalId;
-
-    private String createdBy;
-
-    private Instant createdDate;
-
-    private String lastModifiedBy;
-
-    private Instant lastModifiedDate;
 
     private AssetDTO asset;
 
@@ -60,6 +53,14 @@ public class SensorDTO implements Serializable {
 
     public void setSensorType(SensorType sensorType) {
         this.sensorType = sensorType;
+    }
+
+    public String getExternalId() {
+        return externalId;
+    }
+
+    public void setExternalId(String externalId) {
+        this.externalId = externalId;
     }
 
     public String getName() {
@@ -110,46 +111,6 @@ public class SensorDTO implements Serializable {
         this.active = active;
     }
 
-    public String getExternalId() {
-        return externalId;
-    }
-
-    public void setExternalId(String externalId) {
-        this.externalId = externalId;
-    }
-
-    public String getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
-    }
-
-    public Instant getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(Instant createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    public String getLastModifiedBy() {
-        return lastModifiedBy;
-    }
-
-    public void setLastModifiedBy(String lastModifiedBy) {
-        this.lastModifiedBy = lastModifiedBy;
-    }
-
-    public Instant getLastModifiedDate() {
-        return lastModifiedDate;
-    }
-
-    public void setLastModifiedDate(Instant lastModifiedDate) {
-        this.lastModifiedDate = lastModifiedDate;
-    }
-
     public AssetDTO getAsset() {
         return asset;
     }
@@ -185,17 +146,13 @@ public class SensorDTO implements Serializable {
         return "SensorDTO{" +
             "id=" + getId() +
             ", sensorType='" + getSensorType() + "'" +
+            ", externalId='" + getExternalId() + "'" +
             ", name='" + getName() + "'" +
             ", unit='" + getUnit() + "'" +
             ", minThreshold=" + getMinThreshold() +
             ", maxThreshold=" + getMaxThreshold() +
             ", installedAt='" + getInstalledAt() + "'" +
             ", active='" + getActive() + "'" +
-            ", externalId='" + getExternalId() + "'" +
-            ", createdBy='" + getCreatedBy() + "'" +
-            ", createdDate='" + getCreatedDate() + "'" +
-            ", lastModifiedBy='" + getLastModifiedBy() + "'" +
-            ", lastModifiedDate='" + getLastModifiedDate() + "'" +
             ", asset=" + getAsset() +
             "}";
     }

@@ -52,7 +52,6 @@ public class ProductionLineService {
     public ProductionLineDTO update(ProductionLineDTO productionLineDTO) {
         LOG.debug("Request to update ProductionLine : {}", productionLineDTO);
         ProductionLine productionLine = productionLineMapper.toEntity(productionLineDTO);
-        productionLine.setIsPersisted();
         productionLine = productionLineRepository.save(productionLine);
         return productionLineMapper.toDto(productionLine);
     }

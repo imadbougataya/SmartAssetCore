@@ -77,11 +77,7 @@ public class ProductionLineQueryService extends QueryService<ProductionLine> {
                 buildStringSpecification(criteria.getCode(), ProductionLine_.code),
                 buildStringSpecification(criteria.getName(), ProductionLine_.name),
                 buildStringSpecification(criteria.getDescription(), ProductionLine_.description),
-                buildStringSpecification(criteria.getCreatedBy(), ProductionLine_.createdBy),
-                buildRangeSpecification(criteria.getCreatedDate(), ProductionLine_.createdDate),
-                buildStringSpecification(criteria.getLastModifiedBy(), ProductionLine_.lastModifiedBy),
-                buildRangeSpecification(criteria.getLastModifiedDate(), ProductionLine_.lastModifiedDate),
-                buildSpecification(criteria.getSiteId(), root -> root.join(ProductionLine_.site, JoinType.LEFT).get(Site_.id))
+                buildSpecification(criteria.getZoneId(), root -> root.join(ProductionLine_.zone, JoinType.LEFT).get(Zone_.id))
             );
         }
         return specification;

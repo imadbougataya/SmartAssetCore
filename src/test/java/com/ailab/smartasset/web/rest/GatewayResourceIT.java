@@ -873,7 +873,7 @@ class GatewayResourceIT {
         Gateway partialUpdatedGateway = new Gateway();
         partialUpdatedGateway.setId(gateway.getId());
 
-        partialUpdatedGateway.name(UPDATED_NAME).vendor(UPDATED_VENDOR).macAddress(UPDATED_MAC_ADDRESS).ipAddress(UPDATED_IP_ADDRESS);
+        partialUpdatedGateway.name(UPDATED_NAME).model(UPDATED_MODEL);
 
         restGatewayMockMvc
             .perform(

@@ -10,11 +10,11 @@
     -->
     <changeSet id="20251217002700-2" author="jhipster">
 
-        <addForeignKeyConstraint baseColumnNames="site_id"
+        <addForeignKeyConstraint baseColumnNames="zone_id"
                                  baseTableName="production_line"
-                                 constraintName="fk_production_line__site_id"
+                                 constraintName="fk_production_line__zone_id"
                                  referencedColumnNames="id"
-                                 referencedTableName="site"
+                                 referencedTableName="zone"
                                  />
     </changeSet>
 </databaseChangeLog>

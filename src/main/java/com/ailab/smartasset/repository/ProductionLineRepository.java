@@ -27,14 +27,14 @@ public interface ProductionLineRepository extends JpaRepository<ProductionLine, 
     }
 
     @Query(
-        value = "select productionLine from ProductionLine productionLine left join fetch productionLine.site",
+        value = "select productionLine from ProductionLine productionLine left join fetch productionLine.zone",
         countQuery = "select count(productionLine) from ProductionLine productionLine"
     )
     Page<ProductionLine> findAllWithToOneRelationships(Pageable pageable);
 
-    @Query("select productionLine from ProductionLine productionLine left join fetch productionLine.site")
+    @Query("select productionLine from ProductionLine productionLine left join fetch productionLine.zone")
     List<ProductionLine> findAllWithToOneRelationships();
 
-    @Query("select productionLine from ProductionLine productionLine left join fetch productionLine.site where productionLine.id =:id")
+    @Query("select productionLine from ProductionLine productionLine left join fetch productionLine.zone where productionLine.id =:id")
     Optional<ProductionLine> findOneWithToOneRelationships(@Param("id") Long id);
 }

@@ -2,7 +2,6 @@ package com.ailab.smartasset.service.dto;
 
 import jakarta.validation.constraints.*;
 import java.io.Serializable;
-import java.time.Instant;
 import java.util.Objects;
 
 /**
@@ -24,15 +23,7 @@ public class ProductionLineDTO implements Serializable {
     @Size(max = 500)
     private String description;
 
-    private String createdBy;
-
-    private Instant createdDate;
-
-    private String lastModifiedBy;
-
-    private Instant lastModifiedDate;
-
-    private SiteDTO site;
+    private ZoneDTO zone;
 
     public Long getId() {
         return id;
@@ -66,44 +57,12 @@ public class ProductionLineDTO implements Serializable {
         this.description = description;
     }
 
-    public String getCreatedBy() {
-        return createdBy;
+    public ZoneDTO getZone() {
+        return zone;
     }
 
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
-    }
-
-    public Instant getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(Instant createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    public String getLastModifiedBy() {
-        return lastModifiedBy;
-    }
-
-    public void setLastModifiedBy(String lastModifiedBy) {
-        this.lastModifiedBy = lastModifiedBy;
-    }
-
-    public Instant getLastModifiedDate() {
-        return lastModifiedDate;
-    }
-
-    public void setLastModifiedDate(Instant lastModifiedDate) {
-        this.lastModifiedDate = lastModifiedDate;
-    }
-
-    public SiteDTO getSite() {
-        return site;
-    }
-
-    public void setSite(SiteDTO site) {
-        this.site = site;
+    public void setZone(ZoneDTO zone) {
+        this.zone = zone;
     }
 
     @Override
@@ -135,11 +94,7 @@ public class ProductionLineDTO implements Serializable {
             ", code='" + getCode() + "'" +
             ", name='" + getName() + "'" +
             ", description='" + getDescription() + "'" +
-            ", createdBy='" + getCreatedBy() + "'" +
-            ", createdDate='" + getCreatedDate() + "'" +
-            ", lastModifiedBy='" + getLastModifiedBy() + "'" +
-            ", lastModifiedDate='" + getLastModifiedDate() + "'" +
-            ", site=" + getSite() +
+            ", zone=" + getZone() +
             "}";
     }
 }

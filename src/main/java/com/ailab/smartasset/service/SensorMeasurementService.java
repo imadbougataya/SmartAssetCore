@@ -55,7 +55,6 @@ public class SensorMeasurementService {
     public SensorMeasurementDTO update(SensorMeasurementDTO sensorMeasurementDTO) {
         LOG.debug("Request to update SensorMeasurement : {}", sensorMeasurementDTO);
         SensorMeasurement sensorMeasurement = sensorMeasurementMapper.toEntity(sensorMeasurementDTO);
-        sensorMeasurement.setIsPersisted();
         sensorMeasurement = sensorMeasurementRepository.save(sensorMeasurement);
         return sensorMeasurementMapper.toDto(sensorMeasurement);
     }

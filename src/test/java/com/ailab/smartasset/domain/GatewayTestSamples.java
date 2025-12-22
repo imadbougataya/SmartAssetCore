@@ -17,9 +17,7 @@ public class GatewayTestSamples {
             .vendor("vendor1")
             .model("model1")
             .macAddress("macAddress1")
-            .ipAddress("ipAddress1")
-            .createdBy("createdBy1")
-            .lastModifiedBy("lastModifiedBy1");
+            .ipAddress("ipAddress1");
     }
 
     public static Gateway getGatewaySample2() {
@@ -30,9 +28,7 @@ public class GatewayTestSamples {
             .vendor("vendor2")
             .model("model2")
             .macAddress("macAddress2")
-            .ipAddress("ipAddress2")
-            .createdBy("createdBy2")
-            .lastModifiedBy("lastModifiedBy2");
+            .ipAddress("ipAddress2");
     }
 
     public static Gateway getGatewayRandomSampleGenerator() {
@@ -43,8 +39,6 @@ public class GatewayTestSamples {
             .vendor(UUID.randomUUID().toString())
             .model(UUID.randomUUID().toString())
             .macAddress(UUID.randomUUID().toString())
-            .ipAddress(UUID.randomUUID().toString())
-            .createdBy(UUID.randomUUID().toString())
-            .lastModifiedBy(UUID.randomUUID().toString());
+            .ipAddress(UUID.randomUUID().toString());
     }
 }

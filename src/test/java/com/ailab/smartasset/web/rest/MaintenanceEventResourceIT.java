@@ -936,7 +936,7 @@ class MaintenanceEventResourceIT {
         Asset asset;
         if (TestUtil.findAll(em, Asset.class).isEmpty()) {
             maintenanceEventRepository.saveAndFlush(maintenanceEvent);
-            asset = AssetResourceIT.createEntity();
+            asset = AssetResourceIT.createEntity(em);
         } else {
             asset = TestUtil.findAll(em, Asset.class).get(0);
         }
@@ -1129,10 +1129,14 @@ class MaintenanceEventResourceIT {
 
         partialUpdatedMaintenanceEvent
             .maintenanceType(UPDATED_MAINTENANCE_TYPE)
-            .status(UPDATED_STATUS)
-            .description(UPDATED_DESCRIPTION)
+            .requestedAt(UPDATED_REQUESTED_AT)
+            .plannedAt(UPDATED_PLANNED_AT)
+            .startedAt(UPDATED_STARTED_AT)
+            .finishedAt(UPDATED_FINISHED_AT)
+            .title(UPDATED_TITLE)
             .technician(UPDATED_TECHNICIAN)
-            .downtimeMinutes(UPDATED_DOWNTIME_MINUTES);
+            .downtimeMinutes(UPDATED_DOWNTIME_MINUTES)
+            .costAmount(UPDATED_COST_AMOUNT);
 
         restMaintenanceEventMockMvc
             .perform(

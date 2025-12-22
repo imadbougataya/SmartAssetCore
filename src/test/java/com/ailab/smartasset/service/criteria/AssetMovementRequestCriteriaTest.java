@@ -88,10 +88,6 @@ class AssetMovementRequestCriteriaTest {
         assetMovementRequestCriteria.executedAt();
         assetMovementRequestCriteria.requestedBy();
         assetMovementRequestCriteria.approvedBy();
-        assetMovementRequestCriteria.createdBy();
-        assetMovementRequestCriteria.createdDate();
-        assetMovementRequestCriteria.lastModifiedBy();
-        assetMovementRequestCriteria.lastModifiedDate();
         assetMovementRequestCriteria.assetId();
         assetMovementRequestCriteria.distinct();
     }
@@ -112,10 +108,6 @@ class AssetMovementRequestCriteriaTest {
                 condition.apply(criteria.getExecutedAt()) &&
                 condition.apply(criteria.getRequestedBy()) &&
                 condition.apply(criteria.getApprovedBy()) &&
-                condition.apply(criteria.getCreatedBy()) &&
-                condition.apply(criteria.getCreatedDate()) &&
-                condition.apply(criteria.getLastModifiedBy()) &&
-                condition.apply(criteria.getLastModifiedDate()) &&
                 condition.apply(criteria.getAssetId()) &&
                 condition.apply(criteria.getDistinct()),
             "every filter matches"
@@ -141,10 +133,6 @@ class AssetMovementRequestCriteriaTest {
                 condition.apply(criteria.getExecutedAt(), copy.getExecutedAt()) &&
                 condition.apply(criteria.getRequestedBy(), copy.getRequestedBy()) &&
                 condition.apply(criteria.getApprovedBy(), copy.getApprovedBy()) &&
-                condition.apply(criteria.getCreatedBy(), copy.getCreatedBy()) &&
-                condition.apply(criteria.getCreatedDate(), copy.getCreatedDate()) &&
-                condition.apply(criteria.getLastModifiedBy(), copy.getLastModifiedBy()) &&
-                condition.apply(criteria.getLastModifiedDate(), copy.getLastModifiedDate()) &&
                 condition.apply(criteria.getAssetId(), copy.getAssetId()) &&
                 condition.apply(criteria.getDistinct(), copy.getDistinct()),
             "every filter matches"

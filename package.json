@@ -1,8 +1,8 @@
 {
-  "name": "smartassetcore",
+  "name": "smart-asset-core",
   "version": "0.0.0",
   "private": true,
-  "description": "Description for smartassetcore",
+  "description": "Description for SmartAssetCore",
   "license": "UNLICENSED",
   "scripts": {
     "app:start": "./mvnw -ntp --batch-mode",

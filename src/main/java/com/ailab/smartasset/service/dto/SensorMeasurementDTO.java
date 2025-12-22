@@ -26,14 +26,6 @@ public class SensorMeasurementDTO implements Serializable {
     @Size(max = 80)
     private String source;
 
-    private String createdBy;
-
-    private Instant createdDate;
-
-    private String lastModifiedBy;
-
-    private Instant lastModifiedDate;
-
     private SensorDTO sensor;
 
     public Long getId() {
@@ -76,38 +68,6 @@ public class SensorMeasurementDTO implements Serializable {
         this.source = source;
     }
 
-    public String getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
-    }
-
-    public Instant getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(Instant createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    public String getLastModifiedBy() {
-        return lastModifiedBy;
-    }
-
-    public void setLastModifiedBy(String lastModifiedBy) {
-        this.lastModifiedBy = lastModifiedBy;
-    }
-
-    public Instant getLastModifiedDate() {
-        return lastModifiedDate;
-    }
-
-    public void setLastModifiedDate(Instant lastModifiedDate) {
-        this.lastModifiedDate = lastModifiedDate;
-    }
-
     public SensorDTO getSensor() {
         return sensor;
     }
@@ -146,10 +106,6 @@ public class SensorMeasurementDTO implements Serializable {
             ", value=" + getValue() +
             ", quality='" + getQuality() + "'" +
             ", source='" + getSource() + "'" +
-            ", createdBy='" + getCreatedBy() + "'" +
-            ", createdDate='" + getCreatedDate() + "'" +
-            ", lastModifiedBy='" + getLastModifiedBy() + "'" +
-            ", lastModifiedDate='" + getLastModifiedDate() + "'" +
             ", sensor=" + getSensor() +
             "}";
     }

@@ -76,10 +76,9 @@ public class SiteQueryService extends QueryService<Site> {
                 buildStringSpecification(criteria.getCode(), Site_.code),
                 buildStringSpecification(criteria.getName(), Site_.name),
                 buildStringSpecification(criteria.getDescription(), Site_.description),
-                buildStringSpecification(criteria.getCreatedBy(), Site_.createdBy),
-                buildRangeSpecification(criteria.getCreatedDate(), Site_.createdDate),
-                buildStringSpecification(criteria.getLastModifiedBy(), Site_.lastModifiedBy),
-                buildRangeSpecification(criteria.getLastModifiedDate(), Site_.lastModifiedDate)
+                buildRangeSpecification(criteria.getCenterLat(), Site_.centerLat),
+                buildRangeSpecification(criteria.getCenterLon(), Site_.centerLon),
+                buildRangeSpecification(criteria.getRadiusMeters(), Site_.radiusMeters)
             );
         }
         return specification;

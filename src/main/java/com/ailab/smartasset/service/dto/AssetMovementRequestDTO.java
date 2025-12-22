@@ -47,14 +47,6 @@ public class AssetMovementRequestDTO implements Serializable {
     @Size(max = 120)
     private String approvedBy;
 
-    private String createdBy;
-
-    private Instant createdDate;
-
-    private String lastModifiedBy;
-
-    private Instant lastModifiedDate;
-
     private AssetDTO asset;
 
     public Long getId() {
@@ -161,38 +153,6 @@ public class AssetMovementRequestDTO implements Serializable {
         this.approvedBy = approvedBy;
     }
 
-    public String getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
-    }
-
-    public Instant getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(Instant createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    public String getLastModifiedBy() {
-        return lastModifiedBy;
-    }
-
-    public void setLastModifiedBy(String lastModifiedBy) {
-        this.lastModifiedBy = lastModifiedBy;
-    }
-
-    public Instant getLastModifiedDate() {
-        return lastModifiedDate;
-    }
-
-    public void setLastModifiedDate(Instant lastModifiedDate) {
-        this.lastModifiedDate = lastModifiedDate;
-    }
-
     public AssetDTO getAsset() {
         return asset;
     }
@@ -239,10 +199,6 @@ public class AssetMovementRequestDTO implements Serializable {
             ", executedAt='" + getExecutedAt() + "'" +
             ", requestedBy='" + getRequestedBy() + "'" +
             ", approvedBy='" + getApprovedBy() + "'" +
-            ", createdBy='" + getCreatedBy() + "'" +
-            ", createdDate='" + getCreatedDate() + "'" +
-            ", lastModifiedBy='" + getLastModifiedBy() + "'" +
-            ", lastModifiedDate='" + getLastModifiedDate() + "'" +
             ", asset=" + getAsset() +
             "}";
     }

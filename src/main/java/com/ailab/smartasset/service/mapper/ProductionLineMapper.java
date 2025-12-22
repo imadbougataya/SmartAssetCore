@@ -1,9 +1,9 @@
 package com.ailab.smartasset.service.mapper;
 
 import com.ailab.smartasset.domain.ProductionLine;
-import com.ailab.smartasset.domain.Site;
+import com.ailab.smartasset.domain.Zone;
 import com.ailab.smartasset.service.dto.ProductionLineDTO;
-import com.ailab.smartasset.service.dto.SiteDTO;
+import com.ailab.smartasset.service.dto.ZoneDTO;
 import org.mapstruct.*;
 
 /**
@@ -11,12 +11,12 @@ import org.mapstruct.*;
  */
 @Mapper(componentModel = "spring")
 public interface ProductionLineMapper extends EntityMapper<ProductionLineDTO, ProductionLine> {
-    @Mapping(target = "site", source = "site", qualifiedByName = "siteCode")
+    @Mapping(target = "zone", source = "zone", qualifiedByName = "zoneCode")
     ProductionLineDTO toDto(ProductionLine s);
 
-    @Named("siteCode")
+    @Named("zoneCode")
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
     @Mapping(target = "code", source = "code")
-    SiteDTO toDtoSiteCode(Site site);
+    ZoneDTO toDtoZoneCode(Zone zone);
 }

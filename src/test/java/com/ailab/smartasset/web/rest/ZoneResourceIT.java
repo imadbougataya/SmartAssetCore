@@ -53,9 +53,6 @@ class ZoneResourceIT {
     private static final String DEFAULT_DESCRIPTION = "AAAAAAAAAA";
     private static final String UPDATED_DESCRIPTION = "BBBBBBBBBB";
 
-    private static final String DEFAULT_ZONE_TYPE = "AAAAAAAAAA";
-    private static final String UPDATED_ZONE_TYPE = "BBBBBBBBBB";
-
     private static final Double DEFAULT_CENTER_LAT = 1D;
     private static final Double UPDATED_CENTER_LAT = 2D;
     private static final Double SMALLER_CENTER_LAT = 1D - 1D;
@@ -64,9 +61,9 @@ class ZoneResourceIT {
     private static final Double UPDATED_CENTER_LON = 2D;
     private static final Double SMALLER_CENTER_LON = 1D - 1D;
 
-    private static final Double DEFAULT_RADIUS_METERS = 1D;
-    private static final Double UPDATED_RADIUS_METERS = 2D;
-    private static final Double SMALLER_RADIUS_METERS = 1D - 1D;
+    private static final Integer DEFAULT_RADIUS_METERS = 1;
+    private static final Integer UPDATED_RADIUS_METERS = 2;
+    private static final Integer SMALLER_RADIUS_METERS = 1 - 1;
 
     private static final String ENTITY_API_URL = "/api/zones";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
@@ -110,7 +107,6 @@ class ZoneResourceIT {
             .code(DEFAULT_CODE)
             .name(DEFAULT_NAME)
             .description(DEFAULT_DESCRIPTION)
-            .zoneType(DEFAULT_ZONE_TYPE)
             .centerLat(DEFAULT_CENTER_LAT)
             .centerLon(DEFAULT_CENTER_LON)
             .radiusMeters(DEFAULT_RADIUS_METERS);
@@ -127,7 +123,6 @@ class ZoneResourceIT {
             .code(UPDATED_CODE)
             .name(UPDATED_NAME)
             .description(UPDATED_DESCRIPTION)
-            .zoneType(UPDATED_ZONE_TYPE)
             .centerLat(UPDATED_CENTER_LAT)
             .centerLon(UPDATED_CENTER_LON)
             .radiusMeters(UPDATED_RADIUS_METERS);
@@ -237,7 +232,6 @@ class ZoneResourceIT {
             .andExpect(jsonPath("$.[*].code").value(hasItem(DEFAULT_CODE)))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
             .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION)))
-            .andExpect(jsonPath("$.[*].zoneType").value(hasItem(DEFAULT_ZONE_TYPE)))
             .andExpect(jsonPath("$.[*].centerLat").value(hasItem(DEFAULT_CENTER_LAT)))
             .andExpect(jsonPath("$.[*].centerLon").value(hasItem(DEFAULT_CENTER_LON)))
             .andExpect(jsonPath("$.[*].radiusMeters").value(hasItem(DEFAULT_RADIUS_METERS)));
@@ -275,7 +269,6 @@ class ZoneResourceIT {
             .andExpect(jsonPath("$.code").value(DEFAULT_CODE))
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME))
             .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION))
-            .andExpect(jsonPath("$.zoneType").value(DEFAULT_ZONE_TYPE))
             .andExpect(jsonPath("$.centerLat").value(DEFAULT_CENTER_LAT))
             .andExpect(jsonPath("$.centerLon").value(DEFAULT_CENTER_LON))
             .andExpect(jsonPath("$.radiusMeters").value(DEFAULT_RADIUS_METERS));
@@ -444,56 +437,6 @@ class ZoneResourceIT {
 
         // Get all the zoneList where description does not contain
         defaultZoneFiltering("description.doesNotContain=" + UPDATED_DESCRIPTION, "description.doesNotContain=" + DEFAULT_DESCRIPTION);
-    }
-
-    @Test
-    @Transactional
-    void getAllZonesByZoneTypeIsEqualToSomething() throws Exception {
-        // Initialize the database
-        insertedZone = zoneRepository.saveAndFlush(zone);
-
-        // Get all the zoneList where zoneType equals to
-        defaultZoneFiltering("zoneType.equals=" + DEFAULT_ZONE_TYPE, "zoneType.equals=" + UPDATED_ZONE_TYPE);
-    }
-
-    @Test
-    @Transactional
-    void getAllZonesByZoneTypeIsInShouldWork() throws Exception {
-        // Initialize the database
-        insertedZone = zoneRepository.saveAndFlush(zone);
-
-        // Get all the zoneList where zoneType in
-        defaultZoneFiltering("zoneType.in=" + DEFAULT_ZONE_TYPE + "," + UPDATED_ZONE_TYPE, "zoneType.in=" + UPDATED_ZONE_TYPE);
-    }
-
-    @Test
-    @Transactional
-    void getAllZonesByZoneTypeIsNullOrNotNull() throws Exception {
-        // Initialize the database
-        insertedZone = zoneRepository.saveAndFlush(zone);
-
-        // Get all the zoneList where zoneType is not null
-        defaultZoneFiltering("zoneType.specified=true", "zoneType.specified=false");
-    }
-
-    @Test
-    @Transactional
-    void getAllZonesByZoneTypeContainsSomething() throws Exception {
-        // Initialize the database
-        insertedZone = zoneRepository.saveAndFlush(zone);
-
-        // Get all the zoneList where zoneType contains
-        defaultZoneFiltering("zoneType.contains=" + DEFAULT_ZONE_TYPE, "zoneType.contains=" + UPDATED_ZONE_TYPE);
-    }
-
-    @Test
-    @Transactional
-    void getAllZonesByZoneTypeNotContainsSomething() throws Exception {
-        // Initialize the database
-        insertedZone = zoneRepository.saveAndFlush(zone);
-
-        // Get all the zoneList where zoneType does not contain
-        defaultZoneFiltering("zoneType.doesNotContain=" + UPDATED_ZONE_TYPE, "zoneType.doesNotContain=" + DEFAULT_ZONE_TYPE);
     }
 
     @Test
@@ -754,7 +697,6 @@ class ZoneResourceIT {
             .andExpect(jsonPath("$.[*].code").value(hasItem(DEFAULT_CODE)))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
             .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION)))
-            .andExpect(jsonPath("$.[*].zoneType").value(hasItem(DEFAULT_ZONE_TYPE)))
             .andExpect(jsonPath("$.[*].centerLat").value(hasItem(DEFAULT_CENTER_LAT)))
             .andExpect(jsonPath("$.[*].centerLon").value(hasItem(DEFAULT_CENTER_LON)))
             .andExpect(jsonPath("$.[*].radiusMeters").value(hasItem(DEFAULT_RADIUS_METERS)));
@@ -809,7 +751,6 @@ class ZoneResourceIT {
             .code(UPDATED_CODE)
             .name(UPDATED_NAME)
             .description(UPDATED_DESCRIPTION)
-            .zoneType(UPDATED_ZONE_TYPE)
             .centerLat(UPDATED_CENTER_LAT)
             .centerLon(UPDATED_CENTER_LON)
             .radiusMeters(UPDATED_RADIUS_METERS);
@@ -894,7 +835,7 @@ class ZoneResourceIT {
         Zone partialUpdatedZone = new Zone();
         partialUpdatedZone.setId(zone.getId());
 
-        partialUpdatedZone.name(UPDATED_NAME).zoneType(UPDATED_ZONE_TYPE).centerLon(UPDATED_CENTER_LON).radiusMeters(UPDATED_RADIUS_METERS);
+        partialUpdatedZone.name(UPDATED_NAME).centerLat(UPDATED_CENTER_LAT);
 
         restZoneMockMvc
             .perform(
@@ -926,7 +867,6 @@ class ZoneResourceIT {
             .code(UPDATED_CODE)
             .name(UPDATED_NAME)
             .description(UPDATED_DESCRIPTION)
-            .zoneType(UPDATED_ZONE_TYPE)
             .centerLat(UPDATED_CENTER_LAT)
             .centerLon(UPDATED_CENTER_LON)
             .radiusMeters(UPDATED_RADIUS_METERS);

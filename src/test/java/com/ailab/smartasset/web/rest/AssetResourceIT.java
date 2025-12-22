@@ -14,6 +14,7 @@ import com.ailab.smartasset.domain.Asset;
 import com.ailab.smartasset.domain.ProductionLine;
 import com.ailab.smartasset.domain.Site;
 import com.ailab.smartasset.domain.Zone;
+import com.ailab.smartasset.domain.enumeration.AssetGeofencePolicy;
 import com.ailab.smartasset.domain.enumeration.AssetStatus;
 import com.ailab.smartasset.domain.enumeration.AssetType;
 import com.ailab.smartasset.domain.enumeration.Criticality;
@@ -72,6 +73,9 @@ class AssetResourceIT {
 
     private static final Criticality DEFAULT_CRITICALITY = Criticality.LOW;
     private static final Criticality UPDATED_CRITICALITY = Criticality.MEDIUM;
+
+    private static final AssetGeofencePolicy DEFAULT_GEOFENCE_POLICY = AssetGeofencePolicy.NONE;
+    private static final AssetGeofencePolicy UPDATED_GEOFENCE_POLICY = AssetGeofencePolicy.ZONE_ONLY;
 
     private static final String DEFAULT_RESPONSIBLE_NAME = "AAAAAAAAAA";
     private static final String UPDATED_RESPONSIBLE_NAME = "BBBBBBBBBB";
@@ -199,14 +203,15 @@ class AssetResourceIT {
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
-    public static Asset createEntity() {
-        return new Asset()
+    public static Asset createEntity(EntityManager em) {
+        Asset asset = new Asset()
             .assetType(DEFAULT_ASSET_TYPE)
             .assetCode(DEFAULT_ASSET_CODE)
             .reference(DEFAULT_REFERENCE)
             .description(DEFAULT_DESCRIPTION)
             .status(DEFAULT_STATUS)
             .criticality(DEFAULT_CRITICALITY)
+            .geofencePolicy(DEFAULT_GEOFENCE_POLICY)
             .responsibleName(DEFAULT_RESPONSIBLE_NAME)
             .costCenter(DEFAULT_COST_CENTER)
             .brand(DEFAULT_BRAND)
@@ -232,6 +237,17 @@ class AssetResourceIT {
             .lastCommissioningDate(DEFAULT_LAST_COMMISSIONING_DATE)
             .lastMaintenanceDate(DEFAULT_LAST_MAINTENANCE_DATE)
             .maintenanceCount(DEFAULT_MAINTENANCE_COUNT);
+        // Add required entity
+        ProductionLine productionLine;
+        if (TestUtil.findAll(em, ProductionLine.class).isEmpty()) {
+            productionLine = ProductionLineResourceIT.createEntity();
+            em.persist(productionLine);
+            em.flush();
+        } else {
+            productionLine = TestUtil.findAll(em, ProductionLine.class).get(0);
+        }
+        asset.setProductionLine(productionLine);
+        return asset;
     }
 
     /**
@@ -240,14 +256,15 @@ class AssetResourceIT {
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
-    public static Asset createUpdatedEntity() {
-        return new Asset()
+    public static Asset createUpdatedEntity(EntityManager em) {
+        Asset updatedAsset = new Asset()
             .assetType(UPDATED_ASSET_TYPE)
             .assetCode(UPDATED_ASSET_CODE)
             .reference(UPDATED_REFERENCE)
             .description(UPDATED_DESCRIPTION)
             .status(UPDATED_STATUS)
             .criticality(UPDATED_CRITICALITY)
+            .geofencePolicy(UPDATED_GEOFENCE_POLICY)
             .responsibleName(UPDATED_RESPONSIBLE_NAME)
             .costCenter(UPDATED_COST_CENTER)
             .brand(UPDATED_BRAND)
@@ -273,11 +290,22 @@ class AssetResourceIT {
             .lastCommissioningDate(UPDATED_LAST_COMMISSIONING_DATE)
             .lastMaintenanceDate(UPDATED_LAST_MAINTENANCE_DATE)
             .maintenanceCount(UPDATED_MAINTENANCE_COUNT);
+        // Add required entity
+        ProductionLine productionLine;
+        if (TestUtil.findAll(em, ProductionLine.class).isEmpty()) {
+            productionLine = ProductionLineResourceIT.createUpdatedEntity();
+            em.persist(productionLine);
+            em.flush();
+        } else {
+            productionLine = TestUtil.findAll(em, ProductionLine.class).get(0);
+        }
+        updatedAsset.setProductionLine(productionLine);
+        return updatedAsset;
     }
 
     @BeforeEach
     void initTest() {
-        asset = createEntity();
+        asset = createEntity(em);
     }
 
     @AfterEach
@@ -400,6 +428,23 @@ class AssetResourceIT {
 
     @Test
     @Transactional
+    void checkGeofencePolicyIsRequired() throws Exception {
+        long databaseSizeBeforeTest = getRepositoryCount();
+        // set the field null
+        asset.setGeofencePolicy(null);
+
+        // Create the Asset, which fails.
+        AssetDTO assetDTO = assetMapper.toDto(asset);
+
+        restAssetMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(assetDTO)))
+            .andExpect(status().isBadRequest());
+
+        assertSameRepositoryCount(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
     void getAllAssets() throws Exception {
         // Initialize the database
         insertedAsset = assetRepository.saveAndFlush(asset);
@@ -416,6 +461,7 @@ class AssetResourceIT {
             .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION)))
             .andExpect(jsonPath("$.[*].status").value(hasItem(DEFAULT_STATUS.toString())))
             .andExpect(jsonPath("$.[*].criticality").value(hasItem(DEFAULT_CRITICALITY.toString())))
+            .andExpect(jsonPath("$.[*].geofencePolicy").value(hasItem(DEFAULT_GEOFENCE_POLICY.toString())))
             .andExpect(jsonPath("$.[*].responsibleName").value(hasItem(DEFAULT_RESPONSIBLE_NAME)))
             .andExpect(jsonPath("$.[*].costCenter").value(hasItem(DEFAULT_COST_CENTER)))
             .andExpect(jsonPath("$.[*].brand").value(hasItem(DEFAULT_BRAND)))
@@ -478,6 +524,7 @@ class AssetResourceIT {
             .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION))
             .andExpect(jsonPath("$.status").value(DEFAULT_STATUS.toString()))
             .andExpect(jsonPath("$.criticality").value(DEFAULT_CRITICALITY.toString()))
+            .andExpect(jsonPath("$.geofencePolicy").value(DEFAULT_GEOFENCE_POLICY.toString()))
             .andExpect(jsonPath("$.responsibleName").value(DEFAULT_RESPONSIBLE_NAME))
             .andExpect(jsonPath("$.costCenter").value(DEFAULT_COST_CENTER))
             .andExpect(jsonPath("$.brand").value(DEFAULT_BRAND))
@@ -758,6 +805,39 @@ class AssetResourceIT {
 
         // Get all the assetList where criticality is not null
         defaultAssetFiltering("criticality.specified=true", "criticality.specified=false");
+    }
+
+    @Test
+    @Transactional
+    void getAllAssetsByGeofencePolicyIsEqualToSomething() throws Exception {
+        // Initialize the database
+        insertedAsset = assetRepository.saveAndFlush(asset);
+
+        // Get all the assetList where geofencePolicy equals to
+        defaultAssetFiltering("geofencePolicy.equals=" + DEFAULT_GEOFENCE_POLICY, "geofencePolicy.equals=" + UPDATED_GEOFENCE_POLICY);
+    }
+
+    @Test
+    @Transactional
+    void getAllAssetsByGeofencePolicyIsInShouldWork() throws Exception {
+        // Initialize the database
+        insertedAsset = assetRepository.saveAndFlush(asset);
+
+        // Get all the assetList where geofencePolicy in
+        defaultAssetFiltering(
+            "geofencePolicy.in=" + DEFAULT_GEOFENCE_POLICY + "," + UPDATED_GEOFENCE_POLICY,
+            "geofencePolicy.in=" + UPDATED_GEOFENCE_POLICY
+        );
+    }
+
+    @Test
+    @Transactional
+    void getAllAssetsByGeofencePolicyIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        insertedAsset = assetRepository.saveAndFlush(asset);
+
+        // Get all the assetList where geofencePolicy is not null
+        defaultAssetFiltering("geofencePolicy.specified=true", "geofencePolicy.specified=false");
     }
 
     @Test
@@ -2415,28 +2495,6 @@ class AssetResourceIT {
 
     @Test
     @Transactional
-    void getAllAssetsBySiteIsEqualToSomething() throws Exception {
-        Site site;
-        if (TestUtil.findAll(em, Site.class).isEmpty()) {
-            assetRepository.saveAndFlush(asset);
-            site = SiteResourceIT.createEntity();
-        } else {
-            site = TestUtil.findAll(em, Site.class).get(0);
-        }
-        em.persist(site);
-        em.flush();
-        asset.setSite(site);
-        assetRepository.saveAndFlush(asset);
-        Long siteId = site.getId();
-        // Get all the assetList where site equals to siteId
-        defaultAssetShouldBeFound("siteId.equals=" + siteId);
-
-        // Get all the assetList where site equals to (siteId + 1)
-        defaultAssetShouldNotBeFound("siteId.equals=" + (siteId + 1));
-    }
-
-    @Test
-    @Transactional
     void getAllAssetsByProductionLineIsEqualToSomething() throws Exception {
         ProductionLine productionLine;
         if (TestUtil.findAll(em, ProductionLine.class).isEmpty()) {
@@ -2459,24 +2517,46 @@ class AssetResourceIT {
 
     @Test
     @Transactional
-    void getAllAssetsByCurrentZoneIsEqualToSomething() throws Exception {
-        Zone currentZone;
+    void getAllAssetsByAllowedSiteIsEqualToSomething() throws Exception {
+        Site allowedSite;
+        if (TestUtil.findAll(em, Site.class).isEmpty()) {
+            assetRepository.saveAndFlush(asset);
+            allowedSite = SiteResourceIT.createEntity();
+        } else {
+            allowedSite = TestUtil.findAll(em, Site.class).get(0);
+        }
+        em.persist(allowedSite);
+        em.flush();
+        asset.setAllowedSite(allowedSite);
+        assetRepository.saveAndFlush(asset);
+        Long allowedSiteId = allowedSite.getId();
+        // Get all the assetList where allowedSite equals to allowedSiteId
+        defaultAssetShouldBeFound("allowedSiteId.equals=" + allowedSiteId);
+
+        // Get all the assetList where allowedSite equals to (allowedSiteId + 1)
+        defaultAssetShouldNotBeFound("allowedSiteId.equals=" + (allowedSiteId + 1));
+    }
+
+    @Test
+    @Transactional
+    void getAllAssetsByAllowedZoneIsEqualToSomething() throws Exception {
+        Zone allowedZone;
         if (TestUtil.findAll(em, Zone.class).isEmpty()) {
             assetRepository.saveAndFlush(asset);
-            currentZone = ZoneResourceIT.createEntity();
+            allowedZone = ZoneResourceIT.createEntity();
         } else {
-            currentZone = TestUtil.findAll(em, Zone.class).get(0);
+            allowedZone = TestUtil.findAll(em, Zone.class).get(0);
         }
-        em.persist(currentZone);
+        em.persist(allowedZone);
         em.flush();
-        asset.setCurrentZone(currentZone);
+        asset.setAllowedZone(allowedZone);
         assetRepository.saveAndFlush(asset);
-        Long currentZoneId = currentZone.getId();
-        // Get all the assetList where currentZone equals to currentZoneId
-        defaultAssetShouldBeFound("currentZoneId.equals=" + currentZoneId);
+        Long allowedZoneId = allowedZone.getId();
+        // Get all the assetList where allowedZone equals to allowedZoneId
+        defaultAssetShouldBeFound("allowedZoneId.equals=" + allowedZoneId);
 
-        // Get all the assetList where currentZone equals to (currentZoneId + 1)
-        defaultAssetShouldNotBeFound("currentZoneId.equals=" + (currentZoneId + 1));
+        // Get all the assetList where allowedZone equals to (allowedZoneId + 1)
+        defaultAssetShouldNotBeFound("allowedZoneId.equals=" + (allowedZoneId + 1));
     }
 
     private void defaultAssetFiltering(String shouldBeFound, String shouldNotBeFound) throws Exception {
@@ -2499,6 +2579,7 @@ class AssetResourceIT {
             .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION)))
             .andExpect(jsonPath("$.[*].status").value(hasItem(DEFAULT_STATUS.toString())))
             .andExpect(jsonPath("$.[*].criticality").value(hasItem(DEFAULT_CRITICALITY.toString())))
+            .andExpect(jsonPath("$.[*].geofencePolicy").value(hasItem(DEFAULT_GEOFENCE_POLICY.toString())))
             .andExpect(jsonPath("$.[*].responsibleName").value(hasItem(DEFAULT_RESPONSIBLE_NAME)))
             .andExpect(jsonPath("$.[*].costCenter").value(hasItem(DEFAULT_COST_CENTER)))
             .andExpect(jsonPath("$.[*].brand").value(hasItem(DEFAULT_BRAND)))
@@ -2578,6 +2659,7 @@ class AssetResourceIT {
             .description(UPDATED_DESCRIPTION)
             .status(UPDATED_STATUS)
             .criticality(UPDATED_CRITICALITY)
+            .geofencePolicy(UPDATED_GEOFENCE_POLICY)
             .responsibleName(UPDATED_RESPONSIBLE_NAME)
             .costCenter(UPDATED_COST_CENTER)
             .brand(UPDATED_BRAND)
@@ -2689,20 +2771,19 @@ class AssetResourceIT {
         partialUpdatedAsset.setId(asset.getId());
 
         partialUpdatedAsset
-            .status(UPDATED_STATUS)
+            .assetType(UPDATED_ASSET_TYPE)
+            .description(UPDATED_DESCRIPTION)
             .criticality(UPDATED_CRITICALITY)
-            .costCenter(UPDATED_COST_CENTER)
-            .model(UPDATED_MODEL)
+            .geofencePolicy(UPDATED_GEOFENCE_POLICY)
+            .responsibleName(UPDATED_RESPONSIBLE_NAME)
+            .brand(UPDATED_BRAND)
             .serialNumber(UPDATED_SERIAL_NUMBER)
+            .voltageV(UPDATED_VOLTAGE_V)
             .currentA(UPDATED_CURRENT_A)
-            .speedRpm(UPDATED_SPEED_RPM)
-            .ipRating(UPDATED_IP_RATING)
             .shaftDiameterMm(UPDATED_SHAFT_DIAMETER_MM)
-            .footDistanceBmm(UPDATED_FOOT_DISTANCE_BMM)
-            .frontFlangeMm(UPDATED_FRONT_FLANGE_MM)
-            .rearFlangeMm(UPDATED_REAR_FLANGE_MM)
-            .iecAxisHeightMm(UPDATED_IEC_AXIS_HEIGHT_MM)
+            .hasHeating(UPDATED_HAS_HEATING)
             .temperatureProbeType(UPDATED_TEMPERATURE_PROBE_TYPE)
+            .lastMaintenanceDate(UPDATED_LAST_MAINTENANCE_DATE)
             .maintenanceCount(UPDATED_MAINTENANCE_COUNT);
 
         restAssetMockMvc
@@ -2738,6 +2819,7 @@ class AssetResourceIT {
             .description(UPDATED_DESCRIPTION)
             .status(UPDATED_STATUS)
             .criticality(UPDATED_CRITICALITY)
+            .geofencePolicy(UPDATED_GEOFENCE_POLICY)
             .responsibleName(UPDATED_RESPONSIBLE_NAME)
             .costCenter(UPDATED_COST_CENTER)
             .brand(UPDATED_BRAND)

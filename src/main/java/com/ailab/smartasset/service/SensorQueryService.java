@@ -75,20 +75,13 @@ public class SensorQueryService extends QueryService<Sensor> {
                 Boolean.TRUE.equals(criteria.getDistinct()) ? distinct(criteria.getDistinct()) : null,
                 buildRangeSpecification(criteria.getId(), Sensor_.id),
                 buildSpecification(criteria.getSensorType(), Sensor_.sensorType),
+                buildStringSpecification(criteria.getExternalId(), Sensor_.externalId),
                 buildStringSpecification(criteria.getName(), Sensor_.name),
                 buildStringSpecification(criteria.getUnit(), Sensor_.unit),
                 buildRangeSpecification(criteria.getMinThreshold(), Sensor_.minThreshold),
                 buildRangeSpecification(criteria.getMaxThreshold(), Sensor_.maxThreshold),
                 buildRangeSpecification(criteria.getInstalledAt(), Sensor_.installedAt),
                 buildSpecification(criteria.getActive(), Sensor_.active),
-                buildStringSpecification(criteria.getExternalId(), Sensor_.externalId),
-                buildStringSpecification(criteria.getCreatedBy(), Sensor_.createdBy),
-                buildRangeSpecification(criteria.getCreatedDate(), Sensor_.createdDate),
-                buildStringSpecification(criteria.getLastModifiedBy(), Sensor_.lastModifiedBy),
-                buildRangeSpecification(criteria.getLastModifiedDate(), Sensor_.lastModifiedDate),
-                buildSpecification(criteria.getMeasurementsId(), root ->
-                    root.join(Sensor_.measurements, JoinType.LEFT).get(SensorMeasurement_.id)
-                ),
                 buildSpecification(criteria.getAssetId(), root -> root.join(Sensor_.asset, JoinType.LEFT).get(Asset_.id))
             );
         }

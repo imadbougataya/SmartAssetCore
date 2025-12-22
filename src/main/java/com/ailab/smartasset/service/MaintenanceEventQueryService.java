@@ -89,10 +89,6 @@ public class MaintenanceEventQueryService extends QueryService<MaintenanceEvent>
                 buildRangeSpecification(criteria.getDowntimeMinutes(), MaintenanceEvent_.downtimeMinutes),
                 buildRangeSpecification(criteria.getCostAmount(), MaintenanceEvent_.costAmount),
                 buildStringSpecification(criteria.getNotes(), MaintenanceEvent_.notes),
-                buildStringSpecification(criteria.getCreatedBy(), MaintenanceEvent_.createdBy),
-                buildRangeSpecification(criteria.getCreatedDate(), MaintenanceEvent_.createdDate),
-                buildStringSpecification(criteria.getLastModifiedBy(), MaintenanceEvent_.lastModifiedBy),
-                buildRangeSpecification(criteria.getLastModifiedDate(), MaintenanceEvent_.lastModifiedDate),
                 buildSpecification(criteria.getAssetId(), root -> root.join(MaintenanceEvent_.asset, JoinType.LEFT).get(Asset_.id))
             );
         }

@@ -11,7 +11,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.ailab.smartasset.IntegrationTest;
 import com.ailab.smartasset.domain.Document;
 import com.ailab.smartasset.domain.DocumentLink;
-import com.ailab.smartasset.domain.enumeration.DocumentEntityType;
+import com.ailab.smartasset.domain.enumeration.DocumentLinkEntityType;
 import com.ailab.smartasset.repository.DocumentLinkRepository;
 import com.ailab.smartasset.service.DocumentLinkService;
 import com.ailab.smartasset.service.dto.DocumentLinkDTO;
@@ -47,8 +47,8 @@ import org.springframework.transaction.annotation.Transactional;
 @WithMockUser
 class DocumentLinkResourceIT {
 
-    private static final DocumentEntityType DEFAULT_ENTITY_TYPE = DocumentEntityType.ASSET;
-    private static final DocumentEntityType UPDATED_ENTITY_TYPE = DocumentEntityType.MAINTENANCE_EVENT;
+    private static final DocumentLinkEntityType DEFAULT_ENTITY_TYPE = DocumentLinkEntityType.ASSET;
+    private static final DocumentLinkEntityType UPDATED_ENTITY_TYPE = DocumentLinkEntityType.MAINTENANCE_EVENT;
 
     private static final Long DEFAULT_ENTITY_ID = 1L;
     private static final Long UPDATED_ENTITY_ID = 2L;
@@ -59,6 +59,18 @@ class DocumentLinkResourceIT {
 
     private static final Instant DEFAULT_LINKED_AT = Instant.ofEpochMilli(0L);
     private static final Instant UPDATED_LINKED_AT = Instant.now().truncatedTo(ChronoUnit.MILLIS);
+
+    private static final String DEFAULT_CREATED_BY = "AAAAAAAAAA";
+    private static final String UPDATED_CREATED_BY = "BBBBBBBBBB";
+
+    private static final Instant DEFAULT_CREATED_DATE = Instant.ofEpochMilli(0L);
+    private static final Instant UPDATED_CREATED_DATE = Instant.now().truncatedTo(ChronoUnit.MILLIS);
+
+    private static final String DEFAULT_LAST_MODIFIED_BY = "AAAAAAAAAA";
+    private static final String UPDATED_LAST_MODIFIED_BY = "BBBBBBBBBB";
+
+    private static final Instant DEFAULT_LAST_MODIFIED_DATE = Instant.ofEpochMilli(0L);
+    private static final Instant UPDATED_LAST_MODIFIED_DATE = Instant.now().truncatedTo(ChronoUnit.MILLIS);
 
     private static final String ENTITY_API_URL = "/api/document-links";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
@@ -97,12 +109,27 @@ class DocumentLinkResourceIT {
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
-    public static DocumentLink createEntity() {
-        return new DocumentLink()
+    public static DocumentLink createEntity(EntityManager em) {
+        DocumentLink documentLink = new DocumentLink()
             .entityType(DEFAULT_ENTITY_TYPE)
             .entityId(DEFAULT_ENTITY_ID)
             .label(DEFAULT_LABEL)
-            .linkedAt(DEFAULT_LINKED_AT);
+            .linkedAt(DEFAULT_LINKED_AT)
+            .createdBy(DEFAULT_CREATED_BY)
+            .createdDate(DEFAULT_CREATED_DATE)
+            .lastModifiedBy(DEFAULT_LAST_MODIFIED_BY)
+            .lastModifiedDate(DEFAULT_LAST_MODIFIED_DATE);
+        // Add required entity
+        Document document;
+        if (TestUtil.findAll(em, Document.class).isEmpty()) {
+            document = DocumentResourceIT.createEntity(em);
+            em.persist(document);
+            em.flush();
+        } else {
+            document = TestUtil.findAll(em, Document.class).get(0);
+        }
+        documentLink.setDocument(document);
+        return documentLink;
     }
 
     /**
@@ -111,17 +138,32 @@ class DocumentLinkResourceIT {
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
-    public static DocumentLink createUpdatedEntity() {
-        return new DocumentLink()
+    public static DocumentLink createUpdatedEntity(EntityManager em) {
+        DocumentLink updatedDocumentLink = new DocumentLink()
             .entityType(UPDATED_ENTITY_TYPE)
             .entityId(UPDATED_ENTITY_ID)
             .label(UPDATED_LABEL)
-            .linkedAt(UPDATED_LINKED_AT);
+            .linkedAt(UPDATED_LINKED_AT)
+            .createdBy(UPDATED_CREATED_BY)
+            .createdDate(UPDATED_CREATED_DATE)
+            .lastModifiedBy(UPDATED_LAST_MODIFIED_BY)
+            .lastModifiedDate(UPDATED_LAST_MODIFIED_DATE);
+        // Add required entity
+        Document document;
+        if (TestUtil.findAll(em, Document.class).isEmpty()) {
+            document = DocumentResourceIT.createUpdatedEntity(em);
+            em.persist(document);
+            em.flush();
+        } else {
+            document = TestUtil.findAll(em, Document.class).get(0);
+        }
+        updatedDocumentLink.setDocument(document);
+        return updatedDocumentLink;
     }
 
     @BeforeEach
     void initTest() {
-        documentLink = createEntity();
+        documentLink = createEntity(em);
     }
 
     @AfterEach
@@ -240,7 +282,11 @@ class DocumentLinkResourceIT {
             .andExpect(jsonPath("$.[*].entityType").value(hasItem(DEFAULT_ENTITY_TYPE.toString())))
             .andExpect(jsonPath("$.[*].entityId").value(hasItem(DEFAULT_ENTITY_ID.intValue())))
             .andExpect(jsonPath("$.[*].label").value(hasItem(DEFAULT_LABEL)))
-            .andExpect(jsonPath("$.[*].linkedAt").value(hasItem(DEFAULT_LINKED_AT.toString())));
+            .andExpect(jsonPath("$.[*].linkedAt").value(hasItem(DEFAULT_LINKED_AT.toString())))
+            .andExpect(jsonPath("$.[*].createdBy").value(hasItem(DEFAULT_CREATED_BY)))
+            .andExpect(jsonPath("$.[*].createdDate").value(hasItem(DEFAULT_CREATED_DATE.toString())))
+            .andExpect(jsonPath("$.[*].lastModifiedBy").value(hasItem(DEFAULT_LAST_MODIFIED_BY)))
+            .andExpect(jsonPath("$.[*].lastModifiedDate").value(hasItem(DEFAULT_LAST_MODIFIED_DATE.toString())));
     }
 
     @SuppressWarnings({ "unchecked" })
@@ -275,7 +321,11 @@ class DocumentLinkResourceIT {
             .andExpect(jsonPath("$.entityType").value(DEFAULT_ENTITY_TYPE.toString()))
             .andExpect(jsonPath("$.entityId").value(DEFAULT_ENTITY_ID.intValue()))
             .andExpect(jsonPath("$.label").value(DEFAULT_LABEL))
-            .andExpect(jsonPath("$.linkedAt").value(DEFAULT_LINKED_AT.toString()));
+            .andExpect(jsonPath("$.linkedAt").value(DEFAULT_LINKED_AT.toString()))
+            .andExpect(jsonPath("$.createdBy").value(DEFAULT_CREATED_BY))
+            .andExpect(jsonPath("$.createdDate").value(DEFAULT_CREATED_DATE.toString()))
+            .andExpect(jsonPath("$.lastModifiedBy").value(DEFAULT_LAST_MODIFIED_BY))
+            .andExpect(jsonPath("$.lastModifiedDate").value(DEFAULT_LAST_MODIFIED_DATE.toString()));
     }
 
     @Test
@@ -481,11 +531,192 @@ class DocumentLinkResourceIT {
 
     @Test
     @Transactional
+    void getAllDocumentLinksByCreatedByIsEqualToSomething() throws Exception {
+        // Initialize the database
+        insertedDocumentLink = documentLinkRepository.saveAndFlush(documentLink);
+
+        // Get all the documentLinkList where createdBy equals to
+        defaultDocumentLinkFiltering("createdBy.equals=" + DEFAULT_CREATED_BY, "createdBy.equals=" + UPDATED_CREATED_BY);
+    }
+
+    @Test
+    @Transactional
+    void getAllDocumentLinksByCreatedByIsInShouldWork() throws Exception {
+        // Initialize the database
+        insertedDocumentLink = documentLinkRepository.saveAndFlush(documentLink);
+
+        // Get all the documentLinkList where createdBy in
+        defaultDocumentLinkFiltering("createdBy.in=" + DEFAULT_CREATED_BY + "," + UPDATED_CREATED_BY, "createdBy.in=" + UPDATED_CREATED_BY);
+    }
+
+    @Test
+    @Transactional
+    void getAllDocumentLinksByCreatedByIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        insertedDocumentLink = documentLinkRepository.saveAndFlush(documentLink);
+
+        // Get all the documentLinkList where createdBy is not null
+        defaultDocumentLinkFiltering("createdBy.specified=true", "createdBy.specified=false");
+    }
+
+    @Test
+    @Transactional
+    void getAllDocumentLinksByCreatedByContainsSomething() throws Exception {
+        // Initialize the database
+        insertedDocumentLink = documentLinkRepository.saveAndFlush(documentLink);
+
+        // Get all the documentLinkList where createdBy contains
+        defaultDocumentLinkFiltering("createdBy.contains=" + DEFAULT_CREATED_BY, "createdBy.contains=" + UPDATED_CREATED_BY);
+    }
+
+    @Test
+    @Transactional
+    void getAllDocumentLinksByCreatedByNotContainsSomething() throws Exception {
+        // Initialize the database
+        insertedDocumentLink = documentLinkRepository.saveAndFlush(documentLink);
+
+        // Get all the documentLinkList where createdBy does not contain
+        defaultDocumentLinkFiltering("createdBy.doesNotContain=" + UPDATED_CREATED_BY, "createdBy.doesNotContain=" + DEFAULT_CREATED_BY);
+    }
+
+    @Test
+    @Transactional
+    void getAllDocumentLinksByCreatedDateIsEqualToSomething() throws Exception {
+        // Initialize the database
+        insertedDocumentLink = documentLinkRepository.saveAndFlush(documentLink);
+
+        // Get all the documentLinkList where createdDate equals to
+        defaultDocumentLinkFiltering("createdDate.equals=" + DEFAULT_CREATED_DATE, "createdDate.equals=" + UPDATED_CREATED_DATE);
+    }
+
+    @Test
+    @Transactional
+    void getAllDocumentLinksByCreatedDateIsInShouldWork() throws Exception {
+        // Initialize the database
+        insertedDocumentLink = documentLinkRepository.saveAndFlush(documentLink);
+
+        // Get all the documentLinkList where createdDate in
+        defaultDocumentLinkFiltering(
+            "createdDate.in=" + DEFAULT_CREATED_DATE + "," + UPDATED_CREATED_DATE,
+            "createdDate.in=" + UPDATED_CREATED_DATE
+        );
+    }
+
+    @Test
+    @Transactional
+    void getAllDocumentLinksByCreatedDateIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        insertedDocumentLink = documentLinkRepository.saveAndFlush(documentLink);
+
+        // Get all the documentLinkList where createdDate is not null
+        defaultDocumentLinkFiltering("createdDate.specified=true", "createdDate.specified=false");
+    }
+
+    @Test
+    @Transactional
+    void getAllDocumentLinksByLastModifiedByIsEqualToSomething() throws Exception {
+        // Initialize the database
+        insertedDocumentLink = documentLinkRepository.saveAndFlush(documentLink);
+
+        // Get all the documentLinkList where lastModifiedBy equals to
+        defaultDocumentLinkFiltering(
+            "lastModifiedBy.equals=" + DEFAULT_LAST_MODIFIED_BY,
+            "lastModifiedBy.equals=" + UPDATED_LAST_MODIFIED_BY
+        );
+    }
+
+    @Test
+    @Transactional
+    void getAllDocumentLinksByLastModifiedByIsInShouldWork() throws Exception {
+        // Initialize the database
+        insertedDocumentLink = documentLinkRepository.saveAndFlush(documentLink);
+
+        // Get all the documentLinkList where lastModifiedBy in
+        defaultDocumentLinkFiltering(
+            "lastModifiedBy.in=" + DEFAULT_LAST_MODIFIED_BY + "," + UPDATED_LAST_MODIFIED_BY,
+            "lastModifiedBy.in=" + UPDATED_LAST_MODIFIED_BY
+        );
+    }
+
+    @Test
+    @Transactional
+    void getAllDocumentLinksByLastModifiedByIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        insertedDocumentLink = documentLinkRepository.saveAndFlush(documentLink);
+
+        // Get all the documentLinkList where lastModifiedBy is not null
+        defaultDocumentLinkFiltering("lastModifiedBy.specified=true", "lastModifiedBy.specified=false");
+    }
+
+    @Test
+    @Transactional
+    void getAllDocumentLinksByLastModifiedByContainsSomething() throws Exception {
+        // Initialize the database
+        insertedDocumentLink = documentLinkRepository.saveAndFlush(documentLink);
+
+        // Get all the documentLinkList where lastModifiedBy contains
+        defaultDocumentLinkFiltering(
+            "lastModifiedBy.contains=" + DEFAULT_LAST_MODIFIED_BY,
+            "lastModifiedBy.contains=" + UPDATED_LAST_MODIFIED_BY
+        );
+    }
+
+    @Test
+    @Transactional
+    void getAllDocumentLinksByLastModifiedByNotContainsSomething() throws Exception {
+        // Initialize the database
+        insertedDocumentLink = documentLinkRepository.saveAndFlush(documentLink);
+
+        // Get all the documentLinkList where lastModifiedBy does not contain
+        defaultDocumentLinkFiltering(
+            "lastModifiedBy.doesNotContain=" + UPDATED_LAST_MODIFIED_BY,
+            "lastModifiedBy.doesNotContain=" + DEFAULT_LAST_MODIFIED_BY
+        );
+    }
+
+    @Test
+    @Transactional
+    void getAllDocumentLinksByLastModifiedDateIsEqualToSomething() throws Exception {
+        // Initialize the database
+        insertedDocumentLink = documentLinkRepository.saveAndFlush(documentLink);
+
+        // Get all the documentLinkList where lastModifiedDate equals to
+        defaultDocumentLinkFiltering(
+            "lastModifiedDate.equals=" + DEFAULT_LAST_MODIFIED_DATE,
+            "lastModifiedDate.equals=" + UPDATED_LAST_MODIFIED_DATE
+        );
+    }
+
+    @Test
+    @Transactional
+    void getAllDocumentLinksByLastModifiedDateIsInShouldWork() throws Exception {
+        // Initialize the database
+        insertedDocumentLink = documentLinkRepository.saveAndFlush(documentLink);
+
+        // Get all the documentLinkList where lastModifiedDate in
+        defaultDocumentLinkFiltering(
+            "lastModifiedDate.in=" + DEFAULT_LAST_MODIFIED_DATE + "," + UPDATED_LAST_MODIFIED_DATE,
+            "lastModifiedDate.in=" + UPDATED_LAST_MODIFIED_DATE
+        );
+    }
+
+    @Test
+    @Transactional
+    void getAllDocumentLinksByLastModifiedDateIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        insertedDocumentLink = documentLinkRepository.saveAndFlush(documentLink);
+
+        // Get all the documentLinkList where lastModifiedDate is not null
+        defaultDocumentLinkFiltering("lastModifiedDate.specified=true", "lastModifiedDate.specified=false");
+    }
+
+    @Test
+    @Transactional
     void getAllDocumentLinksByDocumentIsEqualToSomething() throws Exception {
         Document document;
         if (TestUtil.findAll(em, Document.class).isEmpty()) {
             documentLinkRepository.saveAndFlush(documentLink);
-            document = DocumentResourceIT.createEntity();
+            document = DocumentResourceIT.createEntity(em);
         } else {
             document = TestUtil.findAll(em, Document.class).get(0);
         }
@@ -518,7 +749,11 @@ class DocumentLinkResourceIT {
             .andExpect(jsonPath("$.[*].entityType").value(hasItem(DEFAULT_ENTITY_TYPE.toString())))
             .andExpect(jsonPath("$.[*].entityId").value(hasItem(DEFAULT_ENTITY_ID.intValue())))
             .andExpect(jsonPath("$.[*].label").value(hasItem(DEFAULT_LABEL)))
-            .andExpect(jsonPath("$.[*].linkedAt").value(hasItem(DEFAULT_LINKED_AT.toString())));
+            .andExpect(jsonPath("$.[*].linkedAt").value(hasItem(DEFAULT_LINKED_AT.toString())))
+            .andExpect(jsonPath("$.[*].createdBy").value(hasItem(DEFAULT_CREATED_BY)))
+            .andExpect(jsonPath("$.[*].createdDate").value(hasItem(DEFAULT_CREATED_DATE.toString())))
+            .andExpect(jsonPath("$.[*].lastModifiedBy").value(hasItem(DEFAULT_LAST_MODIFIED_BY)))
+            .andExpect(jsonPath("$.[*].lastModifiedDate").value(hasItem(DEFAULT_LAST_MODIFIED_DATE.toString())));
 
         // Check, that the count call also returns 1
         restDocumentLinkMockMvc
@@ -566,7 +801,15 @@ class DocumentLinkResourceIT {
         DocumentLink updatedDocumentLink = documentLinkRepository.findById(documentLink.getId()).orElseThrow();
         // Disconnect from session so that the updates on updatedDocumentLink are not directly saved in db
         em.detach(updatedDocumentLink);
-        updatedDocumentLink.entityType(UPDATED_ENTITY_TYPE).entityId(UPDATED_ENTITY_ID).label(UPDATED_LABEL).linkedAt(UPDATED_LINKED_AT);
+        updatedDocumentLink
+            .entityType(UPDATED_ENTITY_TYPE)
+            .entityId(UPDATED_ENTITY_ID)
+            .label(UPDATED_LABEL)
+            .linkedAt(UPDATED_LINKED_AT)
+            .createdBy(UPDATED_CREATED_BY)
+            .createdDate(UPDATED_CREATED_DATE)
+            .lastModifiedBy(UPDATED_LAST_MODIFIED_BY)
+            .lastModifiedDate(UPDATED_LAST_MODIFIED_DATE);
         DocumentLinkDTO documentLinkDTO = documentLinkMapper.toDto(updatedDocumentLink);
 
         restDocumentLinkMockMvc
@@ -660,7 +903,9 @@ class DocumentLinkResourceIT {
             .entityType(UPDATED_ENTITY_TYPE)
             .entityId(UPDATED_ENTITY_ID)
             .label(UPDATED_LABEL)
-            .linkedAt(UPDATED_LINKED_AT);
+            .createdBy(UPDATED_CREATED_BY)
+            .createdDate(UPDATED_CREATED_DATE)
+            .lastModifiedDate(UPDATED_LAST_MODIFIED_DATE);
 
         restDocumentLinkMockMvc
             .perform(
@@ -695,7 +940,11 @@ class DocumentLinkResourceIT {
             .entityType(UPDATED_ENTITY_TYPE)
             .entityId(UPDATED_ENTITY_ID)
             .label(UPDATED_LABEL)
-            .linkedAt(UPDATED_LINKED_AT);
+            .linkedAt(UPDATED_LINKED_AT)
+            .createdBy(UPDATED_CREATED_BY)
+            .createdDate(UPDATED_CREATED_DATE)
+            .lastModifiedBy(UPDATED_LAST_MODIFIED_BY)
+            .lastModifiedDate(UPDATED_LAST_MODIFIED_DATE);
 
         restDocumentLinkMockMvc
             .perform(

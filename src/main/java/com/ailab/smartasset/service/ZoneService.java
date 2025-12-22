@@ -52,7 +52,6 @@ public class ZoneService {
     public ZoneDTO update(ZoneDTO zoneDTO) {
         LOG.debug("Request to update Zone : {}", zoneDTO);
         Zone zone = zoneMapper.toEntity(zoneDTO);
-        zone.setIsPersisted();
         zone = zoneRepository.save(zone);
         return zoneMapper.toDto(zone);
     }

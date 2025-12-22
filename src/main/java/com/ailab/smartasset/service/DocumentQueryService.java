@@ -7,9 +7,10 @@ import com.ailab.smartasset.service.criteria.DocumentCriteria;
 import com.ailab.smartasset.service.dto.DocumentDTO;
 import com.ailab.smartasset.service.mapper.DocumentMapper;
 import jakarta.persistence.criteria.JoinType;
-import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,7 +20,7 @@ import tech.jhipster.service.QueryService;
  * Service for executing complex queries for {@link Document} entities in the database.
  * The main input is a {@link DocumentCriteria} which gets converted to {@link Specification},
  * in a way that all the filters must apply.
- * It returns a {@link List} of {@link DocumentDTO} which fulfills the criteria.
+ * It returns a {@link Page} of {@link DocumentDTO} which fulfills the criteria.
  */
 @Service
 @Transactional(readOnly = true)
@@ -37,15 +38,16 @@ public class DocumentQueryService extends QueryService<Document> {
     }
 
     /**
-     * Return a {@link List} of {@link DocumentDTO} which matches the criteria from the database.
+     * Return a {@link Page} of {@link DocumentDTO} which matches the criteria from the database.
      * @param criteria The object which holds all the filters, which the entities should match.
+     * @param page The page, which should be returned.
      * @return the matching entities.
      */
     @Transactional(readOnly = true)
-    public List<DocumentDTO> findByCriteria(DocumentCriteria criteria) {
-        LOG.debug("find by criteria : {}", criteria);
+    public Page<DocumentDTO> findByCriteria(DocumentCriteria criteria, Pageable page) {
+        LOG.debug("find by criteria : {}, page: {}", criteria, page);
         final Specification<Document> specification = createSpecification(criteria);
-        return documentMapper.toDto(documentRepository.findAll(specification));
+        return documentRepository.findAll(specification, page).map(documentMapper::toDto);
     }
 
     /**
@@ -79,11 +81,7 @@ public class DocumentQueryService extends QueryService<Document> {
                 buildStringSpecification(criteria.getChecksumSha256(), Document_.checksumSha256),
                 buildRangeSpecification(criteria.getUploadedAt(), Document_.uploadedAt),
                 buildStringSpecification(criteria.getUploadedBy(), Document_.uploadedBy),
-                buildStringSpecification(criteria.getCreatedBy(), Document_.createdBy),
-                buildRangeSpecification(criteria.getCreatedDate(), Document_.createdDate),
-                buildStringSpecification(criteria.getLastModifiedBy(), Document_.lastModifiedBy),
-                buildRangeSpecification(criteria.getLastModifiedDate(), Document_.lastModifiedDate),
-                buildSpecification(criteria.getLinksId(), root -> root.join(Document_.links, JoinType.LEFT).get(DocumentLink_.id))
+                buildSpecification(criteria.getAssetId(), root -> root.join(Document_.asset, JoinType.LEFT).get(Asset_.id))
             );
         }
         return specification;

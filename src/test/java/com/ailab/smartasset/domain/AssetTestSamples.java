@@ -26,9 +26,7 @@ public class AssetTestSamples {
             .ipRating("ipRating1")
             .insulationClass("insulationClass1")
             .dimensionsSource("dimensionsSource1")
-            .maintenanceCount(1)
-            .createdBy("createdBy1")
-            .lastModifiedBy("lastModifiedBy1");
+            .maintenanceCount(1);
     }
 
     public static Asset getAssetSample2() {
@@ -46,9 +44,7 @@ public class AssetTestSamples {
             .ipRating("ipRating2")
             .insulationClass("insulationClass2")
             .dimensionsSource("dimensionsSource2")
-            .maintenanceCount(2)
-            .createdBy("createdBy2")
-            .lastModifiedBy("lastModifiedBy2");
+            .maintenanceCount(2);
     }
 
     public static Asset getAssetRandomSampleGenerator() {
@@ -66,8 +62,6 @@ public class AssetTestSamples {
             .ipRating(UUID.randomUUID().toString())
             .insulationClass(UUID.randomUUID().toString())
             .dimensionsSource(UUID.randomUUID().toString())
-            .maintenanceCount(intCount.incrementAndGet())
-            .createdBy(UUID.randomUUID().toString())
-            .lastModifiedBy(UUID.randomUUID().toString());
+            .maintenanceCount(intCount.incrementAndGet());
     }
 }
