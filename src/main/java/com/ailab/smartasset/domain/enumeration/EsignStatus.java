@@ -5,6 +5,7 @@ package com.ailab.smartasset.domain.enumeration;
  */
 public enum EsignStatus {
     NOT_STARTED,
+    PENDING,
     SENT,
     IN_PROGRESS,
     SIGNED,
