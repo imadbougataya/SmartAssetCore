@@ -15,9 +15,9 @@
 
 logging:
   level:
-    ROOT: DEBUG
-    tech.jhipster: DEBUG
-    org.hibernate.SQL: DEBUG
+    ROOT: ERROR
+    tech.jhipster: ERROR
+    org.hibernate.SQL: ERROR
     com.ailab.smartasset: DEBUG
 
 spring:
@@ -110,3 +110,8 @@ jhipster:
 # ===================================================================
 
 # application:
+esign:
+  base-url: https://demo.esignanywhere.net
+  api-token: mxpiftkcu8pdycjj4807x5xvk3e5jd1lxbcxhaeukc0v4omf9o6u3i3or3j2n02j
+  move-request-template-id: 50102ea3-751f-4421-b97e-3b7535bd5926
+  user-login-name: imad@ailab.ma

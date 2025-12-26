@@ -1,0 +1,378 @@
+application {
+  config {
+    baseName SmartAssetCore
+    applicationType monolith
+    authenticationType jwt
+    databaseType sql
+    prodDatabaseType mysql
+    devDatabaseType mysql
+    buildTool maven
+    enableHibernateCache true
+    clientFramework react
+    nativeLanguage fr
+    languages [fr, en]
+  }
+  entities *
+}
+
+/* =======================
+   ENUMS
+   ======================= */
+
+enum AssetType {
+  INDUSTRIAL_ASSET,
+  NON_INDUSTRIAL_ASSET
+}
+
+enum AssetStatus {
+  ACTIVE,
+  INACTIVE,
+  OUT_OF_SERVICE,
+  LOST,
+  SCRAPPED
+}
+
+enum Criticality {
+  LOW,
+  MEDIUM,
+  HIGH,
+  CRITICAL
+}
+
+enum MountingType {
+  M1,
+  B3,
+  B5,
+  V1,
+  B14,
+  B35,
+  UNKNOWN
+}
+
+enum TemperatureProbeType {
+  NONE,
+  PTC,
+  PT100,
+  PT1000
+}
+
+enum SensorType {
+  TEMPERATURE,
+  VIBRATION,
+  PRESSURE,
+  CURRENT,
+  VOLTAGE,
+  OIL_LEVEL,
+  LIQUID_LEVEL,
+  HUMIDITY,
+  BLE_TAG,
+  GNSS_TRACKER
+}
+
+enum MaintenanceType {
+  PREVENTIVE,
+  CORRECTIVE,
+  REVISION,
+  INSPECTION
+}
+
+enum MaintenanceStatus {
+  REQUESTED,
+  PLANNED,
+  IN_PROGRESS,
+  DONE,
+  CANCELLED
+}
+
+enum MovementRequestStatus {
+  DRAFT,
+  SUBMITTED,
+  SIGNING,
+  SIGNED,
+  REJECTED,
+  EXECUTED,
+  CANCELLED
+}
+
+/* EXISTANT – réutilisé */
+enum EsignStatus {
+  NOT_STARTED,
+  SENT,
+  IN_PROGRESS,
+  SIGNED,
+  REJECTED,
+  FAILED,
+  CANCELLED
+}
+
+enum LocationSource {
+  BLE,
+  GNSS,
+  MANUAL
+}
+
+enum SystemEventSeverity {
+  INFO,
+  WARNING,
+  ERROR
+}
+
+enum SystemEventSource {
+  UI,
+  API,
+  GATEWAY,
+  ESIGN,
+  SCHEDULER,
+  SYSTEM
+}
+
+enum AssetGeofencePolicy {
+  NONE,
+  ZONE_ONLY,
+  SITE_ONLY
+}
+
+enum DocumentLinkEntityType {
+  ASSET,
+  MAINTENANCE_EVENT,
+  MOVEMENT_REQUEST
+}
+
+/* =======================
+   ENTITIES
+   ======================= */
+
+entity Site {
+  code String required unique maxlength(50)
+  name String required maxlength(150)
+  description String maxlength(500)
+  centerLat Double
+  centerLon Double
+  radiusMeters Integer min(1)
+}
+
+entity Zone {
+  code String required unique maxlength(80)
+  name String required maxlength(150)
+  description String maxlength(500)
+  centerLat Double
+  centerLon Double
+  radiusMeters Integer min(1)
+}
+
+entity ProductionLine {
+  code String required unique maxlength(50)
+  name String required maxlength(150)
+  description String maxlength(500)
+}
+
+entity Gateway {
+  code String required unique maxlength(80)
+  name String maxlength(150)
+  vendor String maxlength(80)
+  model String maxlength(80)
+  macAddress String maxlength(32)
+  ipAddress String maxlength(64)
+  installedAt Instant
+  active Boolean required
+}
+
+entity Asset {
+  assetType AssetType required
+  assetCode String required unique maxlength(80)
+  reference String maxlength(120)
+  description String maxlength(500)
+  status AssetStatus required
+  criticality Criticality required
+  geofencePolicy AssetGeofencePolicy required
+
+  responsibleName String maxlength(120)
+  costCenter String maxlength(80)
+
+  brand String maxlength(80)
+  model String maxlength(120)
+  serialNumber String maxlength(120)
+
+  powerKw BigDecimal
+  voltageV BigDecimal
+  currentA BigDecimal
+  cosPhi BigDecimal
+  speedRpm Integer
+  ipRating String maxlength(20)
+  insulationClass String maxlength(30)
+
+  mountingType MountingType
+  shaftDiameterMm BigDecimal
+  footDistanceAmm BigDecimal
+  footDistanceBmm BigDecimal
+  frontFlangeMm BigDecimal
+  rearFlangeMm BigDecimal
+  iecAxisHeightMm BigDecimal
+  dimensionsSource String maxlength(120)
+
+  hasHeating Boolean
+  temperatureProbeType TemperatureProbeType
+
+  lastCommissioningDate LocalDate
+  lastMaintenanceDate LocalDate
+  maintenanceCount Integer
+}
+
+entity Sensor {
+  sensorType SensorType required
+  externalId String required unique maxlength(120)
+  name String maxlength(150)
+  unit String maxlength(30)
+  minThreshold BigDecimal
+  maxThreshold BigDecimal
+  installedAt Instant
+  active Boolean required
+}
+
+entity SensorMeasurement {
+  measuredAt Instant required
+  value BigDecimal required
+  quality String maxlength(40)
+  source String maxlength(80)
+}
+
+entity MaintenanceEvent {
+  maintenanceType MaintenanceType required
+  status MaintenanceStatus required
+  requestedAt Instant required
+  plannedAt Instant
+  startedAt Instant
+  finishedAt Instant
+  title String maxlength(180)
+  description String maxlength(2000)
+  technician String maxlength(120)
+  downtimeMinutes Integer
+  costAmount BigDecimal
+  notes String maxlength(2000)
+}
+
+/* 🔁 MODIFIÉ : suppression des champs eSign redondants */
+entity AssetMovementRequest {
+  status MovementRequestStatus required
+  requestedAt Instant required
+  reason String maxlength(500)
+  fromLocationLabel String maxlength(200)
+  toLocationLabel String maxlength(200)
+  signedAt Instant
+  executedAt Instant
+}
+
+/* 🆕 NOUVELLE ENTITÉ eSign (v6) */
+entity EsignEnvelope {
+  templateName String required maxlength(200)
+  templateId String required maxlength(120)
+
+  draftId String maxlength(120)
+  envelopeId String maxlength(120)
+
+  status EsignStatus required
+  lastStatusUpdate Instant
+
+  initiatedAt Instant required
+  sentAt Instant
+  completedAt Instant
+
+  errorMessage String maxlength(1000)
+}
+
+entity LocationEvent {
+  source LocationSource required
+  observedAt Instant required
+  zoneConfidence Integer
+  rssi Integer
+  txPower Integer
+  latitude Double required
+  longitude Double required
+  accuracyMeters Double
+  speedKmh Double
+  gnssConstellation String maxlength(50)
+  rawPayload String maxlength(4000)
+}
+
+entity Document {
+  fileName String required maxlength(255)
+  mimeType String required maxlength(120)
+  sizeBytes Long
+  storageRef String required maxlength(500)
+  checksumSha256 String maxlength(128)
+  uploadedAt Instant required
+  uploadedBy String maxlength(120)
+}
+
+entity DocumentLink {
+  entityType DocumentLinkEntityType required
+  entityId Long required
+  label String maxlength(200)
+  linkedAt Instant required
+  createdBy String maxlength(120)
+  createdDate Instant
+  lastModifiedBy String maxlength(120)
+  lastModifiedDate Instant
+}
+
+entity SystemEvent {
+  eventType String required maxlength(120)
+  severity SystemEventSeverity required
+  source SystemEventSource required
+  message String maxlength(1000)
+  createdAt Instant required
+  createdBy String maxlength(120)
+  correlationId String maxlength(64)
+  payload TextBlob
+}
+
+/* =======================
+   RELATIONSHIPS
+   ======================= */
+
+relationship ManyToOne {
+
+  Zone{site required} to Site
+  ProductionLine{zone required} to Zone
+
+  Gateway{site} to Site
+  Gateway{zone} to Zone
+
+  Asset{productionLine required} to ProductionLine
+  Asset{allowedSite} to Site
+  Asset{allowedZone} to Zone
+
+  Sensor{asset required} to Asset
+  SensorMeasurement{sensor required} to Sensor
+
+  MaintenanceEvent{asset required} to Asset
+
+  AssetMovementRequest{asset required} to Asset
+  AssetMovementRequest{requestedBy required} to User with builtInEntity
+  AssetMovementRequest{approvedBy} to User with builtInEntity
+
+  LocationEvent{asset required} to Asset
+  LocationEvent{sensor} to Sensor
+  LocationEvent{matchedSite} to Site
+  LocationEvent{matchedZone} to Zone
+
+  DocumentLink{document required} to Document
+}
+
+/* 🔗 LIAISON MÉTIER ↔ eSign */
+relationship OneToOne {
+  AssetMovementRequest{esignEnvelope} to EsignEnvelope
+}
+
+/* =======================
+   OPTIONS
+   ======================= */
+
+paginate Asset, Sensor, SensorMeasurement, MaintenanceEvent,
+         AssetMovementRequest, LocationEvent,
+         Zone, Gateway, ProductionLine, Site,
+         Document, DocumentLink, EsignEnvelope with pagination
+
+service all with serviceClass
+dto all with mapstruct
+filter all

@@ -1,8 +1,10 @@
 package com.ailab.smartasset.service;
 
 import com.ailab.smartasset.domain.AssetMovementRequest;
+import com.ailab.smartasset.domain.enumeration.EsignStatus;
 import com.ailab.smartasset.repository.AssetMovementRequestRepository;
 import com.ailab.smartasset.service.dto.AssetMovementRequestDTO;
+import com.ailab.smartasset.service.esign.EsignWorkflowService;
 import com.ailab.smartasset.service.mapper.AssetMovementRequestMapper;
 import java.util.Optional;
 import org.slf4j.Logger;
@@ -11,7 +13,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Service Implementation for managing {@link com.ailab.smartasset.domain.AssetMovementRequest}.
+ * Service Implementation for managing
+ * {@link com.ailab.smartasset.domain.AssetMovementRequest}.
  */
 @Service
 @Transactional
@@ -22,13 +25,16 @@ public class AssetMovementRequestService {
     private final AssetMovementRequestRepository assetMovementRequestRepository;
 
     private final AssetMovementRequestMapper assetMovementRequestMapper;
+    private final EsignWorkflowService esignWorkflowService;
 
     public AssetMovementRequestService(
         AssetMovementRequestRepository assetMovementRequestRepository,
-        AssetMovementRequestMapper assetMovementRequestMapper
+        AssetMovementRequestMapper assetMovementRequestMapper,
+        EsignWorkflowService esignWorkflowService
     ) {
         this.assetMovementRequestRepository = assetMovementRequestRepository;
         this.assetMovementRequestMapper = assetMovementRequestMapper;
+        this.esignWorkflowService = esignWorkflowService;
     }
 
     /**
@@ -40,7 +46,11 @@ public class AssetMovementRequestService {
     public AssetMovementRequestDTO save(AssetMovementRequestDTO assetMovementRequestDTO) {
         LOG.debug("Request to save AssetMovementRequest : {}", assetMovementRequestDTO);
         AssetMovementRequest assetMovementRequest = assetMovementRequestMapper.toEntity(assetMovementRequestDTO);
+        assetMovementRequest.setEsignStatus(EsignStatus.NOT_STARTED);
+        assetMovementRequest.setRequestedAt(java.time.Instant.now());
         assetMovementRequest = assetMovementRequestRepository.save(assetMovementRequest);
+        // 🔹 Lancement eSign après persistance
+        esignWorkflowService.startWorkflow(assetMovementRequest);
         return assetMovementRequestMapper.toDto(assetMovementRequest);
     }
 
